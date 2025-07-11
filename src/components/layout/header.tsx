@@ -86,6 +86,7 @@ export function Header() {
               variant="ghost"
               size="sm"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Menu"
             >
               {mobileMenuOpen ? (
                 <X className="h-5 w-5" />

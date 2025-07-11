@@ -1,0 +1,79 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - link "K KidsHiz":
+    - /url: /
+  - button "Menu"
+- text: Descobrir • Reservar • Experienciar
+- heading "Atividades Incríveis para Crianças Felizes" [level=1]
+- paragraph: Descobre as melhores atividades para o teu filho no Porto e Matosinhos. De natação a programação, encontra experiências que vão inspirar e desenvolver.
+- link "Explorar Atividades":
+  - /url: /activities
+  - button "Explorar Atividades"
+- link "Saber Mais":
+  - /url: /about
+  - button "Saber Mais"
+- text: 500+ Atividades Disponíveis 50+ Prestadores de Confiança 1000+ Famílias Satisfeitas
+- heading "Atividades em Destaque" [level=2]
+- paragraph: As experiências mais populares escolhidas pelas famílias
+- text: Nenhuma atividade encontrada no momento.
+- link "Ver Todas as Atividades":
+  - /url: /activities
+  - button "Ver Todas as Atividades"
+- heading "Porquê Escolher KidsHiz?" [level=2]
+- heading "Qualidade Garantida" [level=3]
+- paragraph: Todos os nossos prestadores são verificados e avaliados por outras famílias.
+- heading "Para Todas as Idades" [level=3]
+- paragraph: Desde os 3 aos 16 anos, temos atividades adequadas para cada fase do desenvolvimento.
+- heading "Perto de Ti" [level=3]
+- paragraph: "Encontra atividades na tua área: Porto, Matosinhos e arredores."
+- heading "Pronto para Começar?" [level=2]
+- paragraph: Regista-te hoje e descobre o mundo de possibilidades para o teu filho.
+- link "Criar Conta Gratuita":
+  - /url: /auth/signup
+  - button "Criar Conta Gratuita"
+- contentinfo:
+  - text: K KidsHiz
+  - paragraph: A plataforma de descoberta e reserva de atividades para crianças em Portugal.
+  - heading "Para Pais" [level=3]
+  - list:
+    - listitem:
+      - link "Explorar Atividades":
+        - /url: /activities
+    - listitem:
+      - link "Criar Conta":
+        - /url: /auth/signup
+    - listitem:
+      - link "Centro de Ajuda":
+        - /url: /help
+  - heading "Para Prestadores" [level=3]
+  - list:
+    - listitem:
+      - link "Juntar-se ao KidsHiz":
+        - /url: /provider/signup
+    - listitem:
+      - link "Recursos":
+        - /url: /provider/resources
+    - listitem:
+      - link "Suporte":
+        - /url: /provider/support
+  - heading "Empresa" [level=3]
+  - list:
+    - listitem:
+      - link "Sobre Nós":
+        - /url: /about
+    - listitem:
+      - link "Contacto":
+        - /url: /contact
+    - listitem:
+      - link "Privacidade":
+        - /url: /privacy
+    - listitem:
+      - link "Termos":
+        - /url: /terms
+  - paragraph: © 2024 KidsHiz. Todos os direitos reservados.
+- alert
+- button "Open Next.js Dev Tools":
+  - img
+```

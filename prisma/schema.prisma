@@ -1,0 +1,361 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// NextAuth.js required models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// User management
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(PARENT)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  // NextAuth.js relations
+  accounts Account[]
+  sessions Session[]
+
+  // App relations
+  profile        UserProfile?
+  childProfiles  Child[]
+  bookings       Booking[]
+  savedActivities SavedActivity[]
+  
+  // Provider relations
+  provider       Provider?
+  reviews        Review[]
+  
+  @@map("users")
+}
+
+model UserProfile {
+  id          String  @id @default(cuid())
+  userId      String  @unique
+  firstName   String?
+  lastName    String?
+  phone       String?
+  address     String?
+  city        String?
+  postalCode  String?
+  country     String  @default("Portugal")
+  dateOfBirth DateTime?
+  language    String  @default("pt")
+  timezone    String  @default("Europe/Lisbon")
+  
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("user_profiles")
+}
+
+model Child {
+  id          String   @id @default(cuid())
+  parentId    String
+  firstName   String
+  lastName    String
+  dateOfBirth DateTime
+  allergies   String?
+  medicalNotes String?
+  emergencyContact String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+  
+  parent      User     @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  bookings    Booking[]
+  
+  @@map("children")
+}
+
+// Provider management
+model Provider {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  businessName     String
+  businessType     BusinessType
+  description      String?
+  website          String?
+  phone            String?
+  email            String?
+  address          String
+  city             String
+  postalCode       String
+  country          String   @default("Portugal")
+  latitude         Float?
+  longitude        Float?
+  taxId            String?
+  isVerified       Boolean  @default(false)
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  deletedAt        DateTime?
+  
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activities       Activity[]
+  reviews          Review[]
+  
+  @@map("providers")
+}
+
+// Activity management
+model Activity {
+  id              String   @id @default(cuid())
+  providerId      String
+  title           String
+  description     String
+  shortDescription String?
+  category        Category
+  ageMin          Int
+  ageMax          Int
+  capacity        Int
+  price           Float
+  currency        String   @default("EUR")
+  duration        Int      // Duration in minutes
+  language        String   @default("pt")
+  difficulty      Difficulty @default(BEGINNER)
+  location        String?
+  address         String?
+  city            String?
+  postalCode      String?
+  latitude        Float?
+  longitude       Float?
+  imageUrl        String?
+  imageUrls       String[] // Array of image URLs
+  requirements    String?
+  included        String?
+  notIncluded     String?
+  tags            String[]
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  deletedAt       DateTime?
+  
+  provider        Provider      @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  sessions        ActivitySession[]
+  savedBy         SavedActivity[]
+  reviews         Review[]
+  
+  @@map("activities")
+}
+
+model ActivitySession {
+  id           String      @id @default(cuid())
+  activityId   String
+  startTime    DateTime
+  endTime      DateTime
+  capacity     Int
+  availableSpots Int
+  price        Float?      // Optional override price
+  status       SessionStatus @default(SCHEDULED)
+  notes        String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  deletedAt    DateTime?
+  
+  activity     Activity    @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  bookings     Booking[]
+  
+  @@map("activity_sessions")
+}
+
+// Booking management
+model Booking {
+  id            String        @id @default(cuid())
+  userId        String
+  childId       String
+  sessionId     String
+  quantity      Int           @default(1)
+  totalAmount   Float
+  currency      String        @default("EUR")
+  status        BookingStatus @default(PENDING)
+  paymentStatus PaymentStatus @default(PENDING)
+  paymentId     String?
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deletedAt     DateTime?
+  
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  child         Child         @relation(fields: [childId], references: [id], onDelete: Cascade)
+  session       ActivitySession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  payment       Payment?
+  
+  @@map("bookings")
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  bookingId         String        @unique
+  paymentIntentId   String?       // Stripe payment intent ID
+  paymentMethodType PaymentMethod
+  amount            Float
+  currency          String        @default("EUR")
+  status            PaymentStatus @default(PENDING)
+  providerFee       Float?        // Platform fee
+  netAmount         Float?        // Amount after fees
+  refundAmount      Float?
+  refundReason      String?
+  metadata          Json?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  
+  booking           Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  @@map("payments")
+}
+
+// Review system
+model Review {
+  id          String   @id @default(cuid())
+  userId      String
+  activityId  String?
+  providerId  String?
+  rating      Int      // 1-5 stars
+  title       String?
+  comment     String?
+  isVerified  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activity    Activity? @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  provider    Provider? @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  
+  @@map("reviews")
+}
+
+// Saved activities
+model SavedActivity {
+  id         String   @id @default(cuid())
+  userId     String
+  activityId String
+  createdAt  DateTime @default(now())
+  
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, activityId])
+  @@map("saved_activities")
+}
+
+// Enums
+enum Role {
+  PARENT
+  PROVIDER
+  ADMIN
+}
+
+enum BusinessType {
+  INDIVIDUAL
+  SCHOOL
+  ACADEMY
+  SPORTS_CLUB
+  CULTURAL_CENTER
+  PRIVATE_TUTOR
+  OTHER
+}
+
+enum Category {
+  SPORTS
+  ARTS_CRAFTS
+  MUSIC
+  DANCE
+  EDUCATION
+  SCIENCE
+  TECHNOLOGY
+  COOKING
+  LANGUAGES
+  OUTDOOR
+  SWIMMING
+  MARTIAL_ARTS
+  THEATER
+  OTHER
+}
+
+enum Difficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum SessionStatus {
+  SCHEDULED
+  CANCELLED
+  COMPLETED
+  RESCHEDULED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum PaymentMethod {
+  STRIPE_CARD
+  STRIPE_SEPA
+  MBWAY
+  PAYPAL
+  BANK_TRANSFER
+}

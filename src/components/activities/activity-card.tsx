@@ -236,15 +236,9 @@ export function ActivityCard({ activity }: ActivityCardProps) {
         </CardContent>
 
         <CardFooter className="p-6 pt-0">
-          <Button
-            className="w-full bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white rounded-2xl py-4 text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-            onClick={e => {
-              e.preventDefault();
-              // This will be handled by the parent Link
-            }}
-          >
+          <div className="w-full bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white rounded-2xl py-4 text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center cursor-pointer">
             Ver Detalhes
-          </Button>
+          </div>
         </CardFooter>
       </Card>
     </Link>

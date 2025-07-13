@@ -176,3 +176,11 @@
 {"timestamp":"2025-07-13 22:17:11","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
 {"timestamp":"2025-07-13 22:21:06","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":10},"type":"api-request"}
 {"timestamp":"2025-07-13 22:21:06","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:28:39","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:28:39","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:32:50","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:32:50","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:32:55","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":10},"type":"api-request"}
+{"timestamp":"2025-07-13 22:32:55","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:32:59","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":10},"type":"api-request"}
+{"timestamp":"2025-07-13 22:32:59","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}

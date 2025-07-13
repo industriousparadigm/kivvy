@@ -142,6 +142,7 @@ model Provider {
   user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   activities       Activity[]
   reviews          Review[]
+  reports          Report[]
   
   @@map("providers")
 }
@@ -175,6 +176,9 @@ model Activity {
   notIncluded     String?
   tags            String[]
   isActive        Boolean  @default(true)
+  totalBookings   Int      @default(0)
+  totalReviews    Int      @default(0)
+  averageRating   Float?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   deletedAt       DateTime?
@@ -235,18 +239,20 @@ model Booking {
 model Payment {
   id                String        @id @default(cuid())
   bookingId         String        @unique
-  paymentIntentId   String?       // Stripe payment intent ID
-  paymentMethodType PaymentMethod
-  amount            Float
-  currency          String        @default("EUR")
-  status            PaymentStatus @default(PENDING)
-  providerFee       Float?        // Platform fee
-  netAmount         Float?        // Amount after fees
-  refundAmount      Float?
-  refundReason      String?
-  metadata          Json?
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  stripePaymentIntentId String?       // Stripe payment intent ID
+  paymentMethodType     PaymentMethod
+  amount                Float
+  currency              String        @default("EUR")
+  status                PaymentStatus @default(PENDING)
+  providerFee           Float?        // Platform fee
+  netAmount             Float?        // Amount after fees
+  refundAmount          Float?
+  refundReason          String?
+  capturedAt            DateTime?
+  refundedAt            DateTime?
+  metadata              Json?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
   
   booking           Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   
@@ -286,6 +292,22 @@ model SavedActivity {
   
   @@unique([userId, activityId])
   @@map("saved_activities")
+}
+
+// Reports system
+model Report {
+  id          String   @id @default(cuid())
+  type        String   // 'activity-stats', 'revenue-report', 'user-engagement'
+  period      String   // 'daily', 'weekly', 'monthly'
+  data        Json     // Report data
+  providerId  String?  // For provider-specific reports
+  generatedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  provider    Provider? @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  
+  @@map("reports")
 }
 
 // Enums
@@ -346,8 +368,9 @@ enum BookingStatus {
 enum PaymentStatus {
   PENDING
   PROCESSING
-  COMPLETED
+  SUCCEEDED
   FAILED
+  CANCELLED
   REFUNDED
   PARTIALLY_REFUNDED
 }

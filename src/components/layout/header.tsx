@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
-import { User, Menu, X, Heart, ShoppingBag } from 'lucide-react';
+import { User, Menu, X, Heart, ShoppingBag, Settings } from 'lucide-react';
 import { useState } from 'react';
 
 export function Header() {
@@ -11,16 +11,16 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-rose-100 bg-white/95 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">K</span>
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-rose-400 to-amber-400 flex items-center justify-center shadow-sm">
+                <Heart className="text-white h-5 w-5" />
               </div>
-              <span className="text-xl font-bold text-gray-900">KidsHiz</span>
+              <span className="text-xl font-semibold text-rose-900">KidsHiz</span>
             </Link>
           </div>
 
@@ -28,19 +28,19 @@ export function Header() {
           <nav className="hidden md:flex items-center space-x-8">
             <Link
               href="/activities"
-              className="text-gray-700 hover:text-blue-600 transition-colors"
+              className="text-rose-700 hover:text-rose-900 transition-colors font-medium"
             >
               Atividades
             </Link>
             <Link
               href="/about"
-              className="text-gray-700 hover:text-blue-600 transition-colors"
+              className="text-rose-700 hover:text-rose-900 transition-colors font-medium"
             >
               Sobre
             </Link>
             <Link
               href="/contact"
-              className="text-gray-700 hover:text-blue-600 transition-colors"
+              className="text-rose-700 hover:text-rose-900 transition-colors font-medium"
             >
               Contacto
             </Link>
@@ -50,31 +50,37 @@ export function Header() {
           <div className="hidden md:flex items-center space-x-4">
             {session ? (
               <div className="flex items-center space-x-3">
-                <Button variant="ghost" size="sm">
-                  <Heart className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <ShoppingBag className="h-4 w-4" />
-                </Button>
-                <div className="flex items-center space-x-2">
-                  <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                    <User className="h-4 w-4 text-gray-600" />
+                <Link href="/dashboard">
+                  <Button variant="ghost" size="sm" className="text-rose-600 hover:text-rose-800 hover:bg-rose-50">
+                    <Heart className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link href="/profile">
+                  <Button variant="ghost" size="sm" className="text-rose-600 hover:text-rose-800 hover:bg-rose-50">
+                    <Settings className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link href="/dashboard">
+                  <div className="flex items-center space-x-2 hover:bg-rose-50 rounded-xl px-3 py-2 transition-colors cursor-pointer">
+                    <div className="h-8 w-8 rounded-full bg-gradient-to-r from-rose-400 to-amber-400 flex items-center justify-center">
+                      <User className="h-4 w-4 text-white" />
+                    </div>
+                    <span className="text-sm font-medium text-rose-800">
+                      {session.user?.name || session.user?.email}
+                    </span>
                   </div>
-                  <span className="text-sm font-medium text-gray-700">
-                    {session.user?.name || session.user?.email}
-                  </span>
-                </div>
-                <Button variant="outline" size="sm" onClick={() => signOut()}>
+                </Link>
+                <Button variant="outline" size="sm" onClick={() => signOut()} className="border-rose-200 text-rose-700 hover:bg-rose-50">
                   Sair
                 </Button>
               </div>
             ) : (
               <div className="flex items-center space-x-3">
                 <Link href="/auth/signin">
-                  <Button variant="ghost">Entrar</Button>
+                  <Button variant="ghost" className="text-rose-700 hover:text-rose-900 hover:bg-rose-50">Entrar</Button>
                 </Link>
                 <Link href="/auth/signup">
-                  <Button>Registar</Button>
+                  <Button className="bg-rose-600 hover:bg-rose-700 text-white rounded-full px-6">Registar</Button>
                 </Link>
               </div>
             )}
@@ -132,6 +138,24 @@ export function Header() {
                       {session.user?.name || session.user?.email}
                     </div>
                   </div>
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Button variant="ghost" className="w-full justify-start">
+                      <Heart className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <Link
+                    href="/profile"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Button variant="ghost" className="w-full justify-start">
+                      <Settings className="mr-2 h-4 w-4" />
+                      Perfil
+                    </Button>
+                  </Link>
                   <Button
                     variant="outline"
                     className="w-full"

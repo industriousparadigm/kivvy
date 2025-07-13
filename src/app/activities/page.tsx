@@ -5,7 +5,7 @@ import { Header } from '@/components/layout/header';
 import { ActivityCard } from '@/components/activities/activity-card';
 import { ActivityFilters } from '@/components/activities/activity-filters';
 import { Button } from '@/components/ui/button';
-import { Loader2, MapPin, Filter } from 'lucide-react';
+import { MapPin, Heart } from 'lucide-react';
 
 interface Activity {
   id: string;
@@ -15,15 +15,25 @@ interface Activity {
   price: number;
   location: string;
   category: string;
-  ageGroup: string;
-  rating?: number;
-  totalReviews?: number;
+  ageMin: number;
+  ageMax: number;
+  averageRating?: number;
+  reviewCount?: number;
   provider: {
-    name: string;
+    id: string;
+    businessName: string;
+    city: string;
+    isVerified: boolean;
   };
-  _count?: {
-    sessions: number;
-  };
+  nextSessions?: Array<{
+    id: string;
+    startTime: string;
+    endTime?: string;
+    availableSpots: number;
+    capacity?: number;
+    price?: number;
+  }>;
+  savedCount?: number;
 }
 
 interface FilterState {
@@ -39,6 +49,7 @@ interface FilterState {
 export default function ActivitiesPage() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterState>({
     search: '',
     category: '',
@@ -62,6 +73,8 @@ export default function ActivitiesPage() {
       }
 
       try {
+        setError(null); // Clear previous errors
+        
         const params = new URLSearchParams({
           page: resetPage ? '1' : page.toString(),
           limit: '12',
@@ -75,9 +88,18 @@ export default function ActivitiesPage() {
         });
 
         const response = await fetch(`/api/activities?${params.toString()}`);
-        if (!response.ok) throw new Error('Failed to fetch activities');
+        if (!response.ok) {
+          if (response.status === 500) {
+            throw new Error('Os nossos elfos encontraram um problema técnico. Tenta novamente em alguns momentos!');
+          } else if (response.status === 404) {
+            throw new Error('Não conseguimos encontrar atividades neste momento.');
+          } else {
+            throw new Error('Algo correu mal ao carregar as atividades. Verifica a tua ligação à internet!');
+          }
+        }
 
-        const newActivities = await response.json();
+        const data = await response.json();
+        const newActivities = data.activities || [];
 
         if (resetPage) {
           setActivities(newActivities);
@@ -85,12 +107,13 @@ export default function ActivitiesPage() {
           setActivities(prev => [...prev, ...newActivities]);
         }
 
-        setHasMore(newActivities.length === 12);
+        setHasMore(data.pagination?.hasNext || newActivities.length === 12);
         if (!resetPage) {
           setPage(prev => prev + 1);
         }
       } catch (error) {
         console.error('Error fetching activities:', error);
+        setError(error instanceof Error ? error.message : 'Erro desconhecido');
       } finally {
         setLoading(false);
         setLoadingMore(false);
@@ -113,19 +136,25 @@ export default function ActivitiesPage() {
     }
   };
 
+  const retryFetch = () => {
+    fetchActivities(true);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-rose-50 to-amber-50">
       <Header />
 
-      {/* Page Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      {/* Warm Page Header */}
+      <div className="bg-white/90 border-b border-rose-100">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">
-              Explora Atividades para Crianças
+            <h1 className="text-3xl sm:text-4xl font-light text-rose-900 mb-4">
+              Aventuras especiais
+              <br />
+              <span className="font-semibold text-amber-800">para o teu pequeno</span>
             </h1>
-            <p className="mt-4 text-lg text-gray-600">
-              Descobre experiências incríveis no Porto e Matosinhos
+            <p className="mt-4 text-lg text-rose-700 max-w-2xl mx-auto">
+              Cada atividade é uma oportunidade para criar memórias preciosas
             </p>
           </div>
         </div>
@@ -158,47 +187,57 @@ export default function ActivitiesPage() {
             )}
 
             {/* Loading State */}
-            {loading && (
+            {loading && !error && (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="animate-pulse">
-                    <div className="bg-gray-200 h-48 rounded-t-xl"></div>
-                    <div className="p-4 space-y-3">
-                      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                      <div className="h-3 bg-gray-200 rounded w-full"></div>
-                      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                      <div className="h-10 bg-gray-200 rounded"></div>
-                    </div>
-                  </div>
+                  <div key={i} className="h-80 bg-white/60 rounded-3xl animate-pulse border border-rose-100" />
                 ))}
               </div>
             )}
 
+            {/* Error State */}
+            {error && (
+              <div className="text-center py-16">
+                <div className="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Heart className="h-10 w-10 text-rose-600" />
+                </div>
+                <h3 className="text-2xl font-medium text-rose-900 mb-4">Algo não correu bem</h3>
+                <p className="text-rose-700 mb-6">{error}</p>
+                <Button onClick={retryFetch} className="bg-rose-600 hover:bg-rose-700 text-white">
+                  Tentar Novamente
+                </Button>
+              </div>
+            )}
+
             {/* Activities Grid */}
-            {!loading && activities.length > 0 && (
+            {!loading && !error && activities.length > 0 && (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {activities.map(activity => (
-                    <ActivityCard key={activity.id} activity={activity} />
+                    <div key={activity.id} className="transform hover:scale-[1.02] transition-transform duration-300">
+                      <ActivityCard activity={activity} />
+                    </div>
                   ))}
                 </div>
 
                 {/* Load More Button */}
                 {hasMore && (
-                  <div className="mt-8 text-center">
+                  <div className="mt-12 text-center">
                     <Button
                       onClick={handleLoadMore}
                       disabled={loadingMore}
-                      variant="outline"
                       size="lg"
+                      className="bg-amber-600 hover:bg-amber-700 text-white rounded-full px-8 py-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                     >
                       {loadingMore ? (
                         <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />A
-                          carregar...
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          A carregar mais...
                         </>
                       ) : (
-                        'Ver Mais Atividades'
+                        <>
+                          Ver Mais Atividades
+                        </>
                       )}
                     </Button>
                   </div>
@@ -207,17 +246,20 @@ export default function ActivitiesPage() {
             )}
 
             {/* Empty State */}
-            {!loading && activities.length === 0 && (
-              <div className="text-center py-12">
-                <div className="h-16 w-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                  <Filter className="h-8 w-8 text-gray-400" />
+            {!loading && !error && activities.length === 0 && (
+              <div className="text-center py-16 px-4">
+                <div className="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Heart className="h-10 w-10 text-rose-600" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                
+                <h3 className="text-2xl font-medium text-rose-900 mb-4">
                   Nenhuma atividade encontrada
                 </h3>
-                <p className="text-gray-600 mb-6">
-                  Tenta ajustar os teus filtros ou procurar por algo diferente.
+                <p className="text-rose-700 max-w-md mx-auto leading-relaxed mb-8">
+                  Não encontrámos atividades com esses critérios. 
+                  Que tal ajustar os filtros?
                 </p>
+                
                 <Button
                   onClick={() =>
                     setFilters({
@@ -230,9 +272,9 @@ export default function ActivitiesPage() {
                       date: '',
                     })
                   }
-                  variant="outline"
+                  className="bg-rose-600 hover:bg-rose-700 text-white rounded-full px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  Limpar Filtros
+                  Mostrar Todas as Atividades
                 </Button>
               </div>
             )}

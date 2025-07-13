@@ -24,3 +24,44 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Custom magical animations */
+@keyframes animate-reverse {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.animate-reverse {
+  animation: animate-reverse 1.5s linear infinite;
+}
+
+/* Smooth magical transitions */
+.magical-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Gradient text hover effect */
+.gradient-text-hover:hover {
+  background: linear-gradient(45deg, #8b5cf6, #3b82f6, #ec4899, #8b5cf6);
+  background-size: 300% 300%;
+  animation: gradient-shift 2s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

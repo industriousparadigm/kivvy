@@ -1,12 +1,20 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { createSuccessResponse, handleApiError, createPaginationParams, createFilterParams } from '@/lib/api-utils'
+import { withMonitoring } from '@/lib/middleware/monitoring'
+import { logger } from '@/lib/logger'
 
-export async function GET(request: NextRequest) {
+async function getActivitiesHandler(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const { page, limit, skip } = createPaginationParams(searchParams)
     const filters = createFilterParams(searchParams)
+    
+    logger.info('Activities request', {
+      filters,
+      pagination: { page, limit },
+      type: 'api-request',
+    })
 
     // Build where clause for filtering
     const where: any = {
@@ -123,6 +131,13 @@ export async function GET(request: NextRequest) {
 
     const totalPages = Math.ceil(total / limit)
 
+    logger.info('Activities request completed', {
+      resultCount: activitiesWithRating.length,
+      total,
+      page,
+      type: 'api-response',
+    })
+
     return createSuccessResponse({
       activities: activitiesWithRating,
       pagination: {
@@ -135,6 +150,14 @@ export async function GET(request: NextRequest) {
       },
     })
   } catch (error) {
+    logger.error('Activities request failed', {
+      error: error.message,
+      filters,
+      pagination: { page, limit },
+      type: 'api-error',
+    })
     return handleApiError(error)
   }
 }
+
+export const GET = getActivitiesHandler

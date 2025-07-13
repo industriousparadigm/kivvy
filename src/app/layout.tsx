@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/components/providers/session-provider';
+import { ErrorBoundary } from '@/components/error-boundary';
+import { SkipNavigation } from '@/components/accessibility/skip-navigation';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -49,7 +51,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans`}
       >
-        <AuthProvider>{children}</AuthProvider>
+        <SkipNavigation />
+        <ErrorBoundary>
+          <AuthProvider>
+            <main id="main-content">
+              {children}
+            </main>
+          </AuthProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

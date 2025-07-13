@@ -28,33 +28,15 @@ export async function GET(request: NextRequest) {
       return createErrorResponse('Unauthorized', 401)
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
-      include: {
-        profile: true,
-        childProfiles: {
-          where: { deletedAt: null },
-          orderBy: { createdAt: 'asc' },
-        },
-        provider: true,
-        _count: {
-          select: {
-            bookings: {
-              where: { deletedAt: null },
-            },
-            savedActivities: true,
-          },
-        },
-      },
+    const profile = await prisma.userProfile.findUnique({
+      where: { userId: session.user.id },
     })
 
-    if (!user) {
-      return createErrorResponse('User not found', 404)
+    if (!profile) {
+      return createErrorResponse('Profile not found', 404)
     }
 
-    const { password, ...userWithoutPassword } = user
-
-    return createSuccessResponse(userWithoutPassword)
+    return createSuccessResponse(profile)
   } catch (error) {
     return handleApiError(error)
   }
@@ -92,4 +74,9 @@ export async function PATCH(request: NextRequest) {
   } catch (error) {
     return handleApiError(error)
   }
+}
+
+// PUT method for better frontend compatibility
+export async function PUT(request: NextRequest) {
+  return PATCH(request)
 }

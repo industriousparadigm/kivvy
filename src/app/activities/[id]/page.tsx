@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BookingFlow } from '@/components/activities/booking-flow';
+import { StaticMap } from '@/components/maps/google-map';
 import {
   MapPin,
   Clock,
@@ -267,6 +268,30 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                       </p>
                     )}
                   </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Location Map */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <MapPin className="h-5 w-5 text-blue-600" />
+                  <span>Localização</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-2 text-gray-600">
+                    <MapPin className="h-4 w-4" />
+                    <span>{activity.location}</span>
+                  </div>
+                  <StaticMap
+                    address={activity.location}
+                    title={activity.title}
+                    height="300px"
+                    className="rounded-lg"
+                  />
                 </div>
               </CardContent>
             </Card>

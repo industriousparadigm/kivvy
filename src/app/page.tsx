@@ -3,14 +3,7 @@ import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { ActivityCard } from '@/components/activities/activity-card';
 import { Header } from '@/components/layout/header';
-import {
-  Search,
-  Star,
-  Users,
-  MapPin,
-  ArrowRight,
-  Sparkles,
-} from 'lucide-react';
+import { Heart, Shield, Star } from 'lucide-react';
 
 interface Activity {
   id: string;
@@ -20,367 +13,215 @@ interface Activity {
   price: number;
   location: string;
   category: string;
-  ageGroup: string;
-  rating?: number;
-  totalReviews?: number;
+  ageMin: number;
+  ageMax: number;
+  averageRating?: number;
+  reviewCount?: number;
   provider: {
-    name: string;
+    id: string;
+    businessName: string;
+    city: string;
+    isVerified: boolean;
   };
-  _count?: {
-    sessions: number;
-  };
+  nextSessions?: Array<{
+    id: string;
+    startTime: string;
+    availableSpots: number;
+  }>;
 }
 
-// This would typically come from an API call
+// Fetch featured activities
 async function getFeaturedActivities() {
   try {
     const response = await fetch(
-      `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/activities?limit=6&featured=true`,
+      `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/activities?limit=6`,
       {
         cache: 'no-store',
       }
     );
-    if (!response.ok) return [];
-    return await response.json();
+    if (!response.ok) return { activities: [] };
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error('Failed to fetch featured activities:', error);
-    return [];
+    return { activities: [] };
   }
 }
 
-function ActivityCardSkeleton() {
-  return (
-    <div className="animate-pulse">
-      <div className="bg-gray-200 h-48 rounded-t-xl"></div>
-      <div className="p-4 space-y-3">
-        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-        <div className="h-3 bg-gray-200 rounded w-full"></div>
-        <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-        <div className="h-10 bg-gray-200 rounded"></div>
-      </div>
-    </div>
-  );
-}
-
-export default async function Home() {
-  const featuredActivities = await getFeaturedActivities();
+export default async function HomePage() {
+  const { activities: featuredActivities } = await getFeaturedActivities();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-rose-50 to-amber-50">
       <Header />
-
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 text-white">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="flex items-center justify-center mb-6">
-              <Sparkles className="h-8 w-8 text-yellow-300 mr-2" />
-              <span className="text-lg font-medium">
-                Descobrir • Reservar • Experienciar
-              </span>
+      
+      {/* Nurturing Hero Section */}
+      <section className="relative">
+        <div className="max-w-6xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+          {/* Hero Image Placeholder */}
+          <div className="relative h-96 bg-gradient-to-r from-rose-100 to-amber-100 rounded-3xl mb-12 overflow-hidden shadow-lg">
+            <div className="absolute inset-0 bg-gradient-to-t from-rose-900/20 to-transparent" />
+            <div className="absolute bottom-8 left-8 text-white">
+              <div className="text-xs uppercase tracking-wider opacity-90 mb-2">Um momento especial</div>
+              <div className="text-lg font-medium">Quando os olhinhos brilham de alegria</div>
             </div>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
-              Atividades Incríveis para
-              <span className="block text-yellow-300">Crianças Felizes</span>
+          </div>
+          
+          <div className="text-center">
+            <h1 className="text-4xl sm:text-6xl font-light mb-6 text-rose-900 leading-tight">
+              Onde pequenos sonhos
+              <br />
+              <span className="font-semibold text-amber-800">ganham vida</span>
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-xl text-gray-100">
-              Descobre as melhores atividades para o teu filho no Porto e
-              Matosinhos. De natação a programação, encontra experiências que
-              vão inspirar e desenvolver.
+            <p className="text-lg sm:text-xl text-rose-700 max-w-2xl mx-auto leading-relaxed mb-12">
+              Atividades pensadas com carinho para criar memórias que durarão para sempre
             </p>
-            <div className="mt-10 flex items-center justify-center gap-4">
-              <Link href="/activities">
-                <Button
-                  size="lg"
-                  className="bg-white text-blue-600 hover:bg-gray-100"
-                >
-                  <Search className="mr-2 h-5 w-5" />
-                  Explorar Atividades
-                </Button>
-              </Link>
-              <Link href="/about">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-white text-white hover:bg-white/10"
-                >
-                  Saber Mais
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
+            <Link href="/activities">
+              <Button size="lg" className="bg-rose-600 hover:bg-rose-700 text-white px-10 py-4 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+                Descobrir Atividades
+              </Button>
+            </Link>
+            <Link href="#featured">
+              <Button variant="outline" size="lg" className="px-10 py-4 text-lg rounded-full border-2 border-amber-300 text-amber-800 hover:bg-amber-50 transition-all duration-300">
+                Festa de Aniversário
+              </Button>
+            </Link>
+          </div>
+          
+          {/* Gentle Trust Indicators */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+            <div className="bg-white/80 rounded-2xl p-6 shadow-sm">
+              <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Heart className="h-6 w-6 text-rose-600" />
+              </div>
+              <div className="text-rose-900 font-medium">Cuidado & Carinho</div>
+              <div className="text-rose-700 text-sm mt-1">Em cada detalhe</div>
+            </div>
+            <div className="bg-white/80 rounded-2xl p-6 shadow-sm">
+              <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Shield className="h-6 w-6 text-amber-600" />
+              </div>
+              <div className="text-rose-900 font-medium">Totalmente Seguro</div>
+              <div className="text-rose-700 text-sm mt-1">Tranquilidade para ti</div>
+            </div>
+            <div className="bg-white/80 rounded-2xl p-6 shadow-sm">
+              <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Star className="h-6 w-6 text-rose-600" />
+              </div>
+              <div className="text-rose-900 font-medium">Momentos Únicos</div>
+              <div className="text-rose-700 text-sm mt-1">Que ficam no coração</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="bg-white py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="space-y-2">
-              <div className="text-3xl font-bold text-blue-600">500+</div>
-              <div className="text-gray-600">Atividades Disponíveis</div>
+      {/* Stories from Mothers */}
+      <section className="py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-light text-rose-900 mb-4">
+              Histórias que aquecem o coração
+            </h2>
+            <p className="text-lg text-rose-700 max-w-xl mx-auto">
+              O que outras mães dizem sobre estes momentos especiais
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Story Card 1 */}
+            <div className="bg-rose-50 rounded-3xl p-6 border border-rose-100">
+              <div className="h-48 bg-gradient-to-br from-rose-200 to-amber-200 rounded-2xl mb-4 flex items-center justify-center">
+                <div className="text-rose-600 text-center">
+                  <div className="text-sm opacity-80 mb-2">Aula de Pintura</div>
+                  <div className="text-xs">Foto: Criança pintando</div>
+                </div>
+              </div>
+              <blockquote className="text-rose-800 italic mb-3">
+                &ldquo;Nunca vi a Maria tão concentrada. Chegou a casa e disse: &lsquo;Mãe, sou uma artista!&rsquo;&rdquo;
+              </blockquote>
+              <div className="text-sm text-rose-600">— Ana, mãe da Maria (5 anos)</div>
             </div>
-            <div className="space-y-2">
-              <div className="text-3xl font-bold text-purple-600">50+</div>
-              <div className="text-gray-600">Prestadores de Confiança</div>
+
+            {/* Story Card 2 */}
+            <div className="bg-amber-50 rounded-3xl p-6 border border-amber-100">
+              <div className="h-48 bg-gradient-to-br from-amber-200 to-rose-200 rounded-2xl mb-4 flex items-center justify-center">
+                <div className="text-amber-700 text-center">
+                  <div className="text-sm opacity-80 mb-2">Primeira Dança</div>
+                  <div className="text-xs">Foto: Criança dançando</div>
+                </div>
+              </div>
+              <blockquote className="text-amber-800 italic mb-3">
+                &ldquo;O Pedro era tímido. Agora dança pela casa toda. É pura alegria vê-lo assim.&rdquo;
+              </blockquote>
+              <div className="text-sm text-amber-600">— Sofia, mãe do Pedro (4 anos)</div>
             </div>
-            <div className="space-y-2">
-              <div className="text-3xl font-bold text-pink-600">1000+</div>
-              <div className="text-gray-600">Famílias Satisfeitas</div>
+
+            {/* Story Card 3 */}
+            <div className="bg-rose-50 rounded-3xl p-6 border border-rose-100 md:col-span-2 lg:col-span-1">
+              <div className="h-48 bg-gradient-to-br from-rose-200 to-amber-200 rounded-2xl mb-4 flex items-center justify-center">
+                <div className="text-rose-600 text-center">
+                  <div className="text-sm opacity-80 mb-2">Aniversário Especial</div>
+                  <div className="text-xs">Foto: Festa de aniversário</div>
+                </div>
+              </div>
+              <blockquote className="text-rose-800 italic mb-3">
+                &ldquo;A festa da Beatriz foi perfeita. Ela ainda fala dos amigos que fez naquele dia.&rdquo;
+              </blockquote>
+              <div className="text-sm text-rose-600">— Carla, mãe da Beatriz (6 anos)</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Featured Activities */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
-              Atividades em Destaque
+      <section id="featured" className="py-20 bg-gradient-to-b from-amber-50 to-rose-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-light text-rose-900 mb-4">
+              Aventuras que esperam pelo teu pequeno
             </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              As experiências mais populares escolhidas pelas famílias
+            <p className="text-lg text-rose-700 max-w-xl mx-auto">
+              Cada atividade é uma nova descoberta, um novo sorriso
             </p>
           </div>
-
-          <Suspense
-            fallback={
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <ActivityCardSkeleton key={i} />
+          
+          <Suspense fallback={
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-80 bg-white/60 rounded-3xl animate-pulse border border-rose-100" />
+              ))}
+            </div>
+          }>
+            {featuredActivities.length > 0 ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {featuredActivities.slice(0, 6).map((activity: Activity) => (
+                  <div key={activity.id} className="transform hover:scale-[1.02] transition-transform duration-300">
+                    <ActivityCard activity={activity} />
+                  </div>
                 ))}
               </div>
-            }
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredActivities.length > 0 ? (
-                featuredActivities.map((activity: Activity) => (
-                  <ActivityCard key={activity.id} activity={activity} />
-                ))
-              ) : (
-                <div className="col-span-full text-center py-12">
-                  <div className="text-gray-500 mb-4">
-                    Nenhuma atividade encontrada no momento.
-                  </div>
-                  <Link href="/activities">
-                    <Button>Ver Todas as Atividades</Button>
-                  </Link>
+            ) : (
+              <div className="text-center py-16">
+                <div className="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Heart className="h-10 w-10 text-rose-600" />
                 </div>
-              )}
-            </div>
+                <p className="text-rose-700 text-lg">A preparar experiências especiais...</p>
+              </div>
+            )}
           </Suspense>
-
-          {featuredActivities.length > 0 && (
-            <div className="text-center mt-12">
-              <Link href="/activities">
-                <Button size="lg" variant="outline">
-                  Ver Todas as Atividades
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Benefits Section */}
-      <section className="bg-white py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
-              Porquê Escolher KidsHiz?
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center space-y-4">
-              <div className="h-16 w-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
-                <Star className="h-8 w-8 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900">
-                Qualidade Garantida
-              </h3>
-              <p className="text-gray-600">
-                Todos os nossos prestadores são verificados e avaliados por
-                outras famílias.
-              </p>
-            </div>
-
-            <div className="text-center space-y-4">
-              <div className="h-16 w-16 mx-auto bg-purple-100 rounded-full flex items-center justify-center">
-                <Users className="h-8 w-8 text-purple-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900">
-                Para Todas as Idades
-              </h3>
-              <p className="text-gray-600">
-                Desde os 3 aos 16 anos, temos atividades adequadas para cada
-                fase do desenvolvimento.
-              </p>
-            </div>
-
-            <div className="text-center space-y-4">
-              <div className="h-16 w-16 mx-auto bg-pink-100 rounded-full flex items-center justify-center">
-                <MapPin className="h-8 w-8 text-pink-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900">
-                Perto de Ti
-              </h3>
-              <p className="text-gray-600">
-                Encontra atividades na tua área: Porto, Matosinhos e arredores.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white sm:text-4xl">
-            Pronto para Começar?
-          </h2>
-          <p className="mt-4 text-xl text-blue-100">
-            Regista-te hoje e descobre o mundo de possibilidades para o teu
-            filho.
-          </p>
-          <div className="mt-8">
-            <Link href="/auth/signup">
-              <Button
-                size="lg"
-                className="bg-white text-blue-600 hover:bg-gray-100"
-              >
-                Criar Conta Gratuita
+          
+          <div className="text-center mt-16">
+            <Link href="/activities">
+              <Button size="lg" className="bg-amber-600 hover:bg-amber-700 text-white px-12 py-4 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+                Ver Todas as Aventuras
               </Button>
             </Link>
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">K</span>
-                </div>
-                <span className="text-xl font-bold">KidsHiz</span>
-              </div>
-              <p className="text-gray-400">
-                A plataforma de descoberta e reserva de atividades para crianças
-                em Portugal.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4">Para Pais</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link
-                    href="/activities"
-                    className="hover:text-white transition-colors"
-                  >
-                    Explorar Atividades
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/auth/signup"
-                    className="hover:text-white transition-colors"
-                  >
-                    Criar Conta
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/help"
-                    className="hover:text-white transition-colors"
-                  >
-                    Centro de Ajuda
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4">Para Prestadores</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link
-                    href="/provider/signup"
-                    className="hover:text-white transition-colors"
-                  >
-                    Juntar-se ao KidsHiz
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/provider/resources"
-                    className="hover:text-white transition-colors"
-                  >
-                    Recursos
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/provider/support"
-                    className="hover:text-white transition-colors"
-                  >
-                    Suporte
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4">Empresa</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link
-                    href="/about"
-                    className="hover:text-white transition-colors"
-                  >
-                    Sobre Nós
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact"
-                    className="hover:text-white transition-colors"
-                  >
-                    Contacto
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/privacy"
-                    className="hover:text-white transition-colors"
-                  >
-                    Privacidade
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/terms"
-                    className="hover:text-white transition-colors"
-                  >
-                    Termos
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 KidsHiz. Todos os direitos reservados.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

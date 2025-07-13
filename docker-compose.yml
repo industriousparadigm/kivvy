@@ -1,0 +1,147 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: kidshiz
+      POSTGRES_USER: kidshiz
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - kidshiz_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kidshiz -d kidshiz"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Redis for caching and job queues
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - kidshiz_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    command: redis-server --appendonly yes
+
+  # Next.js Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Database
+      DATABASE_URL: "postgresql://kidshiz:password@postgres:5432/kidshiz"
+      
+      # NextAuth.js
+      NEXTAUTH_URL: "http://localhost:3000"
+      NEXTAUTH_SECRET: "super-secret-key-for-development-only"
+      
+      # Redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      
+      # Node environment
+      NODE_ENV: production
+      LOG_LEVEL: info
+      
+      # Feature flags
+      NEXT_TELEMETRY_DISABLED: 1
+    volumes:
+      - app_logs:/app/logs
+      - app_uploads:/app/public/uploads
+    networks:
+      - kidshiz_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Background Workers
+  workers:
+    build:
+      context: .
+      dockerfile: Dockerfile.workers
+    restart: unless-stopped
+    environment:
+      # Database
+      DATABASE_URL: "postgresql://kidshiz:password@postgres:5432/kidshiz"
+      
+      # Redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      
+      # Node environment
+      NODE_ENV: production
+      LOG_LEVEL: info
+    volumes:
+      - app_logs:/app/logs
+    networks:
+      - kidshiz_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # Nginx Reverse Proxy (optional, for production)
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - nginx_cache:/var/cache/nginx
+      - nginx_logs:/var/log/nginx
+    networks:
+      - kidshiz_network
+    depends_on:
+      - app
+    profiles:
+      - production
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  app_logs:
+    driver: local
+  app_uploads:
+    driver: local
+  nginx_cache:
+    driver: local
+  nginx_logs:
+    driver: local
+
+networks:
+  kidshiz_network:
+    driver: bridge

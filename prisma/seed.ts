@@ -484,15 +484,15 @@ async function main() {
       totalAmount: 45.00,
       currency: 'EUR',
       status: 'CONFIRMED',
-      paymentStatus: 'COMPLETED',
+      paymentStatus: 'SUCCEEDED',
       paymentId: 'pi_test_123',
       payment: {
         create: {
-          paymentIntentId: 'pi_test_123',
+          stripePaymentIntentId: 'pi_test_123',
           paymentMethodType: 'STRIPE_CARD',
           amount: 45.00,
           currency: 'EUR',
-          status: 'COMPLETED',
+          status: 'SUCCEEDED',
           providerFee: 4.50,
           netAmount: 40.50,
           metadata: {

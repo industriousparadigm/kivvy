@@ -89,11 +89,11 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
   const averageRating = activity.rating || 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 to-amber-50">
       <Header />
 
       {/* Hero Section with Image */}
-      <div className="relative h-96 bg-gray-900">
+      <div className="relative h-96 bg-rose-900">
         {activity.imageUrl ? (
           <Image
             src={activity.imageUrl}
@@ -102,16 +102,16 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
             className="object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+          <div className="w-full h-full bg-gradient-to-br from-rose-400 to-amber-400 flex items-center justify-center">
             <div className="text-center text-white">
               <div className="h-20 w-20 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center">
-                <span className="text-4xl">🎯</span>
+                <Heart className="h-10 w-10" />
               </div>
-              <div className="text-xl font-semibold">{activity.category}</div>
+              <div className="text-xl font-light">{activity.category}</div>
             </div>
           </div>
         )}
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-rose-900/10" />
 
         {/* Action Buttons */}
         <div className="absolute top-4 right-4 flex space-x-2">
@@ -143,10 +143,10 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                   <Badge variant="secondary" className="mb-2">
                     {activity.category}
                   </Badge>
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                  <h1 className="text-3xl font-bold text-rose-900 mb-2">
                     {activity.title}
                   </h1>
-                  <div className="flex items-center space-x-4 text-sm text-gray-600">
+                  <div className="flex items-center space-x-4 text-sm text-rose-700">
                     <div className="flex items-center space-x-1">
                       <MapPin className="h-4 w-4" />
                       <span>{activity.location}</span>
@@ -162,10 +162,10 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-blue-600">
+                  <div className="text-2xl font-bold text-amber-700">
                     {formatPrice(activity.price)}
                   </div>
-                  <div className="text-sm text-gray-500">por sessão</div>
+                  <div className="text-sm text-rose-600">por sessão</div>
                 </div>
               </div>
 
@@ -193,7 +193,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                 <CardTitle>Sobre Esta Atividade</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-rose-800 leading-relaxed">
                   {activity.description}
                 </p>
               </CardContent>
@@ -206,7 +206,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                   <CardTitle>O Que Esperar</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 leading-relaxed">
+                  <p className="text-rose-800 leading-relaxed">
                     {activity.whatToExpected}
                   </p>
                 </CardContent>
@@ -220,7 +220,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                   <CardTitle>Requisitos</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 leading-relaxed">
+                  <p className="text-rose-800 leading-relaxed">
                     {activity.requirements}
                   </p>
                 </CardContent>
@@ -234,14 +234,14 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
               </CardHeader>
               <CardContent>
                 <div className="flex items-start space-x-4">
-                  <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center">
-                    <span className="text-lg font-semibold text-gray-600">
+                  <div className="h-12 w-12 rounded-full bg-rose-100 flex items-center justify-center">
+                    <span className="text-lg font-semibold text-rose-700">
                       {activity.provider.name.charAt(0)}
                     </span>
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-1">
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="font-semibold text-rose-900">
                         {activity.provider.name}
                       </h3>
                       {activity.provider.verified && (
@@ -252,7 +252,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                       )}
                     </div>
                     {activity.provider.rating && (
-                      <div className="flex items-center space-x-1 text-sm text-gray-600 mb-2">
+                      <div className="flex items-center space-x-1 text-sm text-rose-700 mb-2">
                         <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                         <span>{activity.provider.rating.toFixed(1)}</span>
                         {activity.provider.totalActivities && (
@@ -263,7 +263,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                       </div>
                     )}
                     {activity.provider.description && (
-                      <p className="text-gray-700 text-sm">
+                      <p className="text-rose-800 text-sm">
                         {activity.provider.description}
                       </p>
                     )}
@@ -276,13 +276,13 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
             <Card className="mb-8">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <MapPin className="h-5 w-5 text-blue-600" />
+                  <MapPin className="h-5 w-5 text-amber-600" />
                   <span>Localização</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="flex items-center space-x-2 text-gray-600">
+                  <div className="flex items-center space-x-2 text-rose-700">
                     <MapPin className="h-4 w-4" />
                     <span>{activity.location}</span>
                   </div>
@@ -306,7 +306,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                   {activity.reviews.slice(0, 3).map(review => (
                     <div
                       key={review.id}
-                      className="border-b border-gray-100 last:border-0 pb-4 last:pb-0"
+                      className="border-b border-rose-100 last:border-0 pb-4 last:pb-0"
                     >
                       <div className="flex items-center space-x-2 mb-2">
                         <div className="flex items-center space-x-1">
@@ -324,11 +324,11 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                         <span className="font-medium text-sm">
                           {review.author.name}
                         </span>
-                        <span className="text-gray-500 text-sm">
+                        <span className="text-rose-600 text-sm">
                           {formatDate(review.createdAt)}
                         </span>
                       </div>
-                      <p className="text-gray-700 text-sm">{review.comment}</p>
+                      <p className="text-rose-800 text-sm">{review.comment}</p>
                     </div>
                   ))}
                   {activity.reviews.length > 3 && (

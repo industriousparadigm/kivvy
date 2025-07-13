@@ -154,7 +154,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 to-amber-50">
       <Header />
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -162,11 +162,11 @@ export default function DashboardPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Olá, {session?.user?.name || 'Utilizador'}!
+              <h1 className="text-3xl font-light text-rose-900">
+                Olá, {session?.user?.name || 'querida'}!
               </h1>
-              <p className="text-gray-600 mt-1">
-                Gere as tuas reservas e filhos aqui.
+              <p className="text-rose-700 mt-1">
+                As memórias mais preciosas começam aqui.
               </p>
             </div>
             <Link href="/activities">
@@ -183,12 +183,12 @@ export default function DashboardPage() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center space-x-2">
-                <Calendar className="h-5 w-5 text-blue-600" />
+                <Calendar className="h-5 w-5 text-rose-600" />
                 <div>
                   <div className="text-2xl font-bold">
                     {upcomingBookings.length}
                   </div>
-                  <div className="text-sm text-gray-600">Próximas Reservas</div>
+                  <div className="text-sm text-rose-700">Próximas Reservas</div>
                 </div>
               </div>
             </CardContent>
@@ -197,10 +197,10 @@ export default function DashboardPage() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center space-x-2">
-                <Users className="h-5 w-5 text-green-600" />
+                <Users className="h-5 w-5 text-amber-600" />
                 <div>
                   <div className="text-2xl font-bold">{children.length}</div>
-                  <div className="text-sm text-gray-600">Filhos Registados</div>
+                  <div className="text-sm text-rose-700">Filhos Registados</div>
                 </div>
               </div>
             </CardContent>
@@ -209,14 +209,14 @@ export default function DashboardPage() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center space-x-2">
-                <CreditCard className="h-5 w-5 text-purple-600" />
+                <CreditCard className="h-5 w-5 text-rose-600" />
                 <div>
                   <div className="text-2xl font-bold">
                     {formatPrice(
                       bookings.reduce((sum, b) => sum + b.totalAmount, 0)
                     )}
                   </div>
-                  <div className="text-sm text-gray-600">Total Gasto</div>
+                  <div className="text-sm text-rose-700">Total Gasto</div>
                 </div>
               </div>
             </CardContent>
@@ -225,10 +225,10 @@ export default function DashboardPage() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center space-x-2">
-                <Heart className="h-5 w-5 text-red-600" />
+                <Heart className="h-5 w-5 text-amber-600" />
                 <div>
                   <div className="text-2xl font-bold">0</div>
-                  <div className="text-sm text-gray-600">Favoritos</div>
+                  <div className="text-sm text-rose-700">Favoritos</div>
                 </div>
               </div>
             </CardContent>
@@ -236,14 +236,14 @@ export default function DashboardPage() {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="border-b border-gray-200 mb-6">
+        <div className="border-b border-rose-200 mb-6">
           <nav className="-mb-px flex space-x-8">
             <button
               onClick={() => setActiveTab('bookings')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'bookings'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-rose-500 text-rose-700'
+                  : 'border-transparent text-rose-500 hover:text-rose-700 hover:border-rose-300'
               }`}
             >
               Minhas Reservas
@@ -252,8 +252,8 @@ export default function DashboardPage() {
               onClick={() => setActiveTab('children')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'children'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-rose-500 text-rose-700'
+                  : 'border-transparent text-rose-500 hover:text-rose-700 hover:border-rose-300'
               }`}
             >
               Meus Filhos
@@ -262,8 +262,8 @@ export default function DashboardPage() {
               onClick={() => setActiveTab('favorites')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'favorites'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-rose-500 text-rose-700'
+                  : 'border-transparent text-rose-500 hover:text-rose-700 hover:border-rose-300'
               }`}
             >
               Favoritos
@@ -277,7 +277,7 @@ export default function DashboardPage() {
             {/* Filters */}
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-rose-400" />
                 <Input
                   placeholder="Procurar por atividade ou prestador..."
                   value={searchTerm}
@@ -286,11 +286,11 @@ export default function DashboardPage() {
                 />
               </div>
               <div className="flex items-center space-x-2">
-                <Filter className="h-4 w-4 text-gray-500" />
+                <Filter className="h-4 w-4 text-rose-500" />
                 <select
                   value={statusFilter}
                   onChange={e => setStatusFilter(e.target.value)}
-                  className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
+                  className="border border-rose-300 rounded-2xl px-3 py-2 text-sm bg-white/80 backdrop-blur-sm"
                 >
                   <option value="all">Todos os Estados</option>
                   <option value="CONFIRMED">Confirmado</option>
@@ -303,7 +303,7 @@ export default function DashboardPage() {
             {/* Upcoming Bookings */}
             {upcomingBookings.length > 0 && (
               <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                <h2 className="text-xl font-light text-rose-900 mb-4">
                   Próximas Reservas
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -317,17 +317,17 @@ export default function DashboardPage() {
                         <CardContent className="p-4">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex-1">
-                              <h3 className="font-semibold text-gray-900 mb-1">
+                              <h3 className="font-semibold text-rose-900 mb-1">
                                 {booking.session.activity.title}
                               </h3>
-                              <p className="text-sm text-gray-600 line-clamp-2">
+                              <p className="text-sm text-rose-700 line-clamp-2">
                                 {booking.session.activity.description}
                               </p>
                             </div>
                             {getStatusBadge(booking.status)}
                           </div>
 
-                          <div className="space-y-2 text-sm text-gray-600">
+                          <div className="space-y-2 text-sm text-rose-700">
                             <div className="flex items-center space-x-2">
                               <Calendar className="h-4 w-4" />
                               <span>{formatDate(sessionDate)}</span>
@@ -350,7 +350,7 @@ export default function DashboardPage() {
                           </div>
 
                           <div className="mt-4 flex items-center justify-between">
-                            <div className="text-lg font-bold text-blue-600">
+                            <div className="text-lg font-bold text-amber-700">
                               {formatPrice(booking.totalAmount)}
                             </div>
                             <Link
@@ -372,7 +372,7 @@ export default function DashboardPage() {
             {/* Past Bookings */}
             {pastBookings.length > 0 && (
               <div>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                <h2 className="text-xl font-light text-rose-900 mb-4">
                   Reservas Anteriores
                 </h2>
                 <div className="space-y-3">
@@ -385,10 +385,10 @@ export default function DashboardPage() {
                             <div className="flex-1">
                               <div className="flex items-center space-x-3">
                                 <div>
-                                  <h3 className="font-medium text-gray-900">
+                                  <h3 className="font-medium text-rose-900">
                                     {booking.session.activity.title}
                                   </h3>
-                                  <div className="flex items-center space-x-4 text-sm text-gray-600">
+                                  <div className="flex items-center space-x-4 text-sm text-rose-700">
                                     <span>
                                       {formatDate(sessionDate)} às{' '}
                                       {formatTime(sessionDate)}
@@ -424,8 +424,8 @@ export default function DashboardPage() {
             {filteredBookings.length === 0 && (
               <Card>
                 <CardContent className="text-center py-12">
-                  <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  <Calendar className="h-12 w-12 text-rose-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-rose-900 mb-2">
                     Nenhuma reserva encontrada
                   </h3>
                   <p className="text-gray-600 mb-6">
@@ -446,7 +446,7 @@ export default function DashboardPage() {
         {activeTab === 'children' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-light text-rose-900">
                 Meus Filhos
               </h2>
               <Button className="flex items-center space-x-2">
@@ -470,25 +470,25 @@ export default function DashboardPage() {
                     >
                       <CardContent className="p-6">
                         <div className="flex items-center space-x-3 mb-4">
-                          <div className="h-12 w-12 bg-gradient-to-br from-blue-400 to-purple-600 rounded-full flex items-center justify-center">
+                          <div className="h-12 w-12 bg-gradient-to-br from-rose-400 to-amber-400 rounded-full flex items-center justify-center">
                             <User className="h-6 w-6 text-white" />
                           </div>
                           <div>
-                            <h3 className="font-semibold text-gray-900">
+                            <h3 className="font-semibold text-rose-900">
                               {child.name}
                             </h3>
-                            <p className="text-sm text-gray-600">{age} anos</p>
+                            <p className="text-sm text-rose-700">{age} anos</p>
                           </div>
                         </div>
 
                         {child.notes && (
-                          <p className="text-sm text-gray-600 mb-4">
+                          <p className="text-sm text-rose-700 mb-4">
                             {child.notes}
                           </p>
                         )}
 
                         <div className="flex items-center justify-between">
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-rose-600">
                             Nascido em {formatDate(child.birthDate)}
                           </span>
                           <Button size="sm" variant="outline">
@@ -503,11 +503,11 @@ export default function DashboardPage() {
             ) : (
               <Card>
                 <CardContent className="text-center py-12">
-                  <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  <Users className="h-12 w-12 text-rose-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-rose-900 mb-2">
                     Nenhum filho registado
                   </h3>
-                  <p className="text-gray-600 mb-6">
+                  <p className="text-rose-700 mb-6">
                     Adiciona informações sobre os teus filhos para personalizar
                     as recomendações.
                   </p>
@@ -524,17 +524,17 @@ export default function DashboardPage() {
         {/* Favorites Tab */}
         {activeTab === 'favorites' && (
           <div className="space-y-6">
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-light text-rose-900">
               Atividades Favoritas
             </h2>
 
             <Card>
               <CardContent className="text-center py-12">
-                <Heart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <Heart className="h-12 w-12 text-rose-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-rose-900 mb-2">
                   Nenhuma atividade favorita
                 </h3>
-                <p className="text-gray-600 mb-6">
+                <p className="text-rose-700 mb-6">
                   Marca as tuas atividades favoritas para acesso rápido.
                 </p>
                 <Link href="/activities">

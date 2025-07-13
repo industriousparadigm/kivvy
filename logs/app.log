@@ -164,3 +164,5 @@
 {"timestamp":"2025-07-13 21:15:25","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":4,"total":4,"page":1,"type":"api-response"}
 {"timestamp":"2025-07-13 21:26:01","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
 {"timestamp":"2025-07-13 21:26:01","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":4,"total":4,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 21:39:25","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 21:39:25","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}

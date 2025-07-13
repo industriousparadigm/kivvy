@@ -141,13 +141,13 @@ export default function ActivitiesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-rose-50 to-amber-50">
+    <div className="min-h-screen bg-gradient-to-b from-rose-50 to-amber-50 page-enter">
       <Header />
 
       {/* Warm Page Header */}
       <div className="bg-white/90 border-b border-rose-100">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="text-center">
+          <div className="text-center stagger-children">
             <h1 className="text-3xl sm:text-4xl font-light text-rose-900 mb-4">
               Aventuras especiais
               <br />
@@ -190,7 +190,7 @@ export default function ActivitiesPage() {
             {loading && !error && (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="h-80 bg-white/60 rounded-3xl animate-pulse border border-rose-100" />
+                  <div key={i} className="h-80 bg-white/60 rounded-3xl shimmer border border-rose-100" />
                 ))}
               </div>
             )}
@@ -212,9 +212,9 @@ export default function ActivitiesPage() {
             {/* Activities Grid */}
             {!loading && !error && activities.length > 0 && (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 stagger-children">
                   {activities.map(activity => (
-                    <div key={activity.id} className="transform hover:scale-[1.02] transition-transform duration-300">
+                    <div key={activity.id} className="card-enter gentle-hover">
                       <ActivityCard activity={activity} />
                     </div>
                   ))}
@@ -227,7 +227,7 @@ export default function ActivitiesPage() {
                       onClick={handleLoadMore}
                       disabled={loadingMore}
                       size="lg"
-                      className="bg-amber-600 hover:bg-amber-700 text-white rounded-full px-8 py-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                      className="nurturing-button warm-gradient-hover text-white rounded-full px-8 py-4 shadow-lg"
                     >
                       {loadingMore ? (
                         <>

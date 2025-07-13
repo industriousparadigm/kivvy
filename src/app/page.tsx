@@ -52,7 +52,7 @@ export default async function HomePage() {
   const { activities: featuredActivities } = await getFeaturedActivities();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-rose-50 to-amber-50">
+    <div className="min-h-screen bg-gradient-to-b from-rose-50 to-amber-50 page-enter">
       <Header />
       
       {/* Nurturing Hero Section */}
@@ -67,7 +67,7 @@ export default async function HomePage() {
             </div>
           </div>
           
-          <div className="text-center">
+          <div className="text-center stagger-children">
             <h1 className="text-4xl sm:text-6xl font-light mb-6 text-rose-900 leading-tight">
               Onde pequenos sonhos
               <br />
@@ -78,9 +78,9 @@ export default async function HomePage() {
             </p>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16 stagger-children">
             <Link href="/activities">
-              <Button size="lg" className="bg-rose-600 hover:bg-rose-700 text-white px-10 py-4 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+              <Button size="lg" className="nurturing-button warm-gradient-hover text-white px-10 py-4 text-lg rounded-full shadow-lg">
                 Descobrir Atividades
               </Button>
             </Link>
@@ -92,23 +92,23 @@ export default async function HomePage() {
           </div>
           
           {/* Gentle Trust Indicators */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-            <div className="bg-white/80 rounded-2xl p-6 shadow-sm">
-              <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center stagger-children">
+            <div className="bg-white/80 rounded-2xl p-6 shadow-sm gentle-hover card-enter">
+              <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-3 floating-heart">
                 <Heart className="h-6 w-6 text-rose-600" />
               </div>
               <div className="text-rose-900 font-medium">Cuidado & Carinho</div>
               <div className="text-rose-700 text-sm mt-1">Em cada detalhe</div>
             </div>
-            <div className="bg-white/80 rounded-2xl p-6 shadow-sm">
-              <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <div className="bg-white/80 rounded-2xl p-6 shadow-sm gentle-hover card-enter">
+              <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3 floating-heart">
                 <Shield className="h-6 w-6 text-amber-600" />
               </div>
               <div className="text-rose-900 font-medium">Totalmente Seguro</div>
               <div className="text-rose-700 text-sm mt-1">Tranquilidade para ti</div>
             </div>
-            <div className="bg-white/80 rounded-2xl p-6 shadow-sm">
-              <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <div className="bg-white/80 rounded-2xl p-6 shadow-sm gentle-hover card-enter">
+              <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-3 floating-heart">
                 <Star className="h-6 w-6 text-rose-600" />
               </div>
               <div className="text-rose-900 font-medium">Momentos Únicos</div>
@@ -130,9 +130,9 @@ export default async function HomePage() {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
             {/* Story Card 1 */}
-            <div className="bg-rose-50 rounded-3xl p-6 border border-rose-100">
+            <div className="bg-rose-50 rounded-3xl p-6 border border-rose-100 gentle-hover card-enter">
               <div className="h-48 bg-gradient-to-br from-rose-200 to-amber-200 rounded-2xl mb-4 flex items-center justify-center">
                 <div className="text-rose-600 text-center">
                   <div className="text-sm opacity-80 mb-2">Aula de Pintura</div>
@@ -146,7 +146,7 @@ export default async function HomePage() {
             </div>
 
             {/* Story Card 2 */}
-            <div className="bg-amber-50 rounded-3xl p-6 border border-amber-100">
+            <div className="bg-amber-50 rounded-3xl p-6 border border-amber-100 gentle-hover card-enter">
               <div className="h-48 bg-gradient-to-br from-amber-200 to-rose-200 rounded-2xl mb-4 flex items-center justify-center">
                 <div className="text-amber-700 text-center">
                   <div className="text-sm opacity-80 mb-2">Primeira Dança</div>
@@ -160,7 +160,7 @@ export default async function HomePage() {
             </div>
 
             {/* Story Card 3 */}
-            <div className="bg-rose-50 rounded-3xl p-6 border border-rose-100 md:col-span-2 lg:col-span-1">
+            <div className="bg-rose-50 rounded-3xl p-6 border border-rose-100 md:col-span-2 lg:col-span-1 gentle-hover card-enter">
               <div className="h-48 bg-gradient-to-br from-rose-200 to-amber-200 rounded-2xl mb-4 flex items-center justify-center">
                 <div className="text-rose-600 text-center">
                   <div className="text-sm opacity-80 mb-2">Aniversário Especial</div>

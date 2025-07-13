@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -12,21 +12,21 @@ export default function SignUpPage() {
     password: '',
     confirmPassword: '',
     role: 'PARENT' as 'PARENT' | 'PROVIDER',
-  })
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-  
-  const router = useRouter()
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError('')
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match')
-      setIsLoading(false)
-      return
+      setError('Passwords do not match');
+      setIsLoading(false);
+      return;
     }
 
     try {
@@ -41,7 +41,7 @@ export default function SignUpPage() {
           password: formData.password,
           role: formData.role,
         }),
-      })
+      });
 
       if (response.ok) {
         // Auto sign in after successful registration
@@ -49,38 +49,38 @@ export default function SignUpPage() {
           email: formData.email,
           password: formData.password,
           redirect: false,
-        })
+        });
 
         if (result?.ok) {
           if (formData.role === 'PROVIDER') {
-            router.push('/provider/onboarding')
+            router.push('/provider/onboarding');
           } else {
-            router.push('/dashboard')
+            router.push('/dashboard');
           }
         }
       } else {
-        const data = await response.json()
-        setError(data.error || 'Registration failed')
+        const data = await response.json();
+        setError(data.error || 'Registration failed');
       }
     } catch {
-      setError('An error occurred. Please try again.')
+      setError('An error occurred. Please try again.');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleGoogleSignIn = () => {
-    signIn('google', { callbackUrl: '/dashboard' })
-  }
+    signIn('google', { callbackUrl: '/dashboard' });
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 to-amber-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Criar nova conta
+          <h2 className="mt-6 text-center text-3xl font-light text-rose-900">
+            Junte-se à nossa família
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-rose-700">
             Ou{' '}
             <Link
               href="/auth/signin"
@@ -93,7 +93,10 @@ export default function SignUpPage() {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Nome completo
               </label>
               <input
@@ -102,14 +105,19 @@ export default function SignUpPage() {
                 type="text"
                 required
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={e =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 placeholder="Nome completo"
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email
               </label>
               <input
@@ -119,21 +127,31 @@ export default function SignUpPage() {
                 autoComplete="email"
                 required
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={e =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 placeholder="Email"
               />
             </div>
 
             <div>
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="role"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Tipo de conta
               </label>
               <select
                 id="role"
                 name="role"
                 value={formData.role}
-                onChange={(e) => setFormData({ ...formData, role: e.target.value as 'PARENT' | 'PROVIDER' })}
+                onChange={e =>
+                  setFormData({
+                    ...formData,
+                    role: e.target.value as 'PARENT' | 'PROVIDER',
+                  })
+                }
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               >
                 <option value="PARENT">Pai/Mãe</option>
@@ -142,7 +160,10 @@ export default function SignUpPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <input
@@ -152,14 +173,19 @@ export default function SignUpPage() {
                 autoComplete="new-password"
                 required
                 value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                onChange={e =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 placeholder="Password"
               />
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Confirmar Password
               </label>
               <input
@@ -168,7 +194,9 @@ export default function SignUpPage() {
                 type="password"
                 required
                 value={formData.confirmPassword}
-                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                onChange={e =>
+                  setFormData({ ...formData, confirmPassword: e.target.value })
+                }
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 placeholder="Confirmar password"
               />
@@ -230,5 +258,5 @@ export default function SignUpPage() {
         </form>
       </div>
     </div>
-  )
+  );
 }

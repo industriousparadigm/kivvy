@@ -11,9 +11,13 @@ import { formatPrice, formatDate, formatTime } from '@/lib/utils';
 
 interface Session {
   id: string;
-  dateTime: string;
+  startTime: string;
+  endTime?: string;
+  capacity: number;
   availableSpots: number;
-  maxParticipants: number;
+  price?: number;
+  status: string;
+  notes?: string;
 }
 
 interface Activity {
@@ -84,11 +88,11 @@ export function BookingFlow({ activity, sessions }: BookingFlowProps) {
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Price Summary */}
-        <div className="text-center p-4 bg-blue-50 rounded-lg">
-          <div className="text-2xl font-bold text-blue-600">
+        <div className="text-center p-4 bg-rose-50 rounded-lg">
+          <div className="text-2xl font-bold text-rose-600">
             {formatPrice(activity.price)}
           </div>
-          <div className="text-sm text-gray-600">por participante</div>
+          <div className="text-sm text-rose-700">por participante</div>
         </div>
 
         {/* Session Selection */}
@@ -102,7 +106,7 @@ export function BookingFlow({ activity, sessions }: BookingFlowProps) {
               </div>
             ) : (
               sessions.map(sessionItem => {
-                const sessionDate = new Date(sessionItem.dateTime);
+                const sessionDate = new Date(sessionItem.startTime);
                 const isSelected = selectedSession?.id === sessionItem.id;
                 const isAvailable = sessionItem.availableSpots > 0;
 
@@ -115,9 +119,9 @@ export function BookingFlow({ activity, sessions }: BookingFlowProps) {
                     disabled={!isAvailable}
                     className={`w-full p-3 rounded-lg border text-left transition-colors ${
                       isSelected
-                        ? 'border-blue-500 bg-blue-50'
+                        ? 'border-rose-500 bg-rose-50'
                         : isAvailable
-                          ? 'border-gray-200 hover:border-gray-300'
+                          ? 'border-gray-200 hover:border-rose-300'
                           : 'border-gray-200 bg-gray-50 cursor-not-allowed'
                     }`}
                   >
@@ -193,7 +197,7 @@ export function BookingFlow({ activity, sessions }: BookingFlowProps) {
             </div>
             <div className="flex items-center justify-between font-semibold text-lg">
               <span>Total</span>
-              <span className="text-blue-600">{formatPrice(totalPrice)}</span>
+              <span className="text-rose-600">{formatPrice(totalPrice)}</span>
             </div>
           </div>
         )}
@@ -202,14 +206,14 @@ export function BookingFlow({ activity, sessions }: BookingFlowProps) {
         <div className="space-y-3">
           {!session ? (
             <Button
-              className="w-full"
+              className="w-full bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white"
               onClick={() => router.push('/auth/signin')}
             >
               Entrar para Reservar
             </Button>
           ) : (
             <Button
-              className="w-full"
+              className="w-full bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white"
               onClick={handleBooking}
               disabled={!canBook || loading}
             >

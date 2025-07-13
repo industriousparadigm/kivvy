@@ -147,100 +147,106 @@ export function ActivityCard({ activity }: ActivityCardProps) {
     categoryConfig.DEFAULT;
 
   return (
-    <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border-0 bg-white rounded-3xl hover:-translate-y-2 shadow-lg">
-      <div className="relative h-56 overflow-hidden">
-        {activity.imageUrl ? (
-          <Image
-            src={activity.imageUrl}
-            alt={activity.title}
-            fill
-            className="object-cover group-hover:scale-110 transition-transform duration-700 rounded-t-3xl"
-          />
-        ) : (
-          <div
-            className={`w-full h-full bg-gradient-to-br ${config.gradient} flex items-center justify-center relative rounded-t-3xl`}
-          >
-            <div className="text-center z-10">
-              <Heart className="h-12 w-12 text-white/80 mx-auto mb-2" />
-              <div className="text-white/90 font-light text-lg">
-                {config.name}
+    <Link href={`/activities/${activity.id}`} className="block">
+      <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-500 border-0 bg-white rounded-3xl hover:-translate-y-2 shadow-lg cursor-pointer">
+        <div className="relative h-56 overflow-hidden">
+          {activity.imageUrl ? (
+            <Image
+              src={activity.imageUrl}
+              alt={activity.title}
+              fill
+              className="object-cover group-hover:scale-110 transition-transform duration-700 rounded-t-3xl"
+            />
+          ) : (
+            <div
+              className={`w-full h-full bg-gradient-to-br ${config.gradient} flex items-center justify-center relative rounded-t-3xl`}
+            >
+              <div className="text-center z-10">
+                <Heart className="h-12 w-12 text-white/80 mx-auto mb-2" />
+                <div className="text-white/90 font-light text-lg">
+                  {config.name}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Rating in top left */}
-        {activity.averageRating && (
-          <div className="absolute top-4 left-4">
-            <div className="bg-white/95 backdrop-blur-sm rounded-2xl px-3 py-2 shadow-lg flex items-center space-x-1">
-              <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-              <span className="text-sm font-medium text-amber-700">
-                {activity.averageRating.toFixed(1)}
-              </span>
-            </div>
-          </div>
-        )}
-
-        {/* Simple heart button */}
-        <div className="absolute top-4 right-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-10 w-10 p-0 bg-white/90 hover:bg-white shadow-lg rounded-full transition-all duration-300 backdrop-blur-sm"
-          >
-            <Heart className="h-5 w-5 text-rose-400 hover:text-rose-600 hover:fill-rose-600 transition-all" />
-          </Button>
-        </div>
-
-        {/* Price badge */}
-        <div className="absolute bottom-4 right-4">
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl px-3 py-2 shadow-lg">
-            <div className="text-lg font-semibold text-amber-800">
-              {formatPrice(activity.price)}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <CardContent className="p-6">
-        <div className="space-y-4">
-          <div className="text-center">
-            <h3 className="font-light text-xl text-rose-900 leading-tight mb-3">
-              {activity.title}
-            </h3>
-
-            <div className="flex items-center justify-center space-x-4 text-sm text-rose-700">
-              <div className="flex items-center space-x-1">
-                <MapPin className="h-4 w-4 text-amber-600" />
-                <span>{activity.provider.city}</span>
-              </div>
-              <div className="w-1 h-1 bg-rose-300 rounded-full"></div>
-              <div className="flex items-center space-x-1">
-                <Users className="h-4 w-4 text-amber-600" />
-                <span>
-                  {activity.ageMin}-{activity.ageMax} anos
+          {/* Rating in top left */}
+          {activity.averageRating && (
+            <div className="absolute top-4 left-4">
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl px-3 py-2 shadow-lg flex items-center space-x-1">
+                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                <span className="text-sm font-medium text-amber-700">
+                  {activity.averageRating.toFixed(1)}
                 </span>
               </div>
             </div>
+          )}
+
+          {/* Simple heart button */}
+          <div className="absolute top-4 right-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-10 w-10 p-0 bg-white/90 hover:bg-white shadow-lg rounded-full transition-all duration-300 backdrop-blur-sm"
+            >
+              <Heart className="h-5 w-5 text-rose-400 hover:text-rose-600 hover:fill-rose-600 transition-all" />
+            </Button>
           </div>
 
-          {activity.reviewCount && activity.reviewCount > 0 && (
-            <div className="text-center">
-              <span className="text-xs text-rose-600">
-                ({activity.reviewCount} avaliações)
-              </span>
+          {/* Price badge */}
+          <div className="absolute bottom-4 right-4">
+            <div className="bg-white/95 backdrop-blur-sm rounded-2xl px-3 py-2 shadow-lg">
+              <div className="text-lg font-semibold text-amber-800">
+                {formatPrice(activity.price)}
+              </div>
             </div>
-          )}
+          </div>
         </div>
-      </CardContent>
 
-      <CardFooter className="p-6 pt-0">
-        <Link href={`/activities/${activity.id}`} className="w-full">
-          <Button className="w-full bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white rounded-2xl py-4 text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-            Reservar Experiência
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            <div className="text-center">
+              <h3 className="font-light text-xl text-rose-900 leading-tight mb-3">
+                {activity.title}
+              </h3>
+
+              <div className="flex items-center justify-center space-x-4 text-sm text-rose-700">
+                <div className="flex items-center space-x-1">
+                  <MapPin className="h-4 w-4 text-amber-600" />
+                  <span>{activity.provider.city}</span>
+                </div>
+                <div className="w-1 h-1 bg-rose-300 rounded-full"></div>
+                <div className="flex items-center space-x-1">
+                  <Users className="h-4 w-4 text-amber-600" />
+                  <span>
+                    {activity.ageMin}-{activity.ageMax} anos
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {activity.reviewCount && activity.reviewCount > 0 && (
+              <div className="text-center">
+                <span className="text-xs text-rose-600">
+                  ({activity.reviewCount} avaliações)
+                </span>
+              </div>
+            )}
+          </div>
+        </CardContent>
+
+        <CardFooter className="p-6 pt-0">
+          <Button
+            className="w-full bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white rounded-2xl py-4 text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            onClick={e => {
+              e.preventDefault();
+              // This will be handled by the parent Link
+            }}
+          >
+            Ver Detalhes
           </Button>
-        </Link>
-      </CardFooter>
-    </Card>
+        </CardFooter>
+      </Card>
+    </Link>
   );
 }

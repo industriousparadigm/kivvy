@@ -9,7 +9,7 @@ export function formatPrice(amount: number): string {
   return new Intl.NumberFormat('pt-PT', {
     style: 'currency',
     currency: 'EUR',
-  }).format(amount / 100);
+  }).format(amount);
 }
 
 export function formatDate(date: Date | string): string {

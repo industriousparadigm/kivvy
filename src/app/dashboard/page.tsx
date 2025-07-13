@@ -28,31 +28,45 @@ interface Booking {
   id: string;
   status: string;
   totalAmount: number;
-  participants: number;
+  quantity: number;
   createdAt: string;
   session: {
     id: string;
-    dateTime: string;
+    startTime: string;
+    endTime?: string;
     activity: {
       id: string;
       title: string;
-      description: string;
-      location: string;
-      price: number;
-      category: string;
       imageUrl?: string;
+      duration: number;
+      category: string;
       provider: {
-        name: string;
+        id: string;
+        businessName: string;
+        address: string;
+        city: string;
       };
     };
+  };
+  child: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
   };
 }
 
 interface Child {
   id: string;
-  name: string;
-  birthDate: string;
-  notes?: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  allergies?: string;
+  medicalNotes?: string;
+  emergencyContact?: string;
+  _count?: {
+    bookings: number;
+  };
 }
 
 export default function DashboardPage() {
@@ -87,12 +101,12 @@ export default function DashboardPage() {
 
       if (bookingsRes.ok) {
         const bookingsData = await bookingsRes.json();
-        setBookings(bookingsData);
+        setBookings(bookingsData.bookings || []);
       }
 
       if (childrenRes.ok) {
         const childrenData = await childrenRes.json();
-        setChildren(childrenData);
+        setChildren(childrenData || []);
       }
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -108,18 +122,18 @@ export default function DashboardPage() {
       booking.session.activity.title
         .toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
-      booking.session.activity.provider.name
+      booking.session.activity.provider.businessName
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
     return matchesStatus && matchesSearch;
   });
 
   const upcomingBookings = filteredBookings.filter(
-    booking => new Date(booking.session.dateTime) > new Date()
+    booking => new Date(booking.session.startTime) > new Date()
   );
 
   const pastBookings = filteredBookings.filter(
-    booking => new Date(booking.session.dateTime) <= new Date()
+    booking => new Date(booking.session.startTime) <= new Date()
   );
 
   const getStatusBadge = (status: string) => {
@@ -308,7 +322,7 @@ export default function DashboardPage() {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {upcomingBookings.map(booking => {
-                    const sessionDate = new Date(booking.session.dateTime);
+                    const sessionDate = new Date(booking.session.startTime);
                     return (
                       <Card
                         key={booking.id}
@@ -321,7 +335,8 @@ export default function DashboardPage() {
                                 {booking.session.activity.title}
                               </h3>
                               <p className="text-sm text-rose-700 line-clamp-2">
-                                {booking.session.activity.description}
+                                Para {booking.child.firstName}{' '}
+                                {booking.child.lastName}
                               </p>
                             </div>
                             {getStatusBadge(booking.status)}
@@ -338,13 +353,16 @@ export default function DashboardPage() {
                             </div>
                             <div className="flex items-center space-x-2">
                               <MapPin className="h-4 w-4" />
-                              <span>{booking.session.activity.location}</span>
+                              <span>
+                                {booking.session.activity.provider.address},{' '}
+                                {booking.session.activity.provider.city}
+                              </span>
                             </div>
                             <div className="flex items-center space-x-2">
                               <Users className="h-4 w-4" />
                               <span>
-                                {booking.participants} participante
-                                {booking.participants > 1 ? 's' : ''}
+                                {booking.quantity} participante
+                                {booking.quantity > 1 ? 's' : ''}
                               </span>
                             </div>
                           </div>
@@ -377,7 +395,7 @@ export default function DashboardPage() {
                 </h2>
                 <div className="space-y-3">
                   {pastBookings.map(booking => {
-                    const sessionDate = new Date(booking.session.dateTime);
+                    const sessionDate = new Date(booking.session.startTime);
                     return (
                       <Card key={booking.id} className="opacity-75">
                         <CardContent className="p-4">
@@ -394,11 +412,15 @@ export default function DashboardPage() {
                                       {formatTime(sessionDate)}
                                     </span>
                                     <span>
-                                      {booking.session.activity.location}
+                                      {
+                                        booking.session.activity.provider
+                                          .address
+                                      }
+                                      , {booking.session.activity.provider.city}
                                     </span>
                                     <span>
-                                      {booking.participants} participante
-                                      {booking.participants > 1 ? 's' : ''}
+                                      {booking.quantity} participante
+                                      {booking.quantity > 1 ? 's' : ''}
                                     </span>
                                   </div>
                                 </div>
@@ -446,9 +468,7 @@ export default function DashboardPage() {
         {activeTab === 'children' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-light text-rose-900">
-                Meus Filhos
-              </h2>
+              <h2 className="text-xl font-light text-rose-900">Meus Filhos</h2>
               <Button className="flex items-center space-x-2">
                 <Plus className="h-4 w-4" />
                 <span>Adicionar Filho</span>
@@ -460,7 +480,7 @@ export default function DashboardPage() {
                 {children.map(child => {
                   const age = Math.floor(
                     (new Date().getTime() -
-                      new Date(child.birthDate).getTime()) /
+                      new Date(child.dateOfBirth).getTime()) /
                       (1000 * 60 * 60 * 24 * 365.25)
                   );
                   return (
@@ -475,21 +495,21 @@ export default function DashboardPage() {
                           </div>
                           <div>
                             <h3 className="font-semibold text-rose-900">
-                              {child.name}
+                              {child.firstName} {child.lastName}
                             </h3>
                             <p className="text-sm text-rose-700">{age} anos</p>
                           </div>
                         </div>
 
-                        {child.notes && (
+                        {child.medicalNotes && (
                           <p className="text-sm text-rose-700 mb-4">
-                            {child.notes}
+                            {child.medicalNotes}
                           </p>
                         )}
 
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-rose-600">
-                            Nascido em {formatDate(child.birthDate)}
+                            Nascido em {formatDate(child.dateOfBirth)}
                           </span>
                           <Button size="sm" variant="outline">
                             <Settings className="h-4 w-4" />

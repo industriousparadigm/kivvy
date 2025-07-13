@@ -40,27 +40,43 @@ interface Activity {
   whatToExpect?: string;
   provider: {
     id: string;
-    name: string;
+    businessName: string;
     description?: string;
-    verified: boolean;
-    rating?: number;
-    totalActivities?: number;
+    isVerified: boolean;
+    businessType?: string;
+    address: string;
+    city: string;
+    postalCode: string;
+    country: string;
+    latitude?: number;
+    longitude?: number;
+    phone?: string;
+    email?: string;
+    website?: string;
   };
-  sessions: {
+  upcomingSessions: {
     id: string;
-    dateTime: string;
+    startTime: string;
+    endTime?: string;
+    capacity: number;
     availableSpots: number;
-    maxParticipants: number;
+    price?: number;
+    status: string;
+    notes?: string;
   }[];
-  reviews?: {
+  recentReviews?: {
     id: string;
     rating: number;
     comment: string;
-    author: {
+    user: {
+      id: string;
       name: string;
+      image?: string;
     };
     createdAt: string;
   }[];
+  reviewCount?: number;
+  averageRating?: number;
 }
 
 async function getActivity(id: string): Promise<Activity | null> {
@@ -86,7 +102,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
     notFound();
   }
 
-  const averageRating = activity.rating || 0;
+  const averageRating = activity.averageRating || 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 to-amber-50">
@@ -178,9 +194,9 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                       {averageRating.toFixed(1)}
                     </span>
                   </div>
-                  {activity.totalReviews && (
+                  {activity.reviewCount && (
                     <span className="text-gray-600">
-                      ({activity.totalReviews} avaliações)
+                      ({activity.reviewCount} avaliações)
                     </span>
                   )}
                 </div>
@@ -200,14 +216,14 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
             </Card>
 
             {/* What to Expect */}
-            {activity.whatToExpected && (
+            {activity.whatToExpect && (
               <Card>
                 <CardHeader>
                   <CardTitle>O Que Esperar</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-rose-800 leading-relaxed">
-                    {activity.whatToExpected}
+                    {activity.whatToExpect}
                   </p>
                 </CardContent>
               </Card>
@@ -236,32 +252,26 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                 <div className="flex items-start space-x-4">
                   <div className="h-12 w-12 rounded-full bg-rose-100 flex items-center justify-center">
                     <span className="text-lg font-semibold text-rose-700">
-                      {activity.provider.name.charAt(0)}
+                      {activity.provider.businessName.charAt(0)}
                     </span>
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-1">
                       <h3 className="font-semibold text-rose-900">
-                        {activity.provider.name}
+                        {activity.provider.businessName}
                       </h3>
-                      {activity.provider.verified && (
+                      {activity.provider.isVerified && (
                         <Badge variant="success" size="sm">
                           <Shield className="h-3 w-3 mr-1" />
                           Verificado
                         </Badge>
                       )}
                     </div>
-                    {activity.provider.rating && (
-                      <div className="flex items-center space-x-1 text-sm text-rose-700 mb-2">
-                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                        <span>{activity.provider.rating.toFixed(1)}</span>
-                        {activity.provider.totalActivities && (
-                          <span>
-                            • {activity.provider.totalActivities} atividades
-                          </span>
-                        )}
-                      </div>
-                    )}
+                    <div className="text-sm text-rose-700 mb-2">
+                      <span>
+                        {activity.provider.address}, {activity.provider.city}
+                      </span>
+                    </div>
                     {activity.provider.description && (
                       <p className="text-rose-800 text-sm">
                         {activity.provider.description}
@@ -284,10 +294,12 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                 <div className="space-y-4">
                   <div className="flex items-center space-x-2 text-rose-700">
                     <MapPin className="h-4 w-4" />
-                    <span>{activity.location}</span>
+                    <span>
+                      {activity.provider.address}, {activity.provider.city}
+                    </span>
                   </div>
                   <StaticMap
-                    address={activity.location}
+                    address={`${activity.provider.address}, ${activity.provider.city}`}
                     title={activity.title}
                     height="300px"
                     className="rounded-lg"
@@ -297,13 +309,13 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
             </Card>
 
             {/* Reviews */}
-            {activity.reviews && activity.reviews.length > 0 && (
+            {activity.recentReviews && activity.recentReviews.length > 0 && (
               <Card>
                 <CardHeader>
                   <CardTitle>Avaliações</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {activity.reviews.slice(0, 3).map(review => (
+                  {activity.recentReviews.slice(0, 3).map(review => (
                     <div
                       key={review.id}
                       className="border-b border-rose-100 last:border-0 pb-4 last:pb-0"
@@ -322,7 +334,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                           ))}
                         </div>
                         <span className="font-medium text-sm">
-                          {review.author.name}
+                          {review.user.name}
                         </span>
                         <span className="text-rose-600 text-sm">
                           {formatDate(review.createdAt)}
@@ -331,9 +343,9 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                       <p className="text-rose-800 text-sm">{review.comment}</p>
                     </div>
                   ))}
-                  {activity.reviews.length > 3 && (
+                  {activity.recentReviews.length > 3 && (
                     <Button variant="outline" className="w-full">
-                      Ver Todas as Avaliações ({activity.reviews.length})
+                      Ver Todas as Avaliações ({activity.recentReviews.length})
                     </Button>
                   )}
                 </CardContent>
@@ -344,7 +356,10 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
           {/* Booking Sidebar */}
           <div className="lg:col-span-1">
             <div className="sticky top-24">
-              <BookingFlow activity={activity} sessions={activity.sessions} />
+              <BookingFlow
+                activity={activity}
+                sessions={activity.upcomingSessions}
+              />
             </div>
           </div>
         </div>

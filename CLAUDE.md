@@ -68,12 +68,25 @@ Users, providers, child profiles, activities, activity sessions, bookings, payme
 4. **Core API Endpoints** - Activities, sessions, bookings, users, profiles (15+ endpoints)
 5. **Payment Integration** - Stripe + MBWay processing, webhooks, refunds, dispute handling
 6. **Development Setup** - TypeScript, ESLint, Prettier, Husky hooks, comprehensive tooling
-7. **Frontend UX/UI Transformation** - Complete mother-focused design system with warm colors, emotional copy, and nurturing aesthetic
+7. **Frontend UX/UI Transformation** - Complete mother-focused design system with warm rose/amber colors
+8. **Real Porto/Matosinhos Data** - 5 real birthday party venues with authentic Portuguese content
+9. **Activity Cards Redesign** - Minimalistic, nurturing design focused on emotional connection
+10. **Smooth Animations** - Comprehensive animation system with accessibility support
+11. **Unified Styling** - Homepage, activities page, sign-in, dashboard transformed
 
 ### 🚧 IN PROGRESS
 
-- **Code Quality** - Fix linting issues and improve type safety
-- **Frontend Enhancement** - Detail pages, checkout flow, dashboards
+- **Venue Detail Pages** - Individual venue pages with click-through from cards
+- **Image Integration** - Real Unsplash images for hero section and testimonials
+- **Card Refinement** - Clean pricing display, ratings positioning, remove clutter
+
+### 🐛 CRITICAL FIXES NEEDED
+
+- **Dashboard Crash** - Page crashes when visiting /dashboard
+- **Activity Detail Crash** - Pages crash when visiting /activities/{id}
+- **About Page Styling** - Still uses old corporate design
+- **Broken Images** - Some venue cards showing missing/broken images
+- **Pricing Display** - Showing cents instead of euros (€0.25 vs €25.00)
 
 ### 📋 REMAINING TASKS
 
@@ -81,9 +94,8 @@ Users, providers, child profiles, activities, activity sessions, bookings, payme
 - Background jobs and worker queue skeleton
 - Observability: logging, metrics, error tracking
 - Comprehensive tests (unit + E2E) with ≥70% coverage
-- Docker setup and local deployment scripts
 - Performance and accessibility optimization (Lighthouse ≥90)
-- Documentation: README, architecture decisions, setup guide
+- Final polish and documentation
 
 ## Technical Implementation Highlights
 

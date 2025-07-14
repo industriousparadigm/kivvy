@@ -173,3 +173,7 @@ original-images/
 # Temporary uploads
 uploads/temp/
 uploads/original/
+
+# Large image directories
+imagery/
+original-imagery/

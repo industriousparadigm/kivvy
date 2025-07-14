@@ -5,6 +5,13 @@ export interface SMSOptions {
   message: string;
 }
 
+interface BookingDetails {
+  activityTitle: string;
+  date: string;
+  time?: string;
+  location: string;
+}
+
 class SMSService {
   private apiKey: string | null = null;
   private apiUrl: string | null = null;
@@ -42,7 +49,7 @@ class SMSService {
         body: JSON.stringify({
           to: phoneNumber,
           message: options.message,
-          from: process.env.SMS_FROM || 'KidsHiz',
+          from: process.env.SMS_FROM || 'Kivvy',
         }),
       });
       
@@ -86,23 +93,23 @@ class SMSService {
     return phoneNumber; // Return as-is if format is unclear
   }
   
-  async sendBookingConfirmation(to: string, bookingDetails: any): Promise<void> {
-    const message = `KidsHiz: Reserva confirmada para ${bookingDetails.activityTitle} em ${bookingDetails.date}. Local: ${bookingDetails.location}`;
+  async sendBookingConfirmation(to: string, bookingDetails: BookingDetails): Promise<void> {
+    const message = `Kivvy: Reserva confirmada para ${bookingDetails.activityTitle} em ${bookingDetails.date}. Local: ${bookingDetails.location}`;
     await this.sendSMS({ to, message });
   }
   
-  async sendBookingReminder(to: string, bookingDetails: any): Promise<void> {
-    const message = `KidsHiz: Lembrete - ${bookingDetails.activityTitle} amanhã às ${bookingDetails.time}. Local: ${bookingDetails.location}`;
+  async sendBookingReminder(to: string, bookingDetails: BookingDetails): Promise<void> {
+    const message = `Kivvy: Lembrete - ${bookingDetails.activityTitle} amanhã às ${bookingDetails.time}. Local: ${bookingDetails.location}`;
     await this.sendSMS({ to, message });
   }
   
-  async sendBookingCancellation(to: string, bookingDetails: any): Promise<void> {
-    const message = `KidsHiz: Reserva cancelada para ${bookingDetails.activityTitle}. Reembolso será processado em 3-5 dias úteis.`;
+  async sendBookingCancellation(to: string, bookingDetails: BookingDetails): Promise<void> {
+    const message = `Kivvy: Reserva cancelada para ${bookingDetails.activityTitle}. Reembolso será processado em 3-5 dias úteis.`;
     await this.sendSMS({ to, message });
   }
   
   async sendVerificationCode(to: string, code: string): Promise<void> {
-    const message = `KidsHiz: O seu código de verificação é ${code}. Válido por 10 minutos.`;
+    const message = `Kivvy: O seu código de verificação é ${code}. Válido por 10 minutos.`;
     await this.sendSMS({ to, message });
   }
 }

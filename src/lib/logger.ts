@@ -1,4 +1,5 @@
 import winston from 'winston';
+import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 
 // Define log levels
@@ -76,7 +77,7 @@ export const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: structuredFormat,
   defaultMeta: {
-    service: 'kidshiz',
+    service: 'kivvy',
     environment: process.env.NODE_ENV || 'development',
   },
   transports: [
@@ -117,7 +118,7 @@ export const logger = winston.createLogger({
 });
 
 // Add request logging middleware helper
-export const requestLogger = (req: any, res: any, next: any) => {
+export const requestLogger = (req: NextRequest, res: NextResponse, next: () => void) => {
   const start = Date.now();
   
   // Log request start
@@ -151,11 +152,11 @@ export const requestLogger = (req: any, res: any, next: any) => {
 
 // Performance monitoring helper
 export const performanceLogger = {
-  start: (operation: string, metadata?: Record<string, any>) => {
+  start: (operation: string, metadata?: Record<string, unknown>) => {
     const startTime = Date.now();
     
     return {
-      end: (result?: any) => {
+      end: (result?: unknown) => {
         const duration = Date.now() - startTime;
         
         logger.info('Performance metric', {
@@ -213,7 +214,7 @@ export const securityLogger = {
     });
   },
   
-  suspiciousActivity: (userId: string, activity: string, details: Record<string, any>) => {
+  suspiciousActivity: (userId: string, activity: string, details: Record<string, unknown>) => {
     logger.warn('Suspicious activity detected', {
       userId,
       activity,

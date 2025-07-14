@@ -5,7 +5,7 @@ export interface EmailOptions {
   to: string;
   subject: string;
   template: string;
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
 }
 
 class EmailService {
@@ -69,7 +69,7 @@ class EmailService {
     }
   }
   
-  private generateEmailHTML(template: string, context: Record<string, any> = {}): string {
+  private generateEmailHTML(template: string, context: Record<string, unknown> = {}): string {
     // Simple template engine - in production, use a proper template engine like Handlebars
     const templates: Record<string, string> = {
       'booking-confirmation': `
@@ -85,7 +85,7 @@ class EmailService {
             <p><strong>Participantes:</strong> ${context.participants}</p>
             <p><strong>Total:</strong> ${context.totalAmount}</p>
           </div>
-          <p>Obrigado por escolher o KidsHiz!</p>
+          <p>Obrigado por escolher o Kivvy!</p>
         </div>
       `,
       'booking-reminder': `
@@ -129,9 +129,9 @@ class EmailService {
       `,
       'welcome': `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2563eb;">Bem-vindo ao KidsHiz!</h2>
+          <h2 style="color: #F43F5E;">Bem-vindo ao Kivvy!</h2>
           <p>Olá ${context.userName},</p>
-          <p>Bem-vindo à plataforma KidsHiz! Estamos entusiasmados por ter você connosco.</p>
+          <p>Bem-vindo à plataforma Kivvy! Estamos entusiasmados por ter você connosco.</p>
           <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3 style="margin-top: 0;">O que pode fazer agora:</h3>
             <ul>
@@ -148,9 +148,9 @@ class EmailService {
     
     return templates[template] || `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2>Notificação KidsHiz</h2>
+        <h2>Notificação Kivvy</h2>
         <p>Olá,</p>
-        <p>Tem uma nova notificação da plataforma KidsHiz.</p>
+        <p>Tem uma nova notificação da plataforma Kivvy.</p>
         <pre>${JSON.stringify(context, null, 2)}</pre>
       </div>
     `;

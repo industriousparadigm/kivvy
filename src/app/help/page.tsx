@@ -24,9 +24,9 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Centro de Ajuda | KidsHiz',
+  title: 'Centro de Ajuda | Kivvy',
   description:
-    'Encontre respostas para as suas perguntas sobre a KidsHiz. Suporte completo para pais e prestadores.',
+    'Encontre respostas para as suas perguntas sobre a Kivvy. Suporte completo para pais e prestadores.',
 };
 
 export default function HelpPage() {
@@ -38,7 +38,7 @@ export default function HelpPage() {
       bgColor: 'bg-blue-50',
       questions: [
         {
-          q: 'Como criar uma conta na KidsHiz?',
+          q: 'Como criar uma conta na Kivvy?',
           a: 'Pode criar uma conta clicando em "Registar" e escolhendo entre registo com email ou Google. Preencha os seus dados e confirme o email.',
         },
         {
@@ -282,7 +282,7 @@ export default function HelpPage() {
                 <p className="text-gray-600 mb-4">Envie-nos um email</p>
                 <p className="text-sm text-gray-500 mb-4">Resposta em 24h</p>
                 <a
-                  href="mailto:ajuda@kidshiz.pt"
+                  href="mailto:ajuda@kivvy.pt"
                   className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors inline-block"
                 >
                   Enviar Email
@@ -315,7 +315,7 @@ export default function HelpPage() {
           <CardHeader>
             <CardTitle className="text-center">Recursos Adicionais</CardTitle>
             <CardDescription className="text-center">
-              Explore mais recursos para tirar o máximo partido da KidsHiz
+              Explore mais recursos para tirar o máximo partido da Kivvy
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -370,7 +370,7 @@ export default function HelpPage() {
                       href="/provider/signup"
                       className="hover:text-blue-600 transition-colors"
                     >
-                      Como juntar-se à KidsHiz
+                      Como juntar-se à Kivvy
                     </a>
                   </li>
                   <li className="flex items-center gap-2">

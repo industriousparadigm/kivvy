@@ -1,4 +1,4 @@
-# Kid-Activities Aggregator - Project Instructions Summary
+# Kivvy - Kid-Activities Marketplace - Project Instructions Summary
 
 ## Mission
 

@@ -1,0 +1,78 @@
+# Page snapshot
+
+```yaml
+- link "Saltar para o conteúdo principal":
+  - /url: "#main-content"
+- main:
+  - link "KidsHiz":
+    - /url: /
+  - button "Menu"
+  - img "Crianças felizes numa festa de aniversário no centro de atividades"
+  - text: Um momento especial Quando os olhinhos brilham de alegria
+  - heading "Onde pequenos sonhos ganham vida" [level=1]
+  - paragraph: Atividades pensadas com carinho para criar memórias que durarão para sempre
+  - link "Descobrir Atividades":
+    - /url: /activities
+    - button "Descobrir Atividades"
+  - link "Festa de Aniversário":
+    - /url: "#featured"
+    - button "Festa de Aniversário"
+  - text: Cuidado & Carinho Em cada detalhe Totalmente Seguro Tranquilidade para ti Momentos Únicos Que ficam no coração
+  - heading "Histórias que aquecem o coração" [level=2]
+  - paragraph: O que outras mães dizem sobre estes momentos especiais
+  - img "Mãos de crianças criando projetos de arte coloridos"
+  - blockquote: "“Nunca vi a Maria tão concentrada. Chegou a casa e disse: ‘Mãe, sou uma artista!’”"
+  - text: — Ana, mãe da Maria (5 anos)
+  - img "Pequeno grupo de crianças com instrumentos musicais"
+  - blockquote: “O Pedro era tímido. Agora dança pela casa toda. É pura alegria vê-lo assim.”
+  - text: — Sofia, mãe do Pedro (4 anos)
+  - img "Pai dando abraço carinhoso à criança antes da atividade"
+  - blockquote: “A festa da Beatriz foi perfeita. Ela ainda fala dos amigos que fez naquele dia.”
+  - text: — Carla, mãe da Beatriz (6 anos)
+  - heading "Aventuras que esperam pelo teu pequeno" [level=2]
+  - paragraph: Cada atividade é uma nova descoberta, um novo sorriso
+  - link "Festa Realidade Virtual - Another World 25,00 € Festa Realidade Virtual - Another World Porto 6-18 anos 0 Ver Detalhes":
+    - /url: /activities/cmd24tqxw000ym7qlohr2q78q
+    - img "Festa Realidade Virtual - Another World"
+    - button
+    - text: 25,00 €
+    - heading "Festa Realidade Virtual - Another World" [level=3]
+    - text: Porto 6-18 anos 0 Ver Detalhes
+  - link "Festa Criativa no Ateliê de Festas 16,50 € Festa Criativa no Ateliê de Festas Matosinhos 3-12 anos 0 Ver Detalhes":
+    - /url: /activities/cmd24tqxv000wm7ql5bd6ckmz
+    - img "Festa Criativa no Ateliê de Festas"
+    - button
+    - text: 16,50 €
+    - heading "Festa Criativa no Ateliê de Festas" [level=3]
+    - text: Matosinhos 3-12 anos 0 Ver Detalhes
+  - link "Festa Aventura no YupiColor 4.0 18,00 € Festa Aventura no YupiColor Maia 3-12 anos (1 avaliações) Ver Detalhes":
+    - /url: /activities/cmd24tqxr000um7qlwda3xu85
+    - img "Festa Aventura no YupiColor"
+    - text: "4.0"
+    - button
+    - text: 18,00 €
+    - heading "Festa Aventura no YupiColor" [level=3]
+    - text: Maia 3-12 anos (1 avaliações) Ver Detalhes
+  - link "Festa de Princesas no Princelandia 5.0 22,00 € Festa de Princesas no Princelandia Matosinhos 4-12 anos (1 avaliações) Ver Detalhes":
+    - /url: /activities/cmd24tqxp000sm7qltnp0hdkk
+    - img "Festa de Princesas no Princelandia"
+    - text: "5.0"
+    - button
+    - text: 22,00 €
+    - heading "Festa de Princesas no Princelandia" [level=3]
+    - text: Matosinhos 4-12 anos (1 avaliações) Ver Detalhes
+  - link "Festa de Aniversário no Colibee Fun Park 5.0 15,50 € Festa de Aniversário no Colibee Fun Park Porto 1-12 anos (1 avaliações) Ver Detalhes":
+    - /url: /activities/cmd24tqxo000qm7qlj336pywb
+    - img "Festa de Aniversário no Colibee Fun Park"
+    - text: "5.0"
+    - button
+    - text: 15,50 €
+    - heading "Festa de Aniversário no Colibee Fun Park" [level=3]
+    - text: Porto 1-12 anos (1 avaliações) Ver Detalhes
+  - link "Ver Todas as Aventuras":
+    - /url: /activities
+    - button "Ver Todas as Aventuras"
+- alert
+- button "Open Next.js Dev Tools":
+  - img
+```

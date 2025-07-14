@@ -184,3 +184,133 @@
 {"timestamp":"2025-07-13 22:32:55","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
 {"timestamp":"2025-07-13 22:32:59","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":10},"type":"api-request"}
 {"timestamp":"2025-07-13 22:32:59","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:34:59","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:34:59","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:35:36","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":10},"type":"api-request"}
+{"timestamp":"2025-07-13 22:35:36","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:17","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:17","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:19","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:19","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:19","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:19","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:19","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:19","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:19","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:19","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:21","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:21","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:22","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":10},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:22","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:22","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:22","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:22","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:22","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:27","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:27","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:27","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:27","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:28","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:28","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:31","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":12},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:33","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:33","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:34","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:34","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:35","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:35","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:39","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:39","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:41","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:41","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:41","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":10},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:42","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:42","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:42","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:43","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:43","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:43","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:43","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:44","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:44","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:45","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:45","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:47","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":12},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:50","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:50","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:51","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":12},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:51","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{"search":"natação"},"pagination":{"page":1,"limit":12},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:52","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:52","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:54","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:54","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:54","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:54","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:57","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":10},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:57","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:57","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:57","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:57","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:57","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:58","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:58","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:58","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:58","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:36:59","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:36:59","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:00","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:00","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:02","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":12},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:03","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":12},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:04","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{"search":"natação"},"pagination":{"page":1,"limit":12},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:04","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:04","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:05","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:05","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:08","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:08","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:11","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":10},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:11","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:11","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:11","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:11","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:11","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:12","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:12","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:13","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:13","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:15","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:15","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:18","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:18","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:19","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:19","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:22","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":12},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:28","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":12},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:28","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:28","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:29","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:29","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:35","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:35","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:36","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:36","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:38","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:38","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:39","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":10},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:39","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:39","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:39","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:42","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:42","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:44","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:44","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:45","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:45","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:46","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:46","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}
+{"timestamp":"2025-07-13 22:37:50","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":12},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:51","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":12},"type":"api-request"}
+{"timestamp":"2025-07-13 22:37:51","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{"search":"natação"},"pagination":{"page":1,"limit":12},"type":"api-request"}
+{"timestamp":"2025-07-14 07:05:31","level":"info","message":"Activities request","service":"kidshiz","environment":"development","filters":{},"pagination":{"page":1,"limit":6},"type":"api-request"}
+{"timestamp":"2025-07-14 07:05:31","level":"info","message":"Activities request completed","service":"kidshiz","environment":"development","resultCount":5,"total":5,"page":1,"type":"api-response"}

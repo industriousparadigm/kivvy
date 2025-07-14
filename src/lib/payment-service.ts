@@ -1,6 +1,6 @@
 import { stripe, calculatePlatformFee, calculateNetAmount } from './stripe'
 import { prisma } from './prisma'
-import { PaymentMethod, PaymentStatus } from '@prisma/client'
+import { PaymentMethod } from '@prisma/client'
 
 export interface CreatePaymentIntentRequest {
   bookingId: string
@@ -68,8 +68,8 @@ export class PaymentService {
         netAmount: netAmount.toString(),
         ...metadata,
       },
-      description: `KidsHiz - ${booking.session.activity.title} for ${booking.child.firstName}`,
-      statement_descriptor: 'KIDSHIZ',
+      description: `Kivvy - ${booking.session.activity.title} for ${booking.child.firstName}`,
+      statement_descriptor: 'KIVVY',
     })
 
     // Create payment record
@@ -100,7 +100,12 @@ export class PaymentService {
     }
   }
 
-  static async handleMBWayPayment(request: CreatePaymentIntentRequest): Promise<any> {
+  static async handleMBWayPayment(request: CreatePaymentIntentRequest): Promise<{
+    success: boolean;
+    paymentId?: string;
+    transactionId?: string;
+    error?: string;
+  }> {
     // MBWay integration would go here
     // For now, we'll simulate the process
     const { bookingId, amount, currency = 'EUR', metadata = {} } = request
@@ -139,20 +144,20 @@ export class PaymentService {
         status: 'PENDING',
         providerFee: platformFee,
         netAmount,
-        metadata: {
+        metadata: JSON.stringify({
           mbwayReference: this.generateMBWayReference(),
           expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(), // 15 minutes
           ...metadata,
-        } as any,
+        }),
       },
     })
 
     return {
       paymentId: payment.id,
-      mbwayReference: (payment.metadata as any)?.mbwayReference,
+      mbwayReference: payment.metadata ? JSON.parse(payment.metadata as string)?.mbwayReference : undefined,
       amount,
       currency: currency.toUpperCase(),
-      expiresAt: (payment.metadata as any)?.expiresAt,
+      expiresAt: payment.metadata ? JSON.parse(payment.metadata as string)?.expiresAt : undefined,
       instructions: 'Abra a aplicação MB WAY e introduza a referência acima',
     }
   }
@@ -224,11 +229,11 @@ export class PaymentService {
         status: refundAmount >= payment.amount ? 'REFUNDED' : 'PARTIALLY_REFUNDED',
         refundAmount,
         refundReason: reason,
-        metadata: {
-          ...(payment.metadata as any || {}),
+        metadata: JSON.stringify({
+          ...(payment.metadata ? JSON.parse(payment.metadata as string) : {}),
           refundId: refund.id,
           refundedAt: new Date().toISOString(),
-        } as any,
+        }),
       },
     })
 

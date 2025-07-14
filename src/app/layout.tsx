@@ -16,10 +16,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'KidsHiz - Atividades para Crianças',
+  title: 'Kivvy - Atividades para Crianças',
   description:
     'Plataforma de descoberta e reserva de atividades para crianças em Portugal',
   keywords: [
+    'kivvy',
     'atividades',
     'crianças',
     'Porto',
@@ -28,13 +29,40 @@ export const metadata: Metadata = {
     'dança',
     'programação',
   ],
-  authors: [{ name: 'KidsHiz Team' }],
+  authors: [{ name: 'Kivvy Team' }],
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  manifest: '/manifest.json',
   openGraph: {
-    title: 'KidsHiz - Atividades para Crianças',
+    title: 'Kivvy - Atividades para Crianças',
     description:
       'Descobre e reserva as melhores atividades para crianças no Porto e Matosinhos',
     type: 'website',
     locale: 'pt_PT',
+    siteName: 'Kivvy',
+    images: [
+      {
+        url: '/images/hero-birthday-party.png',
+        width: 1200,
+        height: 630,
+        alt: 'Kivvy - Atividades para Crianças',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Kivvy - Atividades para Crianças',
+    description:
+      'Descobre e reserva as melhores atividades para crianças no Porto e Matosinhos',
+    images: ['/images/hero-birthday-party.png'],
   },
 };
 
@@ -45,9 +73,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt">
-      <head>
-        <link rel="icon" href="/favicon.ico" />
-      </head>
+      <head />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans`}
       >

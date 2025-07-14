@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { CldUploadWidget } from 'next-cloudinary';
+import { CldUploadWidget, CloudinaryUploadWidgetResults } from 'next-cloudinary';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { X, Upload, Image as ImageIcon } from 'lucide-react';
@@ -25,12 +25,12 @@ export function ImageUpload({
   disabled = false,
   accept = 'image/*',
   className = '',
-  folder = 'kidshiz/activities',
+  folder = 'kivvy/activities',
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleCloudinaryUpload = (results: any) => {
+  const handleCloudinaryUpload = (results: CloudinaryUploadWidgetResults) => {
     if (results.event === 'success') {
       const newUrl = results.info.secure_url;
       const updatedUrls = multiple ? [...value, newUrl] : [newUrl];
@@ -212,7 +212,6 @@ export function SingleImageUpload({
   onChange,
   disabled = false,
   className = '',
-  placeholder = 'Carregar imagem',
 }: {
   value?: string;
   onChange: (url: string | undefined) => void;

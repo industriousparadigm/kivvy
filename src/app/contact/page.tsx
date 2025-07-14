@@ -14,9 +14,9 @@ import { Header } from '@/components/layout/header';
 import { Mail, Phone, MapPin, Clock, MessageCircle, Heart } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Contacto | KidsHiz',
+  title: 'Contacto | Kivvy',
   description:
-    'Entre em contacto com a KidsHiz. Estamos aqui para ajudar com qualquer questão sobre atividades para crianças.',
+    'Entre em contacto com a Kivvy. Estamos aqui para ajudar com qualquer questão sobre atividades para crianças.',
 };
 
 export default function ContactPage() {
@@ -118,7 +118,7 @@ export default function ContactPage() {
                     <Mail className="h-5 w-5 text-rose-600 mt-0.5" />
                     <div>
                       <h4 className="font-semibold text-rose-900">Email</h4>
-                      <p className="text-rose-700">ola@kidshiz.pt</p>
+                      <p className="text-rose-700">ola@kivvy.pt</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">

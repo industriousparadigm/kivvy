@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
-import { User, Menu, X, Heart, ShoppingBag, Settings } from 'lucide-react';
+import { User, Menu, X, Heart, Settings } from 'lucide-react';
 import { useState } from 'react';
 
 export function Header() {
@@ -20,7 +20,7 @@ export function Header() {
               <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-rose-400 to-amber-400 flex items-center justify-center shadow-sm">
                 <Heart className="text-white h-5 w-5" />
               </div>
-              <span className="text-xl font-semibold text-rose-900">KidsHiz</span>
+              <span className="text-xl font-semibold text-rose-900">Kivvy</span>
             </Link>
           </div>
 

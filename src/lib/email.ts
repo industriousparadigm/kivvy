@@ -10,18 +10,20 @@ export interface EmailOptions {
 
 class EmailService {
   private transporter: nodemailer.Transporter | null = null;
-  
+
   constructor() {
     this.initializeTransporter();
   }
-  
+
   private initializeTransporter() {
     if (!process.env.SMTP_HOST) {
-      logger.warn('SMTP not configured, email service will use console logging');
+      logger.warn(
+        'SMTP not configured, email service will use console logging'
+      );
       return;
     }
-    
-    this.transporter = nodemailer.createTransporter({
+
+    this.transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: parseInt(process.env.SMTP_PORT || '587'),
       secure: process.env.SMTP_PORT === '465',
@@ -31,11 +33,11 @@ class EmailService {
       },
     });
   }
-  
+
   async sendEmail(options: EmailOptions): Promise<void> {
     try {
       const html = this.generateEmailHTML(options.template, options.context);
-      
+
       if (!this.transporter) {
         // Fallback to console logging for development
         logger.info('Email would be sent (SMTP not configured)', {
@@ -46,14 +48,14 @@ class EmailService {
         });
         return;
       }
-      
+
       await this.transporter.sendMail({
         from: process.env.SMTP_FROM || process.env.SMTP_USER,
         to: options.to,
         subject: options.subject,
         html,
       });
-      
+
       logger.info('Email sent successfully', {
         to: options.to,
         subject: options.subject,
@@ -63,13 +65,16 @@ class EmailService {
       logger.error('Failed to send email', {
         to: options.to,
         subject: options.subject,
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
       });
       throw error;
     }
   }
-  
-  private generateEmailHTML(template: string, context: Record<string, unknown> = {}): string {
+
+  private generateEmailHTML(
+    template: string,
+    context: Record<string, unknown> = {}
+  ): string {
     // Simple template engine - in production, use a proper template engine like Handlebars
     const templates: Record<string, string> = {
       'booking-confirmation': `
@@ -127,7 +132,7 @@ class EmailService {
           <p>Por favor, tente novamente ou contacte-nos para assistência.</p>
         </div>
       `,
-      'welcome': `
+      welcome: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #F43F5E;">Bem-vindo ao Kivvy!</h2>
           <p>Olá ${context.userName},</p>
@@ -145,15 +150,18 @@ class EmailService {
         </div>
       `,
     };
-    
-    return templates[template] || `
+
+    return (
+      templates[template] ||
+      `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>Notificação Kivvy</h2>
         <p>Olá,</p>
         <p>Tem uma nova notificação da plataforma Kivvy.</p>
         <pre>${JSON.stringify(context, null, 2)}</pre>
       </div>
-    `;
+    `
+    );
   }
 }
 

@@ -38,15 +38,18 @@ export const processEmailJob = async (job: Queue.Job<JobData>) => {
     logger.info('Processing email job', { jobId: job.id, payload });
 
     await emailService.sendEmail({
-      to: payload.to,
-      subject: payload.subject,
-      template: payload.template,
-      context: payload.context || {},
+      to: payload.to as string,
+      subject: payload.subject as string,
+      template: payload.template as string,
+      context: (payload.context as Record<string, unknown>) || {},
     });
 
     logger.info('Email job completed successfully', { jobId: job.id });
   } catch (error) {
-    logger.error('Email job failed', { jobId: job.id, error: error.message });
+    logger.error('Email job failed', {
+      jobId: job.id,
+      error: error instanceof Error ? error.message : String(error),
+    });
     throw error;
   }
 };
@@ -59,13 +62,16 @@ export const processSMSJob = async (job: Queue.Job<JobData>) => {
     logger.info('Processing SMS job', { jobId: job.id, payload });
 
     await smsService.sendSMS({
-      to: payload.phoneNumber,
-      message: payload.message,
+      to: payload.phoneNumber as string,
+      message: payload.message as string,
     });
 
     logger.info('SMS job completed successfully', { jobId: job.id });
   } catch (error) {
-    logger.error('SMS job failed', { jobId: job.id, error: error.message });
+    logger.error('SMS job failed', {
+      jobId: job.id,
+      error: error instanceof Error ? error.message : String(error),
+    });
     throw error;
   }
 };
@@ -78,10 +84,10 @@ export const processPushNotificationJob = async (job: Queue.Job<JobData>) => {
     logger.info('Processing push notification job', { jobId: job.id, payload });
 
     await pushNotificationService.sendNotification({
-      userId: payload.userId,
-      title: payload.title,
-      message: payload.message,
-      data: payload.data,
+      userId: payload.userId as string,
+      title: payload.title as string,
+      message: payload.message as string,
+      data: payload.data as Record<string, unknown>,
     });
 
     logger.info('Push notification job completed successfully', {
@@ -90,7 +96,7 @@ export const processPushNotificationJob = async (job: Queue.Job<JobData>) => {
   } catch (error) {
     logger.error('Push notification job failed', {
       jobId: job.id,
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
     });
     throw error;
   }
@@ -129,7 +135,11 @@ export const processPaymentJob = async (job: Queue.Job<JobData>) => {
         await processPaymentCapture(booking);
         break;
       case 'refund':
-        await processPaymentRefund(booking, payload.amount, payload.reason);
+        await processPaymentRefund(
+          booking,
+          payload.amount as number,
+          payload.reason as string
+        );
         break;
       case 'capture':
         await processPaymentCapture(booking);
@@ -146,7 +156,7 @@ export const processPaymentJob = async (job: Queue.Job<JobData>) => {
     logger.error('Payment job failed', {
       jobId: job.id,
       bookingId,
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
     });
     throw error;
   }
@@ -163,14 +173,14 @@ async function processPaymentCapture(booking: BookingWithRelations) {
   await prisma.payment.update({
     where: { id: booking.payment.id },
     data: {
-      status: 'succeeded',
+      status: 'SUCCEEDED',
       capturedAt: new Date(),
     },
   });
 
   await prisma.booking.update({
     where: { id: booking.id },
-    data: { status: 'confirmed' },
+    data: { status: 'CONFIRMED' },
   });
 }
 
@@ -183,23 +193,28 @@ async function processPaymentRefund(
     throw new Error('No payment intent found for booking');
   }
 
-  await stripe.refunds.create({
+  const refundData: any = {
     payment_intent: booking.payment.stripePaymentIntentId,
-    amount: amount ? Math.round(amount * 100) : undefined, // Convert to cents
     reason: reason || 'requested_by_customer',
-  });
+  };
+
+  if (amount) {
+    refundData.amount = Math.round(amount * 100); // Convert to cents
+  }
+
+  await stripe.refunds.create(refundData);
 
   await prisma.payment.update({
     where: { id: booking.payment.id },
     data: {
-      status: 'refunded',
+      status: 'REFUNDED',
       refundedAt: new Date(),
     },
   });
 
   await prisma.booking.update({
     where: { id: booking.id },
-    data: { status: 'cancelled' },
+    data: { status: 'CANCELLED' },
   });
 }
 
@@ -214,13 +229,13 @@ export const processReportJob = async (job: Queue.Job<JobData>) => {
 
     switch (payload.type) {
       case 'activity-stats':
-        reportData = await generateActivityStatsReport(payload);
+        reportData = await generateActivityStatsReport(payload as any);
         break;
       case 'revenue-report':
-        reportData = await generateRevenueReport(payload);
+        reportData = await generateRevenueReport(payload as any);
         break;
       case 'user-engagement':
-        reportData = await generateUserEngagementReport(payload);
+        reportData = await generateUserEngagementReport(payload as any);
         break;
       default:
         throw new Error(`Unknown report type: ${payload.type}`);
@@ -229,17 +244,20 @@ export const processReportJob = async (job: Queue.Job<JobData>) => {
     // Store report in database
     await prisma.report.create({
       data: {
-        type: payload.type,
-        period: payload.period,
-        data: reportData,
+        type: payload.type as string,
+        period: payload.period as string,
+        data: reportData as any,
         generatedAt: new Date(),
-        providerId: payload.providerId,
+        providerId: payload.providerId as string,
       },
     });
 
     logger.info('Report job completed successfully', { jobId: job.id });
   } catch (error) {
-    logger.error('Report job failed', { jobId: job.id, error: error.message });
+    logger.error('Report job failed', {
+      jobId: job.id,
+      error: error instanceof Error ? error.message : String(error),
+    });
     throw error;
   }
 };
@@ -249,11 +267,11 @@ async function generateActivityStatsReport(payload: ReportPayload) {
   const whereClause: Prisma.ActivityWhereInput = {};
 
   if (payload.providerId) {
-    whereClause.providerId = payload.providerId;
+    whereClause.providerId = payload.providerId as string;
   }
 
   if (payload.date) {
-    const date = new Date(payload.date);
+    const date = new Date(payload.date as string);
     const startDate = new Date(
       date.getFullYear(),
       date.getMonth(),
@@ -272,14 +290,14 @@ async function generateActivityStatsReport(payload: ReportPayload) {
     prisma.activity.count({ where: whereClause }),
     prisma.booking.count({
       where: {
-        ...whereClause,
-        status: 'confirmed',
+        ...(whereClause as any),
+        status: 'CONFIRMED',
       },
     }),
     prisma.payment.aggregate({
       where: {
-        ...whereClause,
-        status: 'succeeded',
+        ...(whereClause as any),
+        status: 'SUCCEEDED',
       },
       _sum: { amount: true },
     }),
@@ -301,7 +319,7 @@ async function generateRevenueReport(payload: ReportPayload) {
     whereClause.booking = {
       session: {
         activity: {
-          providerId: payload.providerId,
+          providerId: payload.providerId as string,
         },
       },
     };
@@ -395,7 +413,7 @@ export const processMaintenanceJob = async (job: Queue.Job<JobData>) => {
   } catch (error) {
     logger.error('Maintenance job failed', {
       jobId: job.id,
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
     });
     throw error;
   }
@@ -467,7 +485,7 @@ export const processBookingReminderJob = async (job: Queue.Job<JobData>) => {
 
     const bookings = await prisma.booking.findMany({
       where: {
-        status: 'confirmed',
+        status: 'CONFIRMED',
         session: {
           dateTime: {
             gte: tomorrow,
@@ -504,7 +522,7 @@ export const processBookingReminderJob = async (job: Queue.Job<JobData>) => {
   } catch (error) {
     logger.error('Booking reminder job failed', {
       jobId: job.id,
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
     });
     throw error;
   }

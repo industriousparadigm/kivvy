@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { CldUploadWidget, CloudinaryUploadWidgetResults } from 'next-cloudinary';
+import { CldUploadWidget } from 'next-cloudinary';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { X, Upload, Image as ImageIcon } from 'lucide-react';
@@ -29,14 +29,6 @@ export function ImageUpload({
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleCloudinaryUpload = (results: CloudinaryUploadWidgetResults) => {
-    if (results.event === 'success') {
-      const newUrl = results.info.secure_url;
-      const updatedUrls = multiple ? [...value, newUrl] : [newUrl];
-      onChange(updatedUrls);
-    }
-  };
 
   const handleFileUpload = async (files: FileList) => {
     if (!files.length) return;
@@ -91,28 +83,31 @@ export function ImageUpload({
           {cloudinaryConfig.cloudName && cloudinaryConfig.uploadPreset && (
             <CldUploadWidget
               uploadPreset={cloudinaryConfig.uploadPreset}
-              options={{
-                multiple,
-                maxFiles: maxFiles - value.length,
-                resourceType: 'image',
-                folder,
-                transformation: [
-                  {
-                    width: 800,
-                    height: 600,
-                    crop: 'limit',
-                    quality: 'auto',
-                    format: 'auto',
-                  },
-                ],
+              options={
+                {
+                  multiple,
+                  maxFiles: maxFiles - value.length,
+                  resourceType: 'image',
+                  folder,
+                } as any
+              }
+              onSuccess={(results: any) => {
+                if (
+                  results.event === 'success' &&
+                  results.info &&
+                  typeof results.info !== 'string'
+                ) {
+                  const newUrl = results.info.secure_url;
+                  const updatedUrls = multiple ? [...value, newUrl] : [newUrl];
+                  onChange(updatedUrls);
+                }
               }}
-              onUpload={handleCloudinaryUpload}
             >
               {({ open }) => (
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={open}
+                  onClick={() => open()}
                   disabled={disabled || isUploading}
                   className="flex items-center gap-2"
                 >
@@ -130,7 +125,7 @@ export function ImageUpload({
               type="file"
               accept={accept}
               multiple={multiple}
-              onChange={(e) => {
+              onChange={e => {
                 const files = e.target.files;
                 if (files) {
                   handleFileUpload(files);
@@ -156,7 +151,10 @@ export function ImageUpload({
       {/* Upload Progress */}
       {isUploading && (
         <div className="w-full bg-gray-200 rounded-full h-2">
-          <div className="bg-blue-600 h-2 rounded-full animate-pulse" style={{ width: '60%' }} />
+          <div
+            className="bg-blue-600 h-2 rounded-full animate-pulse"
+            style={{ width: '60%' }}
+          />
         </div>
       )}
 
@@ -222,7 +220,7 @@ export function SingleImageUpload({
   return (
     <ImageUpload
       value={value ? [value] : []}
-      onChange={(urls) => onChange(urls[0])}
+      onChange={urls => onChange(urls[0])}
       multiple={false}
       maxFiles={1}
       disabled={disabled}
@@ -267,7 +265,7 @@ export function AvatarUpload({
             </div>
           )}
         </div>
-        
+
         {value && (
           <button
             type="button"

@@ -95,7 +95,7 @@ export function usePagePerformance(pageName: string) {
 
 // Hook to track component render performance
 export function useRenderPerformance(componentName: string) {
-  const renderStartRef = useRef<number>();
+  const renderStartRef = useRef<number>(0);
   const renderCountRef = useRef<number>(0);
 
   useEffect(() => {
@@ -187,21 +187,10 @@ export function useMemoryMonitoring() {
     if (
       typeof window !== 'undefined' &&
       'performance' in window &&
-      'memory' in
-        (window.performance as PerformanceNavigationTiming & {
-          memory?: unknown;
-        })
+      'memory' in (window.performance as any)
     ) {
       const checkMemory = () => {
-        const memory = (
-          window.performance as PerformanceNavigationTiming & {
-            memory?: {
-              usedJSHeapSize?: number;
-              totalJSHeapSize?: number;
-              jsHeapSizeLimit?: number;
-            };
-          }
-        ).memory;
+        const memory = (window.performance as any).memory;
 
         monitoring.captureMetric(
           'browser.memory.used',

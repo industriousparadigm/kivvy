@@ -1,25 +1,31 @@
 import { Metadata } from 'next';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Building, 
-  Users, 
-  Star, 
-  Shield, 
-  TrendingUp, 
-  Clock, 
-  Heart, 
-  CheckCircle 
+import {
+  Building,
+  Users,
+  Star,
+  Shield,
+  TrendingUp,
+  Clock,
+  Heart,
+  CheckCircle,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Torne-se Prestador | KidsHiz',
-  description: 'Junte-se à KidsHiz como prestador de atividades para crianças. Alcance mais famílias e faça crescer o seu negócio.',
+  title: 'Torne-se Prestador | Kivvy',
+  description:
+    'Junte-se à Kivvy como prestador de atividades para crianças. Alcance mais famílias e faça crescer o seu negócio.',
 };
 
 export default function ProviderSignupPage() {
@@ -31,16 +37,20 @@ export default function ProviderSignupPage() {
           <div className="flex justify-center mb-4">
             <Building className="h-12 w-12 text-blue-600" />
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Torne-se um Prestador KidsHiz</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Torne-se um Prestador Kivvy
+          </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Junte-se à nossa rede de prestadores e alcance milhares de famílias à procura 
-            de atividades de qualidade para os seus filhos.
+            Junte-se à nossa rede de prestadores e alcance milhares de famílias
+            à procura de atividades de qualidade para os seus filhos.
           </p>
         </div>
 
         {/* Benefits Section */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">Porque Escolher a KidsHiz?</h2>
+          <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">
+            Porque Escolher a Kivvy?
+          </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="text-center hover:shadow-lg transition-shadow">
               <CardContent className="p-6">
@@ -51,7 +61,8 @@ export default function ProviderSignupPage() {
                 </div>
                 <h3 className="font-semibold text-lg mb-2">Mais Clientes</h3>
                 <p className="text-gray-600">
-                  Aceda a uma base de milhares de famílias ativas à procura de atividades para crianças.
+                  Aceda a uma base de milhares de famílias ativas à procura de
+                  atividades para crianças.
                 </p>
               </CardContent>
             </Card>
@@ -64,7 +75,8 @@ export default function ProviderSignupPage() {
                 </div>
                 <h3 className="font-semibold text-lg mb-2">Crescimento</h3>
                 <p className="text-gray-600">
-                  Faça crescer o seu negócio com ferramentas de gestão e marketing integradas.
+                  Faça crescer o seu negócio com ferramentas de gestão e
+                  marketing integradas.
                 </p>
               </CardContent>
             </Card>
@@ -77,7 +89,8 @@ export default function ProviderSignupPage() {
                 </div>
                 <h3 className="font-semibold text-lg mb-2">Suporte Dedicado</h3>
                 <p className="text-gray-600">
-                  Apoio contínuo da nossa equipa para o ajudar a ter sucesso na plataforma.
+                  Apoio contínuo da nossa equipa para o ajudar a ter sucesso na
+                  plataforma.
                 </p>
               </CardContent>
             </Card>
@@ -89,25 +102,33 @@ export default function ProviderSignupPage() {
           <div className="grid md:grid-cols-4 gap-6">
             <Card className="text-center">
               <CardContent className="p-6">
-                <div className="text-3xl font-bold text-blue-600 mb-2">10k+</div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">
+                  10k+
+                </div>
                 <div className="text-gray-600">Famílias Registadas</div>
               </CardContent>
             </Card>
             <Card className="text-center">
               <CardContent className="p-6">
-                <div className="text-3xl font-bold text-green-600 mb-2">50+</div>
+                <div className="text-3xl font-bold text-green-600 mb-2">
+                  50+
+                </div>
                 <div className="text-gray-600">Prestadores Ativos</div>
               </CardContent>
             </Card>
             <Card className="text-center">
               <CardContent className="p-6">
-                <div className="text-3xl font-bold text-purple-600 mb-2">1000+</div>
+                <div className="text-3xl font-bold text-purple-600 mb-2">
+                  1000+
+                </div>
                 <div className="text-gray-600">Reservas Mensais</div>
               </CardContent>
             </Card>
             <Card className="text-center">
               <CardContent className="p-6">
-                <div className="text-3xl font-bold text-orange-600 mb-2">4.8</div>
+                <div className="text-3xl font-bold text-orange-600 mb-2">
+                  4.8
+                </div>
                 <div className="text-gray-600">Avaliação Média</div>
               </CardContent>
             </Card>
@@ -126,7 +147,9 @@ export default function ProviderSignupPage() {
             <CardContent>
               <form className="space-y-6">
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-lg">Informações Pessoais</h3>
+                  <h3 className="font-semibold text-lg">
+                    Informações Pessoais
+                  </h3>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="firstName">Nome</Label>
@@ -139,23 +162,39 @@ export default function ProviderSignupPage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="seu.email@exemplo.com" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="seu.email@exemplo.com"
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone">Telefone</Label>
-                    <Input id="phone" type="tel" placeholder="+351 912 345 678" />
+                    <Input
+                      id="phone"
+                      type="tel"
+                      placeholder="+351 912 345 678"
+                    />
                   </div>
                 </div>
 
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-lg">Informações do Negócio</h3>
+                  <h3 className="font-semibold text-lg">
+                    Informações do Negócio
+                  </h3>
                   <div className="space-y-2">
                     <Label htmlFor="businessName">Nome do Negócio</Label>
-                    <Input id="businessName" placeholder="Nome da sua empresa/organização" />
+                    <Input
+                      id="businessName"
+                      placeholder="Nome da sua empresa/organização"
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="businessType">Tipo de Negócio</Label>
-                    <Input id="businessType" placeholder="Ex: Escola de Dança, Academia de Desporto" />
+                    <Input
+                      id="businessType"
+                      placeholder="Ex: Escola de Dança, Academia de Desporto"
+                    />
                   </div>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -169,8 +208,8 @@ export default function ProviderSignupPage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="description">Descrição do Negócio</Label>
-                    <Textarea 
-                      id="description" 
+                    <Textarea
+                      id="description"
                       placeholder="Conte-nos sobre a sua empresa e as atividades que oferece..."
                       rows={4}
                     />
@@ -178,12 +217,29 @@ export default function ProviderSignupPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-lg">Atividades Oferecidas</h3>
+                  <h3 className="font-semibold text-lg">
+                    Atividades Oferecidas
+                  </h3>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {['Desporto', 'Dança', 'Música', 'Arte', 'Programação', 'Idiomas', 'Ciência', 'Teatro', 'Culinária'].map((activity) => (
-                      <div key={activity} className="flex items-center space-x-2">
+                    {[
+                      'Desporto',
+                      'Dança',
+                      'Música',
+                      'Arte',
+                      'Programação',
+                      'Idiomas',
+                      'Ciência',
+                      'Teatro',
+                      'Culinária',
+                    ].map(activity => (
+                      <div
+                        key={activity}
+                        className="flex items-center space-x-2"
+                      >
                         <Checkbox id={activity} />
-                        <Label htmlFor={activity} className="text-sm">{activity}</Label>
+                        <Label htmlFor={activity} className="text-sm">
+                          {activity}
+                        </Label>
                       </div>
                     ))}
                   </div>
@@ -191,7 +247,9 @@ export default function ProviderSignupPage() {
 
                 <div className="space-y-4">
                   <h3 className="font-semibold text-lg">Documentos</h3>
-                  <p className="text-sm text-gray-600">Será necessário enviar os seguintes documentos:</p>
+                  <p className="text-sm text-gray-600">
+                    Será necessário enviar os seguintes documentos:
+                  </p>
                   <ul className="text-sm text-gray-600 space-y-1">
                     <li>• Certificado de registo da empresa</li>
                     <li>• Seguro de responsabilidade civil</li>
@@ -203,8 +261,18 @@ export default function ProviderSignupPage() {
                 <div className="flex items-center space-x-2">
                   <Checkbox id="terms" />
                   <Label htmlFor="terms" className="text-sm">
-                    Concordo com os <a href="/terms" className="text-blue-600 hover:underline">Termos de Serviço</a> e 
-                    <a href="/privacy" className="text-blue-600 hover:underline"> Política de Privacidade</a>
+                    Concordo com os{' '}
+                    <a href="/terms" className="text-blue-600 hover:underline">
+                      Termos de Serviço
+                    </a>{' '}
+                    e
+                    <a
+                      href="/privacy"
+                      className="text-blue-600 hover:underline"
+                    >
+                      {' '}
+                      Política de Privacidade
+                    </a>
                   </Label>
                 </div>
 
@@ -232,7 +300,9 @@ export default function ProviderSignupPage() {
                     </div>
                     <div>
                       <h4 className="font-semibold">Submissão</h4>
-                      <p className="text-sm text-gray-600">Preencha e envie o formulário de candidatura</p>
+                      <p className="text-sm text-gray-600">
+                        Preencha e envie o formulário de candidatura
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -241,7 +311,9 @@ export default function ProviderSignupPage() {
                     </div>
                     <div>
                       <h4 className="font-semibold">Revisão</h4>
-                      <p className="text-sm text-gray-600">A nossa equipa revisa a sua candidatura (2-3 dias)</p>
+                      <p className="text-sm text-gray-600">
+                        A nossa equipa revisa a sua candidatura (2-3 dias)
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -250,7 +322,9 @@ export default function ProviderSignupPage() {
                     </div>
                     <div>
                       <h4 className="font-semibold">Verificação</h4>
-                      <p className="text-sm text-gray-600">Verificamos documentos e referências</p>
+                      <p className="text-sm text-gray-600">
+                        Verificamos documentos e referências
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -259,7 +333,9 @@ export default function ProviderSignupPage() {
                     </div>
                     <div>
                       <h4 className="font-semibold">Aprovação</h4>
-                      <p className="text-sm text-gray-600">Começa a aceitar reservas na plataforma</p>
+                      <p className="text-sm text-gray-600">
+                        Começa a aceitar reservas na plataforma
+                      </p>
                     </div>
                   </div>
                 </div>

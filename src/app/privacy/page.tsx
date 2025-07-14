@@ -1,11 +1,18 @@
 import { Metadata } from 'next';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Shield, Eye, Lock, UserCheck, Database, Cookie } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Política de Privacidade | KidsHiz',
-  description: 'Política de privacidade da KidsHiz. Saiba como protegemos e utilizamos os seus dados pessoais.',
+  title: 'Política de Privacidade | Kivvy',
+  description:
+    'Política de privacidade da Kivvy. Saiba como protegemos e utilizamos os seus dados pessoais.',
 };
 
 export default function PrivacyPage() {
@@ -17,7 +24,9 @@ export default function PrivacyPage() {
           <div className="flex justify-center mb-4">
             <Shield className="h-12 w-12 text-blue-600" />
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Política de Privacidade</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Política de Privacidade
+          </h1>
           <p className="text-lg text-gray-600">
             Última atualização: 11 de Julho de 2025
           </p>
@@ -33,13 +42,15 @@ export default function PrivacyPage() {
           </CardHeader>
           <CardContent>
             <p className="text-gray-700 mb-4">
-              A KidsHiz está comprometida com a proteção da sua privacidade e dos seus dados pessoais. 
-              Esta política explica como recolhemos, utilizamos, armazenamos e protegemos as suas informações 
-              quando utiliza a nossa plataforma.
+              A Kivvy está comprometida com a proteção da sua privacidade e dos
+              seus dados pessoais. Esta política explica como recolhemos,
+              utilizamos, armazenamos e protegemos as suas informações quando
+              utiliza a nossa plataforma.
             </p>
             <p className="text-gray-700">
-              Esta política aplica-se ao website www.kidshiz.pt e a todos os serviços relacionados. 
-              Ao utilizar os nossos serviços, concorda com as práticas descritas nesta política.
+              Esta política aplica-se ao website www.kivvy.pt e a todos os
+              serviços relacionados. Ao utilizar os nossos serviços, concorda
+              com as práticas descritas nesta política.
             </p>
           </CardContent>
         </Card>
@@ -55,16 +66,25 @@ export default function PrivacyPage() {
           <CardContent>
             <div className="space-y-6">
               <div>
-                <h3 className="font-semibold text-lg mb-3">Informações Pessoais</h3>
+                <h3 className="font-semibold text-lg mb-3">
+                  Informações Pessoais
+                </h3>
                 <ul className="list-disc list-inside space-y-2 text-gray-700">
-                  <li>Nome completo e informações de contacto (email, telefone)</li>
+                  <li>
+                    Nome completo e informações de contacto (email, telefone)
+                  </li>
                   <li>Informações de faturação e pagamento</li>
-                  <li>Informações sobre os seus filhos (nome, idade, necessidades especiais)</li>
+                  <li>
+                    Informações sobre os seus filhos (nome, idade, necessidades
+                    especiais)
+                  </li>
                   <li>Preferências e historico de atividades</li>
                 </ul>
               </div>
               <div>
-                <h3 className="font-semibold text-lg mb-3">Informações Técnicas</h3>
+                <h3 className="font-semibold text-lg mb-3">
+                  Informações Técnicas
+                </h3>
                 <ul className="list-disc list-inside space-y-2 text-gray-700">
                   <li>Endereço IP e localização geográfica</li>
                   <li>Tipo de navegador e dispositivo</li>
@@ -87,7 +107,9 @@ export default function PrivacyPage() {
           <CardContent>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h3 className="font-semibold text-lg mb-3">Finalidades Primárias</h3>
+                <h3 className="font-semibold text-lg mb-3">
+                  Finalidades Primárias
+                </h3>
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
@@ -108,7 +130,9 @@ export default function PrivacyPage() {
                 </ul>
               </div>
               <div>
-                <h3 className="font-semibold text-lg mb-3">Finalidades Secundárias</h3>
+                <h3 className="font-semibold text-lg mb-3">
+                  Finalidades Secundárias
+                </h3>
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
@@ -143,12 +167,15 @@ export default function PrivacyPage() {
           <CardContent>
             <div className="space-y-4">
               <p className="text-gray-700">
-                Implementamos medidas de segurança técnicas e organizacionais apropriadas para proteger 
-                os seus dados pessoais contra acesso não autorizado, alteração, divulgação ou destruição.
+                Implementamos medidas de segurança técnicas e organizacionais
+                apropriadas para proteger os seus dados pessoais contra acesso
+                não autorizado, alteração, divulgação ou destruição.
               </p>
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="bg-blue-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-blue-900 mb-2">Medidas Técnicas</h4>
+                  <h4 className="font-semibold text-blue-900 mb-2">
+                    Medidas Técnicas
+                  </h4>
                   <ul className="text-sm text-blue-800 space-y-1">
                     <li>• Encriptação SSL/TLS</li>
                     <li>• Armazenamento seguro</li>
@@ -157,7 +184,9 @@ export default function PrivacyPage() {
                   </ul>
                 </div>
                 <div className="bg-green-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-green-900 mb-2">Medidas Organizacionais</h4>
+                  <h4 className="font-semibold text-green-900 mb-2">
+                    Medidas Organizacionais
+                  </h4>
                   <ul className="text-sm text-green-800 space-y-1">
                     <li>• Acesso restrito aos dados</li>
                     <li>• Formação de segurança</li>
@@ -174,7 +203,10 @@ export default function PrivacyPage() {
         <Card className="mb-8">
           <CardHeader>
             <CardTitle>Os Seus Direitos</CardTitle>
-            <CardDescription>Sob o RGPD, tem vários direitos relativamente aos seus dados pessoais</CardDescription>
+            <CardDescription>
+              Sob o RGPD, tem vários direitos relativamente aos seus dados
+              pessoais
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-2 gap-4">
@@ -228,29 +260,35 @@ export default function PrivacyPage() {
           </CardHeader>
           <CardContent>
             <p className="text-gray-700 mb-4">
-              Utilizamos cookies e tecnologias semelhantes para melhorar a sua experiência, 
-              analisar o tráfego e personalizar o conteúdo. Pode gerir as suas preferências de cookies 
-              a qualquer momento.
+              Utilizamos cookies e tecnologias semelhantes para melhorar a sua
+              experiência, analisar o tráfego e personalizar o conteúdo. Pode
+              gerir as suas preferências de cookies a qualquer momento.
             </p>
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div>
                   <span className="font-medium">Cookies Essenciais</span>
-                  <p className="text-sm text-gray-600">Necessários para o funcionamento do site</p>
+                  <p className="text-sm text-gray-600">
+                    Necessários para o funcionamento do site
+                  </p>
                 </div>
                 <Badge>Sempre Ativos</Badge>
               </div>
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div>
                   <span className="font-medium">Cookies de Análise</span>
-                  <p className="text-sm text-gray-600">Ajudam-nos a entender como utiliza o site</p>
+                  <p className="text-sm text-gray-600">
+                    Ajudam-nos a entender como utiliza o site
+                  </p>
                 </div>
                 <Badge variant="outline">Opcionais</Badge>
               </div>
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div>
                   <span className="font-medium">Cookies de Marketing</span>
-                  <p className="text-sm text-gray-600">Utilizados para mostrar publicidade relevante</p>
+                  <p className="text-sm text-gray-600">
+                    Utilizados para mostrar publicidade relevante
+                  </p>
                 </div>
                 <Badge variant="outline">Opcionais</Badge>
               </div>
@@ -262,22 +300,28 @@ export default function PrivacyPage() {
         <Card>
           <CardHeader>
             <CardTitle>Contacto</CardTitle>
-            <CardDescription>Para questões sobre privacidade e proteção de dados</CardDescription>
+            <CardDescription>
+              Para questões sobre privacidade e proteção de dados
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <p className="text-gray-700">
-                Se tiver alguma questão sobre esta política de privacidade ou quiser exercer os seus direitos, 
-                pode contactar-nos:
+                Se tiver alguma questão sobre esta política de privacidade ou
+                quiser exercer os seus direitos, pode contactar-nos:
               </p>
               <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="font-semibold text-blue-900">Encarregado de Proteção de Dados</p>
-                <p className="text-blue-800">Email: privacidade@kidshiz.pt</p>
+                <p className="font-semibold text-blue-900">
+                  Encarregado de Proteção de Dados
+                </p>
+                <p className="text-blue-800">Email: privacidade@kivvy.pt</p>
                 <p className="text-blue-800">Telefone: +351 220 123 456</p>
               </div>
               <p className="text-sm text-gray-600">
-                Tem também o direito de apresentar uma reclamação à Comissão Nacional de Proteção de Dados (CNPD) 
-                se considerar que os seus dados pessoais não estão a ser tratados em conformidade com a lei.
+                Tem também o direito de apresentar uma reclamação à Comissão
+                Nacional de Proteção de Dados (CNPD) se considerar que os seus
+                dados pessoais não estão a ser tratados em conformidade com a
+                lei.
               </p>
             </div>
           </CardContent>

@@ -11,9 +11,9 @@ import { Badge } from '@/components/ui/badge';
 import { Users, Calendar, Shield, Heart, Star } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Sobre Nós | KidsHiz',
+  title: 'Sobre Nós | Kivvy',
   description:
-    'Conheça a KidsHiz, a plataforma que conecta famílias às melhores atividades para crianças no Porto e Matosinhos.',
+    'Conheça a Kivvy, a plataforma que conecta famílias às melhores atividades para crianças no Porto e Matosinhos.',
 };
 
 export default function AboutPage() {
@@ -45,7 +45,7 @@ export default function AboutPage() {
               A Nossa Missão
             </h2>
             <p className="text-rose-700 mb-4 leading-relaxed">
-              A KidsHiz nasceu do coração de uma mãe que queria simplificar a
+              A Kivvy nasceu do coração de uma mãe que queria simplificar a
               busca por experiências especiais para os seus filhos. Acreditamos
               que cada criança merece oportunidades para explorar, descobrir e
               crescer rodeada de amor e cuidado.

@@ -24,7 +24,10 @@ export async function POST(request: NextRequest) {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
-        { error: 'Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed.' },
+        {
+          error:
+            'Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed.',
+        },
         { status: 400 }
       );
     }
@@ -41,12 +44,12 @@ export async function POST(request: NextRequest) {
     // Generate unique filename
     const fileExtension = file.name.split('.').pop();
     const filename = `${uuidv4()}.${fileExtension}`;
-    
+
     // Create upload directory if it doesn't exist
     const uploadDir = join(process.cwd(), 'public', 'uploads');
     try {
       await mkdir(uploadDir, { recursive: true });
-    } catch (error) {
+    } catch {
       // Directory might already exist
     }
 
@@ -77,12 +80,12 @@ export async function POST(request: NextRequest) {
 // Alternative implementation using Cloudinary
 export async function uploadToCloudinary(file: File): Promise<string> {
   const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`;
-  
+
   const formData = new FormData();
   formData.append('file', file);
   formData.append('upload_preset', process.env.CLOUDINARY_UPLOAD_PRESET!);
-  formData.append('folder', 'kidshiz/activities');
-  
+  formData.append('folder', 'kivvy/activities');
+
   const response = await fetch(cloudinaryUrl, {
     method: 'POST',
     body: formData,
@@ -115,7 +118,10 @@ export async function POST_CLOUDINARY(request: NextRequest) {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
-        { error: 'Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed.' },
+        {
+          error:
+            'Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed.',
+        },
         { status: 400 }
       );
     }
@@ -132,19 +138,25 @@ export async function POST_CLOUDINARY(request: NextRequest) {
     let imageUrl: string;
 
     // Try Cloudinary first if configured
-    if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_UPLOAD_PRESET) {
+    if (
+      process.env.CLOUDINARY_CLOUD_NAME &&
+      process.env.CLOUDINARY_UPLOAD_PRESET
+    ) {
       try {
         imageUrl = await uploadToCloudinary(file);
       } catch (error) {
-        console.error('Cloudinary upload failed, falling back to local:', error);
+        console.error(
+          'Cloudinary upload failed, falling back to local:',
+          error
+        );
         // Fall back to local upload
         const fileExtension = file.name.split('.').pop();
         const filename = `${uuidv4()}.${fileExtension}`;
-        
+
         const uploadDir = join(process.cwd(), 'public', 'uploads');
         try {
           await mkdir(uploadDir, { recursive: true });
-        } catch (error) {
+        } catch {
           // Directory might already exist
         }
 
@@ -152,18 +164,18 @@ export async function POST_CLOUDINARY(request: NextRequest) {
         const buffer = Buffer.from(bytes);
         const filePath = join(uploadDir, filename);
         await writeFile(filePath, buffer);
-        
+
         imageUrl = `/uploads/${filename}`;
       }
     } else {
       // Local upload only
       const fileExtension = file.name.split('.').pop();
       const filename = `${uuidv4()}.${fileExtension}`;
-      
+
       const uploadDir = join(process.cwd(), 'public', 'uploads');
       try {
         await mkdir(uploadDir, { recursive: true });
-      } catch (error) {
+      } catch {
         // Directory might already exist
       }
 
@@ -171,7 +183,7 @@ export async function POST_CLOUDINARY(request: NextRequest) {
       const buffer = Buffer.from(bytes);
       const filePath = join(uploadDir, filename);
       await writeFile(filePath, buffer);
-      
+
       imageUrl = `/uploads/${filename}`;
     }
 

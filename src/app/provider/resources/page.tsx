@@ -1,29 +1,32 @@
 import { Metadata } from 'next';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { 
-  BookOpen, 
-  TrendingUp, 
-  Users, 
-  Camera, 
-  MessageSquare, 
-  Star, 
-  DollarSign,
+import {
+  BookOpen,
+  TrendingUp,
+  Users,
+  Camera,
+  MessageSquare,
+  Star,
   Calendar,
   BarChart,
-  Shield,
-  Download,
   ExternalLink,
-  ChevronRight,
   Lightbulb,
   Target,
-  Award
+  Award,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Recursos para Prestadores | KidsHiz',
-  description: 'Recursos, guias e ferramentas para prestadores de atividades na KidsHiz. Maximize o sucesso do seu negócio.',
+  title: 'Recursos para Prestadores | Kivvy',
+  description:
+    'Recursos, guias e ferramentas para prestadores de atividades na Kivvy. Maximize o sucesso do seu negócio.',
 };
 
 export default function ProviderResourcesPage() {
@@ -36,23 +39,23 @@ export default function ProviderResourcesPage() {
       items: [
         {
           title: 'Guia Completo do Prestador',
-          description: 'Tudo o que precisa de saber para começar na KidsHiz',
+          description: 'Tudo o que precisa de saber para começar na Kivvy',
           type: 'PDF',
-          link: '#'
+          link: '#',
         },
         {
           title: 'Configuração do Perfil',
           description: 'Como criar um perfil atrativo e completo',
           type: 'Vídeo',
-          link: '#'
+          link: '#',
         },
         {
           title: 'Primeiros Passos',
           description: 'Checklist para começar a receber reservas',
           type: 'Checklist',
-          link: '#'
-        }
-      ]
+          link: '#',
+        },
+      ],
     },
     {
       category: 'Marketing & Vendas',
@@ -64,21 +67,21 @@ export default function ProviderResourcesPage() {
           title: 'Fotografias que Vendem',
           description: 'Dicas para tirar fotos atrativas das suas atividades',
           type: 'Guia',
-          link: '#'
+          link: '#',
         },
         {
           title: 'Descrições Persuasivas',
           description: 'Como escrever descrições que convertem',
           type: 'Template',
-          link: '#'
+          link: '#',
         },
         {
           title: 'Preços Competitivos',
           description: 'Estratégias de preços para maximizar reservas',
           type: 'Webinar',
-          link: '#'
-        }
-      ]
+          link: '#',
+        },
+      ],
     },
     {
       category: 'Gestão de Clientes',
@@ -90,21 +93,21 @@ export default function ProviderResourcesPage() {
           title: 'Comunicação Eficaz',
           description: 'Como comunicar profissionalmente com os pais',
           type: 'Guia',
-          link: '#'
+          link: '#',
         },
         {
           title: 'Gestão de Expectativas',
           description: 'Defina expectativas claras desde o início',
           type: 'Template',
-          link: '#'
+          link: '#',
         },
         {
           title: 'Resolução de Conflitos',
           description: 'Como lidar com situações difíceis',
           type: 'Vídeo',
-          link: '#'
-        }
-      ]
+          link: '#',
+        },
+      ],
     },
     {
       category: 'Ferramentas Técnicas',
@@ -116,22 +119,22 @@ export default function ProviderResourcesPage() {
           title: 'Analytics do Prestador',
           description: 'Como interpretar as suas estatísticas',
           type: 'Tutorial',
-          link: '#'
+          link: '#',
         },
         {
           title: 'Gestão de Calendário',
           description: 'Otimize a sua agenda para maximizar reservas',
           type: 'Guia',
-          link: '#'
+          link: '#',
         },
         {
           title: 'App Móvel',
           description: 'Gira o seu negócio em movimento',
           type: 'Download',
-          link: '#'
-        }
-      ]
-    }
+          link: '#',
+        },
+      ],
+    },
   ];
 
   const bestPractices = [
@@ -139,26 +142,31 @@ export default function ProviderResourcesPage() {
       icon: Star,
       title: 'Mantenha uma Classificação Alta',
       description: 'Prestadores com 4.5+ estrelas recebem 40% mais reservas',
-      tips: ['Responda rapidamente', 'Supere expectativas', 'Peça feedback']
+      tips: ['Responda rapidamente', 'Supere expectativas', 'Peça feedback'],
     },
     {
       icon: Camera,
       title: 'Use Fotos de Qualidade',
-      description: 'Atividades com fotos profissionais têm 3x mais visualizações',
-      tips: ['Luz natural', 'Crianças felizes', 'Espaços limpos']
+      description:
+        'Atividades com fotos profissionais têm 3x mais visualizações',
+      tips: ['Luz natural', 'Crianças felizes', 'Espaços limpos'],
     },
     {
       icon: MessageSquare,
       title: 'Comunique Proactivamente',
       description: 'Prestadores que comunicam bem têm menos cancelamentos',
-      tips: ['Confirme reservas', 'Envie lembretes', 'Partilhe detalhes']
+      tips: ['Confirme reservas', 'Envie lembretes', 'Partilhe detalhes'],
     },
     {
       icon: Calendar,
       title: 'Mantenha Disponibilidade',
       description: 'Calendários atualizados geram mais confiança',
-      tips: ['Atualize regularmente', 'Planeie com antecedência', 'Seja flexível']
-    }
+      tips: [
+        'Atualize regularmente',
+        'Planeie com antecedência',
+        'Seja flexível',
+      ],
+    },
   ];
 
   return (
@@ -169,10 +177,12 @@ export default function ProviderResourcesPage() {
           <div className="flex justify-center mb-4">
             <BookOpen className="h-12 w-12 text-blue-600" />
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Recursos para Prestadores</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Recursos para Prestadores
+          </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Tudo o que precisa para ter sucesso na KidsHiz. Guias, ferramentas e dicas 
-            dos nossos melhores prestadores.
+            Tudo o que precisa para ter sucesso na Kivvy. Guias, ferramentas e
+            dicas dos nossos melhores prestadores.
           </p>
         </div>
 
@@ -206,7 +216,9 @@ export default function ProviderResourcesPage() {
 
         {/* Resources by Category */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Recursos por Categoria</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-8">
+            Recursos por Categoria
+          </h2>
           <div className="grid md:grid-cols-2 gap-8">
             {resources.map((category, index) => {
               const Icon = category.icon;
@@ -223,10 +235,17 @@ export default function ProviderResourcesPage() {
                   <CardContent>
                     <div className="space-y-4">
                       {category.items.map((item, itemIndex) => (
-                        <div key={itemIndex} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <div
+                          key={itemIndex}
+                          className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                        >
                           <div className="flex-1">
-                            <h4 className="font-medium text-gray-900">{item.title}</h4>
-                            <p className="text-sm text-gray-600">{item.description}</p>
+                            <h4 className="font-medium text-gray-900">
+                              {item.title}
+                            </h4>
+                            <p className="text-sm text-gray-600">
+                              {item.description}
+                            </p>
                           </div>
                           <div className="flex items-center gap-2">
                             <Badge variant="outline">{item.type}</Badge>
@@ -246,7 +265,9 @@ export default function ProviderResourcesPage() {
 
         {/* Best Practices */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Melhores Práticas</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-8">
+            Melhores Práticas
+          </h2>
           <div className="grid md:grid-cols-2 gap-8">
             {bestPractices.map((practice, index) => {
               const Icon = practice.icon;
@@ -258,13 +279,22 @@ export default function ProviderResourcesPage() {
                         <Icon className="h-6 w-6 text-blue-600" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold text-lg mb-2">{practice.title}</h3>
-                        <p className="text-gray-600 mb-4">{practice.description}</p>
+                        <h3 className="font-semibold text-lg mb-2">
+                          {practice.title}
+                        </h3>
+                        <p className="text-gray-600 mb-4">
+                          {practice.description}
+                        </p>
                         <div className="space-y-2">
                           {practice.tips.map((tip, tipIndex) => (
-                            <div key={tipIndex} className="flex items-center gap-2">
+                            <div
+                              key={tipIndex}
+                              className="flex items-center gap-2"
+                            >
                               <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                              <span className="text-sm text-gray-700">{tip}</span>
+                              <span className="text-sm text-gray-700">
+                                {tip}
+                              </span>
                             </div>
                           ))}
                         </div>
@@ -279,7 +309,9 @@ export default function ProviderResourcesPage() {
 
         {/* Success Stories */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Histórias de Sucesso</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-8">
+            Histórias de Sucesso
+          </h2>
           <div className="grid md:grid-cols-3 gap-6">
             <Card className="hover:shadow-lg transition-shadow">
               <CardContent className="p-6">
@@ -293,15 +325,21 @@ export default function ProviderResourcesPage() {
                   </div>
                 </div>
                 <p className="text-gray-700 mb-4">
-                  "A KidsHiz aumentou as nossas reservas em 200% no primeiro mês. A plataforma é intuitiva e o suporte é excecional."
+                  &quot;A Kivvy aumentou as nossas reservas em 200% no primeiro
+                  mês. A plataforma é intuitiva e o suporte é excecional.&quot;
                 </p>
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <Star
+                        key={i}
+                        className="h-4 w-4 fill-yellow-400 text-yellow-400"
+                      />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-600">5.0 (127 avaliações)</span>
+                  <span className="text-sm text-gray-600">
+                    5.0 (127 avaliações)
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -317,15 +355,22 @@ export default function ProviderResourcesPage() {
                   </div>
                 </div>
                 <p className="text-gray-700 mb-4">
-                  "Conseguimos alcançar muito mais famílias interessadas em programação para crianças. A qualidade dos pais é excecional."
+                  &quot;Conseguimos alcançar muito mais famílias interessadas em
+                  programação para crianças. A qualidade dos pais é
+                  excecional.&quot;
                 </p>
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <Star
+                        key={i}
+                        className="h-4 w-4 fill-yellow-400 text-yellow-400"
+                      />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-600">4.9 (89 avaliações)</span>
+                  <span className="text-sm text-gray-600">
+                    4.9 (89 avaliações)
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -341,15 +386,21 @@ export default function ProviderResourcesPage() {
                   </div>
                 </div>
                 <p className="text-gray-700 mb-4">
-                  "A gestão de reservas ficou muito mais fácil. Conseguimos focar-nos no que fazemos melhor: ensinar dança."
+                  &quot;A gestão de reservas ficou muito mais fácil. Conseguimos
+                  focar-nos no que fazemos melhor: ensinar dança.&quot;
                 </p>
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <Star
+                        key={i}
+                        className="h-4 w-4 fill-yellow-400 text-yellow-400"
+                      />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-600">4.8 (156 avaliações)</span>
+                  <span className="text-sm text-gray-600">
+                    4.8 (156 avaliações)
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -358,7 +409,9 @@ export default function ProviderResourcesPage() {
 
         {/* Training & Events */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Formação e Eventos</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-8">
+            Formação e Eventos
+          </h2>
           <div className="grid md:grid-cols-2 gap-8">
             <Card>
               <CardHeader>
@@ -366,27 +419,35 @@ export default function ProviderResourcesPage() {
                   <Lightbulb className="h-5 w-5 text-yellow-600" />
                   Webinars Mensais
                 </CardTitle>
-                <CardDescription>Sessões de formação ao vivo com especialistas</CardDescription>
+                <CardDescription>
+                  Sessões de formação ao vivo com especialistas
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
                     <div>
-                      <h4 className="font-medium">Marketing Digital para Prestadores</h4>
-                      <p className="text-sm text-gray-600">15 de Agosto, 18h00</p>
+                      <h4 className="font-medium">
+                        Marketing Digital para Prestadores
+                      </h4>
+                      <p className="text-sm text-gray-600">
+                        15 de Agosto, 18h00
+                      </p>
                     </div>
                     <Badge>Inscrição Aberta</Badge>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                     <div>
-                      <h4 className="font-medium">Gestão de Clientes Difíceis</h4>
-                      <p className="text-sm text-gray-600">22 de Agosto, 19h00</p>
+                      <h4 className="font-medium">
+                        Gestão de Clientes Difíceis
+                      </h4>
+                      <p className="text-sm text-gray-600">
+                        22 de Agosto, 19h00
+                      </p>
                     </div>
                     <Badge variant="outline">Brevemente</Badge>
                   </div>
-                  <Button className="w-full">
-                    Ver Todos os Webinars
-                  </Button>
+                  <Button className="w-full">Ver Todos os Webinars</Button>
                 </div>
               </CardContent>
             </Card>
@@ -403,20 +464,22 @@ export default function ProviderResourcesPage() {
                   <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
                     <div>
                       <h4 className="font-medium">Bootcamp de Vendas</h4>
-                      <p className="text-sm text-gray-600">5 de Setembro, 9h00-17h00</p>
+                      <p className="text-sm text-gray-600">
+                        5 de Setembro, 9h00-17h00
+                      </p>
                     </div>
                     <Badge>Lugares Limitados</Badge>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                     <div>
                       <h4 className="font-medium">Networking de Prestadores</h4>
-                      <p className="text-sm text-gray-600">20 de Setembro, 18h00</p>
+                      <p className="text-sm text-gray-600">
+                        20 de Setembro, 18h00
+                      </p>
                     </div>
                     <Badge variant="outline">Gratuito</Badge>
                   </div>
-                  <Button className="w-full">
-                    Inscrever-se
-                  </Button>
+                  <Button className="w-full">Inscrever-se</Button>
                 </div>
               </CardContent>
             </Card>
@@ -430,7 +493,9 @@ export default function ProviderResourcesPage() {
               <Award className="h-5 w-5 text-purple-600" />
               Suporte Dedicado
             </CardTitle>
-            <CardDescription>Estamos aqui para o ajudar a ter sucesso</CardDescription>
+            <CardDescription>
+              Estamos aqui para o ajudar a ter sucesso
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-3 gap-6">
@@ -439,7 +504,9 @@ export default function ProviderResourcesPage() {
                   <MessageSquare className="h-8 w-8 text-blue-600" />
                 </div>
                 <h3 className="font-semibold mb-2">Chat de Suporte</h3>
-                <p className="text-sm text-gray-600 mb-4">Resposta imediata para questões urgentes</p>
+                <p className="text-sm text-gray-600 mb-4">
+                  Resposta imediata para questões urgentes
+                </p>
                 <Button variant="outline" size="sm">
                   Abrir Chat
                 </Button>
@@ -449,7 +516,9 @@ export default function ProviderResourcesPage() {
                   <Users className="h-8 w-8 text-green-600" />
                 </div>
                 <h3 className="font-semibold mb-2">Gestor de Conta</h3>
-                <p className="text-sm text-gray-600 mb-4">Suporte personalizado para o seu crescimento</p>
+                <p className="text-sm text-gray-600 mb-4">
+                  Suporte personalizado para o seu crescimento
+                </p>
                 <Button variant="outline" size="sm">
                   Contactar
                 </Button>
@@ -459,7 +528,9 @@ export default function ProviderResourcesPage() {
                   <BookOpen className="h-8 w-8 text-purple-600" />
                 </div>
                 <h3 className="font-semibold mb-2">Centro de Ajuda</h3>
-                <p className="text-sm text-gray-600 mb-4">Documentação completa e tutoriais</p>
+                <p className="text-sm text-gray-600 mb-4">
+                  Documentação completa e tutoriais
+                </p>
                 <Button variant="outline" size="sm">
                   <a href="/help">Visitar</a>
                 </Button>

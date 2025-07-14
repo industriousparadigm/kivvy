@@ -27,27 +27,28 @@ const structuredFormat = winston.format.combine(
   }),
   winston.format.errors({ stack: true }),
   winston.format.json(),
-  winston.format.printf((info) => {
+  winston.format.printf(info => {
     const { timestamp, level, message, ...meta } = info;
-    
-    const logEntry = {
+    const metaAny = meta as any;
+
+    const logEntry: any = {
       timestamp,
       level,
       message,
       ...meta,
     };
-    
+
     // Add request context if available
-    if (meta.req) {
+    if (metaAny.req) {
       logEntry.request = {
-        method: meta.req.method,
-        url: meta.req.url,
-        userAgent: meta.req.headers?.['user-agent'],
-        ip: meta.req.ip,
+        method: metaAny.req.method,
+        url: metaAny.req.url,
+        userAgent: metaAny.req.headers?.['user-agent'],
+        ip: metaAny.req.ip,
       };
       delete logEntry.req;
     }
-    
+
     return JSON.stringify(logEntry);
   })
 );
@@ -58,15 +59,15 @@ const consoleFormat = winston.format.combine(
     format: 'HH:mm:ss',
   }),
   winston.format.colorize(),
-  winston.format.printf((info) => {
+  winston.format.printf(info => {
     const { timestamp, level, message, ...meta } = info;
-    
+
     let output = `${timestamp} [${level}]: ${message}`;
-    
+
     if (Object.keys(meta).length > 0) {
       output += '\n' + JSON.stringify(meta, null, 2);
     }
-    
+
     return output;
   })
 );
@@ -83,23 +84,26 @@ export const logger = winston.createLogger({
   transports: [
     // Console transport for development
     new winston.transports.Console({
-      format: process.env.NODE_ENV === 'production' ? structuredFormat : consoleFormat,
+      format:
+        process.env.NODE_ENV === 'production'
+          ? structuredFormat
+          : consoleFormat,
     }),
-    
+
     // File transport for errors
     new winston.transports.File({
       filename: path.join(process.cwd(), 'logs', 'error.log'),
       level: 'error',
       format: structuredFormat,
     }),
-    
+
     // File transport for all logs
     new winston.transports.File({
       filename: path.join(process.cwd(), 'logs', 'app.log'),
       format: structuredFormat,
     }),
   ],
-  
+
   // Handle uncaught exceptions
   exceptionHandlers: [
     new winston.transports.File({
@@ -107,7 +111,7 @@ export const logger = winston.createLogger({
       format: structuredFormat,
     }),
   ],
-  
+
   // Handle unhandled promise rejections
   rejectionHandlers: [
     new winston.transports.File({
@@ -118,35 +122,39 @@ export const logger = winston.createLogger({
 });
 
 // Add request logging middleware helper
-export const requestLogger = (req: NextRequest, res: NextResponse, next: () => void) => {
+export const requestLogger = (
+  req: NextRequest,
+  res: NextResponse,
+  next: () => void
+) => {
   const start = Date.now();
-  
+
   // Log request start
   logger.info('Request started', {
     method: req.method,
     url: req.url,
-    userAgent: req.headers['user-agent'],
-    ip: req.ip,
-    sessionId: req.session?.id,
-    userId: req.user?.id,
+    userAgent: req.headers.get('user-agent') || undefined,
+    ip: req.ip || req.headers.get('x-forwarded-for') || undefined,
+    sessionId: (req as any).session?.id,
+    userId: (req as any).user?.id,
   });
-  
+
   // Log response when finished
   res.on('finish', () => {
     const duration = Date.now() - start;
-    
+
     logger.info('Request completed', {
       method: req.method,
       url: req.url,
-      statusCode: res.statusCode,
+      statusCode: res.status,
       duration,
-      userAgent: req.headers['user-agent'],
-      ip: req.ip,
-      sessionId: req.session?.id,
-      userId: req.user?.id,
+      userAgent: req.headers.get('user-agent') || undefined,
+      ip: req.ip || req.headers.get('x-forwarded-for') || undefined,
+      sessionId: (req as any).session?.id,
+      userId: (req as any).user?.id,
     });
   });
-  
+
   next();
 };
 
@@ -154,11 +162,11 @@ export const requestLogger = (req: NextRequest, res: NextResponse, next: () => v
 export const performanceLogger = {
   start: (operation: string, metadata?: Record<string, unknown>) => {
     const startTime = Date.now();
-    
+
     return {
       end: (result?: unknown) => {
         const duration = Date.now() - startTime;
-        
+
         logger.info('Performance metric', {
           operation,
           duration,
@@ -166,10 +174,10 @@ export const performanceLogger = {
           result: result ? 'success' : 'failure',
         });
       },
-      
+
       error: (error: Error) => {
         const duration = Date.now() - startTime;
-        
+
         logger.error('Performance metric - error', {
           operation,
           duration,
@@ -184,7 +192,12 @@ export const performanceLogger = {
 
 // Security event logger
 export const securityLogger = {
-  loginAttempt: (email: string, success: boolean, ip: string, userAgent: string) => {
+  loginAttempt: (
+    email: string,
+    success: boolean,
+    ip: string,
+    userAgent: string
+  ) => {
     logger.info('Login attempt', {
       email,
       success,
@@ -193,8 +206,13 @@ export const securityLogger = {
       type: 'authentication',
     });
   },
-  
-  loginSuccess: (userId: string, email: string, ip: string, userAgent: string) => {
+
+  loginSuccess: (
+    userId: string,
+    email: string,
+    ip: string,
+    userAgent: string
+  ) => {
     logger.info('Login successful', {
       userId,
       email,
@@ -203,8 +221,13 @@ export const securityLogger = {
       type: 'authentication',
     });
   },
-  
-  loginFailed: (email: string, reason: string, ip: string, userAgent: string) => {
+
+  loginFailed: (
+    email: string,
+    reason: string,
+    ip: string,
+    userAgent: string
+  ) => {
     logger.warn('Login failed', {
       email,
       reason,
@@ -213,8 +236,12 @@ export const securityLogger = {
       type: 'authentication',
     });
   },
-  
-  suspiciousActivity: (userId: string, activity: string, details: Record<string, unknown>) => {
+
+  suspiciousActivity: (
+    userId: string,
+    activity: string,
+    details: Record<string, unknown>
+  ) => {
     logger.warn('Suspicious activity detected', {
       userId,
       activity,
@@ -222,8 +249,13 @@ export const securityLogger = {
       type: 'security',
     });
   },
-  
-  paymentAttempt: (userId: string, amount: number, success: boolean, provider: string) => {
+
+  paymentAttempt: (
+    userId: string,
+    amount: number,
+    success: boolean,
+    provider: string
+  ) => {
     logger.info('Payment attempt', {
       userId,
       amount,
@@ -232,7 +264,7 @@ export const securityLogger = {
       type: 'payment',
     });
   },
-  
+
   dataAccess: (userId: string, resource: string, action: string) => {
     logger.info('Data access', {
       userId,
@@ -245,7 +277,12 @@ export const securityLogger = {
 
 // Business metrics logger
 export const businessLogger = {
-  bookingCreated: (bookingId: string, userId: string, activityId: string, amount: number) => {
+  bookingCreated: (
+    bookingId: string,
+    userId: string,
+    activityId: string,
+    amount: number
+  ) => {
     logger.info('Booking created', {
       bookingId,
       userId,
@@ -254,7 +291,7 @@ export const businessLogger = {
       type: 'business-event',
     });
   },
-  
+
   bookingCancelled: (bookingId: string, userId: string, reason: string) => {
     logger.info('Booking cancelled', {
       bookingId,
@@ -263,8 +300,12 @@ export const businessLogger = {
       type: 'business-event',
     });
   },
-  
-  activityCreated: (activityId: string, providerId: string, category: string) => {
+
+  activityCreated: (
+    activityId: string,
+    providerId: string,
+    category: string
+  ) => {
     logger.info('Activity created', {
       activityId,
       providerId,
@@ -272,7 +313,7 @@ export const businessLogger = {
       type: 'business-event',
     });
   },
-  
+
   userRegistered: (userId: string, role: string, provider: string) => {
     logger.info('User registered', {
       userId,
@@ -281,8 +322,13 @@ export const businessLogger = {
       type: 'business-event',
     });
   },
-  
-  paymentProcessed: (paymentId: string, amount: number, provider: string, success: boolean) => {
+
+  paymentProcessed: (
+    paymentId: string,
+    amount: number,
+    provider: string,
+    success: boolean
+  ) => {
     logger.info('Payment processed', {
       paymentId,
       amount,

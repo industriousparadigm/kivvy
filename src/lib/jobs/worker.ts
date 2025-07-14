@@ -93,7 +93,9 @@ function setupEventHandlers() {
         queue: queue.name,
         jobId: job.id,
         type: job.data.type,
-        duration: Date.now() - job.processedOn,
+        duration: job.finishedOn
+          ? job.finishedOn - job.processedOn!
+          : undefined,
         attempts: job.attemptsMade,
       });
     });
@@ -187,7 +189,12 @@ export async function checkWorkerHealth() {
     } catch (error) {
       health[queue.name] = {
         status: 'unhealthy',
-        error: error.message,
+        waiting: 0,
+        active: 0,
+        completed: 0,
+        failed: 0,
+        isPaused: false,
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }

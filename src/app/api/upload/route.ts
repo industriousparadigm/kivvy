@@ -99,7 +99,7 @@ async function uploadToCloudinary(file: File): Promise<string> {
 }
 
 // Enhanced POST handler with Cloudinary support
-async function POST_CLOUDINARY(request: NextRequest) {
+async function _POST_CLOUDINARY(request: NextRequest) {
   try {
     const session = await auth();
     if (!session) {

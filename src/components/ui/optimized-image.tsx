@@ -85,7 +85,7 @@ export function OptimizedImage({
   if (fill) {
     return (
       <div className="relative overflow-hidden">
-        <Image {...imageProps} fill />
+        <Image {...imageProps} fill alt={alt || ''} />
         {isLoading && (
           <div className="absolute inset-0 bg-gray-200 animate-pulse" />
         )}
@@ -95,7 +95,7 @@ export function OptimizedImage({
 
   return (
     <div className="relative">
-      <Image {...imageProps} width={width!} height={height!} />
+      <Image {...imageProps} width={width!} height={height!} alt={alt || ''} />
       {isLoading && (
         <div
           className="absolute inset-0 bg-gray-200 animate-pulse rounded"

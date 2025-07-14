@@ -444,13 +444,20 @@ async function updateActivityStats() {
   // Update activity view counts, ratings, etc.
   const activities = await prisma.activity.findMany({
     include: {
-      bookings: true,
+      sessions: {
+        include: {
+          bookings: true,
+        },
+      },
       reviews: true,
     },
   });
 
   for (const activity of activities) {
-    const totalBookings = activity.bookings.length;
+    const totalBookings = activity.sessions.reduce(
+      (sum, session) => sum + session.bookings.length,
+      0
+    );
     const totalReviews = activity.reviews.length;
     const averageRating =
       totalReviews > 0
@@ -487,7 +494,7 @@ export const processBookingReminderJob = async (job: Queue.Job<JobData>) => {
       where: {
         status: 'CONFIRMED',
         session: {
-          dateTime: {
+          startTime: {
             gte: tomorrow,
             lt: new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000),
           },
@@ -512,7 +519,7 @@ export const processBookingReminderJob = async (job: Queue.Job<JobData>) => {
         context: {
           userName: booking.user.name,
           activityTitle: booking.session.activity.title,
-          sessionDate: booking.session.dateTime,
+          sessionDate: booking.session.startTime,
           location: booking.session.activity.location,
         },
       });

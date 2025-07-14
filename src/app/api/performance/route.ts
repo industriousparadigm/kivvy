@@ -1,12 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth';
+import { NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
-    
-    if (!session || session.user.role !== 'admin') {
+    const session = await auth();
+
+    if (!session || session.user.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -14,12 +13,24 @@ export async function GET(request: NextRequest) {
     const performanceChecks = {
       // Core Web Vitals targets
       coreWebVitals: {
-        fcp: { target: 1800, description: 'First Contentful Paint should be < 1.8s' },
-        lcp: { target: 2500, description: 'Largest Contentful Paint should be < 2.5s' },
-        cls: { target: 0.1, description: 'Cumulative Layout Shift should be < 0.1' },
-        fid: { target: 100, description: 'First Input Delay should be < 100ms' },
+        fcp: {
+          target: 1800,
+          description: 'First Contentful Paint should be < 1.8s',
+        },
+        lcp: {
+          target: 2500,
+          description: 'Largest Contentful Paint should be < 2.5s',
+        },
+        cls: {
+          target: 0.1,
+          description: 'Cumulative Layout Shift should be < 0.1',
+        },
+        fid: {
+          target: 100,
+          description: 'First Input Delay should be < 100ms',
+        },
       },
-      
+
       // Performance optimizations implemented
       optimizations: {
         imageOptimization: {
@@ -27,29 +38,45 @@ export async function GET(request: NextRequest) {
           description: 'Next.js Image component with automatic optimization',
           features: ['WebP/AVIF support', 'Lazy loading', 'Responsive images'],
         },
-        
+
         bundleOptimization: {
           enabled: true,
           description: 'Code splitting and tree shaking',
-          features: ['Dynamic imports', 'Bundle analyzer', 'Dead code elimination'],
+          features: [
+            'Dynamic imports',
+            'Bundle analyzer',
+            'Dead code elimination',
+          ],
         },
-        
+
         caching: {
           enabled: true,
           description: 'Aggressive caching strategy',
-          features: ['Static assets caching', 'API response caching', 'Database query caching'],
+          features: [
+            'Static assets caching',
+            'API response caching',
+            'Database query caching',
+          ],
         },
-        
+
         lazyLoading: {
           enabled: true,
           description: 'Lazy loading for non-critical components',
-          features: ['Intersection Observer', 'Progressive loading', 'Skeleton screens'],
+          features: [
+            'Intersection Observer',
+            'Progressive loading',
+            'Skeleton screens',
+          ],
         },
-        
+
         preloading: {
           enabled: true,
           description: 'Strategic resource preloading',
-          features: ['Critical resources', 'Route prefetching', 'Font preloading'],
+          features: [
+            'Critical resources',
+            'Route prefetching',
+            'Font preloading',
+          ],
         },
       },
 
@@ -58,27 +85,35 @@ export async function GET(request: NextRequest) {
         semanticHTML: {
           enabled: true,
           description: 'Proper semantic HTML structure',
-          features: ['ARIA landmarks', 'Heading hierarchy', 'Alt text for images'],
+          features: [
+            'ARIA landmarks',
+            'Heading hierarchy',
+            'Alt text for images',
+          ],
         },
-        
+
         keyboardNavigation: {
           enabled: true,
           description: 'Full keyboard accessibility',
           features: ['Focus management', 'Skip links', 'Focus trapping'],
         },
-        
+
         screenReader: {
           enabled: true,
           description: 'Screen reader support',
           features: ['ARIA labels', 'Live regions', 'Role attributes'],
         },
-        
+
         colorContrast: {
           enabled: true,
           description: 'WCAG AA color contrast compliance',
-          features: ['High contrast ratios', 'Focus indicators', 'Error states'],
+          features: [
+            'High contrast ratios',
+            'Focus indicators',
+            'Error states',
+          ],
         },
-        
+
         responsiveDesign: {
           enabled: true,
           description: 'Mobile-first responsive design',
@@ -93,13 +128,13 @@ export async function GET(request: NextRequest) {
           description: 'Comprehensive meta tags',
           features: ['Open Graph', 'Twitter Cards', 'JSON-LD structured data'],
         },
-        
+
         sitemap: {
           enabled: false,
           description: 'XML sitemap generation',
           features: ['Dynamic sitemap', 'Search engine submission'],
         },
-        
+
         robotsTxt: {
           enabled: false,
           description: 'Robots.txt configuration',
@@ -112,9 +147,14 @@ export async function GET(request: NextRequest) {
         headers: {
           enabled: true,
           description: 'Security headers implemented',
-          features: ['CSP', 'HSTS', 'X-Frame-Options', 'X-Content-Type-Options'],
+          features: [
+            'CSP',
+            'HSTS',
+            'X-Frame-Options',
+            'X-Content-Type-Options',
+          ],
         },
-        
+
         authentication: {
           enabled: true,
           description: 'Secure authentication',
@@ -127,27 +167,35 @@ export async function GET(request: NextRequest) {
         errorTracking: {
           enabled: true,
           description: 'Comprehensive error tracking',
-          features: ['Sentry integration', 'Error boundaries', 'Performance monitoring'],
+          features: [
+            'Sentry integration',
+            'Error boundaries',
+            'Performance monitoring',
+          ],
         },
-        
+
         analytics: {
           enabled: false,
           description: 'Performance analytics',
           features: ['Core Web Vitals tracking', 'User behavior analytics'],
         },
-        
+
         logging: {
           enabled: true,
           description: 'Structured logging',
-          features: ['Winston logger', 'Performance metrics', 'Business events'],
+          features: [
+            'Winston logger',
+            'Performance metrics',
+            'Business events',
+          ],
         },
       },
     };
 
     // Calculate scores
-    const calculateScore = (category: any) => {
+    const calculateScore = (category: Record<string, { enabled: boolean }>) => {
       const items = Object.values(category);
-      const enabledCount = items.filter((item: any) => item.enabled).length;
+      const enabledCount = items.filter(item => item.enabled).length;
       return Math.round((enabledCount / items.length) * 100);
     };
 
@@ -160,7 +208,8 @@ export async function GET(request: NextRequest) {
     };
 
     const overallScore = Math.round(
-      Object.values(scores).reduce((sum, score) => sum + score, 0) / Object.values(scores).length
+      Object.values(scores).reduce((sum, score) => sum + score, 0) /
+        Object.values(scores).length
     );
 
     // Recommendations
@@ -169,7 +218,8 @@ export async function GET(request: NextRequest) {
         category: 'SEO',
         priority: 'high',
         item: 'Implement XML sitemap generation',
-        description: 'Create dynamic sitemaps to help search engines discover your content',
+        description:
+          'Create dynamic sitemaps to help search engines discover your content',
         effort: 'medium',
       },
       {
@@ -206,7 +256,6 @@ export async function GET(request: NextRequest) {
         url: 'https://developers.google.com/web/tools/lighthouse',
       },
     });
-
   } catch (error) {
     console.error('Performance report error:', error);
     return NextResponse.json(

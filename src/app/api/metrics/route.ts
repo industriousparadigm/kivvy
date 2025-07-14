@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth';
+import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { logger } from '@/lib/logger';
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
-    if (!session || session.user.role !== 'admin') {
+    if (!session || session.user.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -122,7 +121,7 @@ export async function GET(request: NextRequest) {
             include: {
               _count: {
                 select: {
-                  bookings: true,
+                  sessions: true,
                 },
               },
             },
@@ -130,9 +129,7 @@ export async function GET(request: NextRequest) {
         },
         take: 10,
         orderBy: {
-          activities: {
-            _count: 'desc',
-          },
+          businessName: 'asc',
         },
       }),
     ]);
@@ -223,8 +220,8 @@ export async function GET(request: NextRequest) {
         id: provider.id,
         businessName: provider.businessName,
         activitiesCount: provider._count.activities,
-        totalBookings: provider.activities.reduce(
-          (sum, activity) => sum + activity._count.bookings,
+        totalSessions: provider.activities.reduce(
+          (sum, activity) => sum + activity._count.sessions,
           0
         ),
       })),
@@ -251,7 +248,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(metrics);
   } catch (error) {
     logger.error('Metrics request failed', {
-      error: error.message,
+      error: error instanceof Error ? error.message : 'Unknown error',
       type: 'metrics-error',
     });
 

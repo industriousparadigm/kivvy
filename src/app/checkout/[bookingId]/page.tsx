@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { notFound } from 'next/navigation';
@@ -22,9 +22,9 @@ import {
 import { formatPrice, formatDate, formatTime } from '@/lib/utils';
 
 interface CheckoutPageProps {
-  params: {
+  params: Promise<{
     bookingId: string;
-  };
+  }>;
 }
 
 interface Booking {
@@ -48,6 +48,7 @@ interface Booking {
 }
 
 export default function CheckoutPage({ params }: CheckoutPageProps) {
+  const resolvedParams = use(params);
   const { data: session } = useSession();
   const router = useRouter();
   const [booking, setBooking] = useState<Booking | null>(null);
@@ -67,11 +68,11 @@ export default function CheckoutPage({ params }: CheckoutPageProps) {
 
     fetchBooking();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, params.bookingId]);
+  }, [session, resolvedParams.bookingId]);
 
   const fetchBooking = async () => {
     try {
-      const response = await fetch(`/api/bookings/${params.bookingId}`);
+      const response = await fetch(`/api/bookings/${resolvedParams.bookingId}`);
       if (!response.ok) {
         if (response.status === 404) {
           notFound();

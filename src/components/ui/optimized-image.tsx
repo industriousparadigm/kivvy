@@ -36,7 +36,7 @@ export function OptimizedImage({
   onLoadingComplete,
 }: OptimizedImageProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
+  const [, setHasError] = useState(false);
   const [imageSrc, setImageSrc] = useState(src);
 
   // Generate a simple blur placeholder if none provided
@@ -71,7 +71,9 @@ export function OptimizedImage({
     onLoad: handleLoad,
     onError: handleError,
     placeholder: placeholder as 'blur' | 'empty' | undefined,
-    blurDataURL: blurDataURL || (placeholder === 'blur' ? generateBlurDataURL(width, height) : undefined),
+    blurDataURL:
+      blurDataURL ||
+      (placeholder === 'blur' ? generateBlurDataURL(width, height) : undefined),
     className: cn(
       'transition-opacity duration-300',
       isLoading && 'opacity-0',
@@ -83,10 +85,7 @@ export function OptimizedImage({
   if (fill) {
     return (
       <div className="relative overflow-hidden">
-        <Image
-          {...imageProps}
-          fill
-        />
+        <Image {...imageProps} fill />
         {isLoading && (
           <div className="absolute inset-0 bg-gray-200 animate-pulse" />
         )}
@@ -96,13 +95,9 @@ export function OptimizedImage({
 
   return (
     <div className="relative">
-      <Image
-        {...imageProps}
-        width={width!}
-        height={height!}
-      />
+      <Image {...imageProps} width={width!} height={height!} />
       {isLoading && (
-        <div 
+        <div
           className="absolute inset-0 bg-gray-200 animate-pulse rounded"
           style={{ width, height }}
         />

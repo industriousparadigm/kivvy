@@ -4,45 +4,80 @@ export interface PushNotificationOptions {
   userId: string;
   title: string;
   message: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
   url?: string;
   image?: string;
+}
+
+interface PushSubscription {
+  endpoint: string;
+  keys: {
+    p256dh: string;
+    auth: string;
+  };
+}
+
+interface BookingDetails {
+  id: string;
+  activityTitle: string;
+  date?: string;
+  time?: string;
+  location?: string;
+}
+
+interface ActivityDetails {
+  id: string;
+  title: string;
+  imageUrl?: string;
+}
+
+interface PaymentDetails {
+  bookingId: string;
+  activityTitle: string;
+  amount?: number;
 }
 
 class PushNotificationService {
   private vapidKey: string | null = null;
   private vapidSubject: string | null = null;
-  
+
   constructor() {
     this.vapidKey = process.env.VAPID_PRIVATE_KEY || null;
     this.vapidSubject = process.env.VAPID_SUBJECT || null;
-    
+
     if (!this.vapidKey || !this.vapidSubject) {
-      logger.warn('Push notifications not configured, will use console logging');
+      logger.warn(
+        'Push notifications not configured, will use console logging'
+      );
     }
   }
-  
+
   async sendNotification(options: PushNotificationOptions): Promise<void> {
     try {
       if (!this.vapidKey || !this.vapidSubject) {
         // Fallback to console logging for development
-        logger.info('Push notification would be sent (service not configured)', {
+        logger.info(
+          'Push notification would be sent (service not configured)',
+          {
+            userId: options.userId,
+            title: options.title,
+            message: options.message,
+            data: options.data,
+          }
+        );
+        return;
+      }
+
+      // Get user's push subscriptions from database
+      const subscriptions = await this.getUserPushSubscriptions();
+
+      if (subscriptions.length === 0) {
+        logger.info('No push subscriptions found for user', {
           userId: options.userId,
-          title: options.title,
-          message: options.message,
-          data: options.data,
         });
         return;
       }
-      
-      // Get user's push subscriptions from database
-      const subscriptions = await this.getUserPushSubscriptions(options.userId);
-      
-      if (subscriptions.length === 0) {
-        logger.info('No push subscriptions found for user', { userId: options.userId });
-        return;
-      }
-      
+
       const payload = JSON.stringify({
         title: options.title,
         body: options.message,
@@ -66,14 +101,14 @@ class PushNotificationService {
         requireInteraction: true,
         timestamp: Date.now(),
       });
-      
+
       // Send to all user's subscriptions
-      const sendPromises = subscriptions.map(subscription => 
+      const sendPromises = subscriptions.map(subscription =>
         this.sendToSubscription(subscription, payload)
       );
-      
+
       await Promise.allSettled(sendPromises);
-      
+
       logger.info('Push notifications sent', {
         userId: options.userId,
         subscriptions: subscriptions.length,
@@ -87,14 +122,17 @@ class PushNotificationService {
       throw error;
     }
   }
-  
-  private async getUserPushSubscriptions(userId: string): Promise<any[]> {
+
+  private async getUserPushSubscriptions(): Promise<PushSubscription[]> {
     // This would normally fetch from database
     // For now, return empty array as placeholder
     return [];
   }
-  
-  private async sendToSubscription(subscription: any, payload: string): Promise<void> {
+
+  private async sendToSubscription(
+    subscription: PushSubscription,
+    payload: string
+  ): Promise<void> {
     try {
       // This would use a library like web-push to send notifications
       // For now, just log the attempt
@@ -110,8 +148,11 @@ class PushNotificationService {
       // Don't throw error for individual subscription failures
     }
   }
-  
-  async sendBookingConfirmation(userId: string, bookingDetails: any): Promise<void> {
+
+  async sendBookingConfirmation(
+    userId: string,
+    bookingDetails: BookingDetails
+  ): Promise<void> {
     await this.sendNotification({
       userId,
       title: 'Reserva Confirmada!',
@@ -123,8 +164,11 @@ class PushNotificationService {
       url: `/bookings/${bookingDetails.id}`,
     });
   }
-  
-  async sendBookingReminder(userId: string, bookingDetails: any): Promise<void> {
+
+  async sendBookingReminder(
+    userId: string,
+    bookingDetails: BookingDetails
+  ): Promise<void> {
     await this.sendNotification({
       userId,
       title: 'Lembrete de Atividade',
@@ -136,8 +180,11 @@ class PushNotificationService {
       url: `/bookings/${bookingDetails.id}`,
     });
   }
-  
-  async sendBookingCancellation(userId: string, bookingDetails: any): Promise<void> {
+
+  async sendBookingCancellation(
+    userId: string,
+    bookingDetails: BookingDetails
+  ): Promise<void> {
     await this.sendNotification({
       userId,
       title: 'Reserva Cancelada',
@@ -149,8 +196,11 @@ class PushNotificationService {
       url: `/bookings`,
     });
   }
-  
-  async sendNewActivity(userId: string, activity: any): Promise<void> {
+
+  async sendNewActivity(
+    userId: string,
+    activity: ActivityDetails
+  ): Promise<void> {
     await this.sendNotification({
       userId,
       title: 'Nova Atividade Disponível!',
@@ -163,8 +213,11 @@ class PushNotificationService {
       image: activity.imageUrl,
     });
   }
-  
-  async sendPaymentFailed(userId: string, paymentDetails: any): Promise<void> {
+
+  async sendPaymentFailed(
+    userId: string,
+    paymentDetails: PaymentDetails
+  ): Promise<void> {
     await this.sendNotification({
       userId,
       title: 'Falha no Pagamento',

@@ -16,7 +16,7 @@ const redisConfig = {
 let redis: Redis | null = null;
 try {
   redis = new Redis(redisConfig);
-  redis.on('error', (err) => {
+  redis.on('error', err => {
     console.warn('Redis connection error:', err);
     redis = null;
   });
@@ -26,7 +26,7 @@ try {
 }
 
 // Job types
-export type JobType = 
+export type JobType =
   | 'send-email'
   | 'send-sms'
   | 'send-push-notification'
@@ -40,11 +40,11 @@ export type JobType =
 
 export interface JobData {
   type: JobType;
-  payload: any;
+  payload: Record<string, unknown>;
   userId?: string;
   bookingId?: string;
   activityId?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 // Create queues
@@ -63,7 +63,7 @@ const createQueue = (name: string): Queue.Queue => {
       },
     });
   }
-  
+
   // Fallback to in-memory queue (for development)
   return new Queue(name, {
     defaultJobOptions: {
@@ -89,7 +89,7 @@ export const maintenanceQueue = createQueue('maintenance');
 export class QueueManager {
   private static instance: QueueManager;
   private queues: Map<string, Queue.Queue> = new Map();
-  
+
   private constructor() {
     this.queues.set('email', emailQueue);
     this.queues.set('notification', notificationQueue);
@@ -97,14 +97,14 @@ export class QueueManager {
     this.queues.set('report', reportQueue);
     this.queues.set('maintenance', maintenanceQueue);
   }
-  
+
   static getInstance(): QueueManager {
     if (!QueueManager.instance) {
       QueueManager.instance = new QueueManager();
     }
     return QueueManager.instance;
   }
-  
+
   async addJob(
     queueName: string,
     jobData: JobData,
@@ -114,16 +114,16 @@ export class QueueManager {
     if (!queue) {
       throw new Error(`Queue '${queueName}' not found`);
     }
-    
+
     return queue.add(jobData.type, jobData, options);
   }
-  
+
   async getQueueStats(queueName: string) {
     const queue = this.queues.get(queueName);
     if (!queue) {
       throw new Error(`Queue '${queueName}' not found`);
     }
-    
+
     const [waiting, active, completed, failed, delayed] = await Promise.all([
       queue.getWaiting(),
       queue.getActive(),
@@ -131,7 +131,7 @@ export class QueueManager {
       queue.getFailed(),
       queue.getDelayed(),
     ]);
-    
+
     return {
       waiting: waiting.length,
       active: active.length,
@@ -140,47 +140,58 @@ export class QueueManager {
       delayed: delayed.length,
     };
   }
-  
+
   async getAllStats() {
-    const stats: Record<string, any> = {};
-    
-    for (const [queueName, queue] of this.queues) {
+    const stats: Record<
+      string,
+      {
+        waiting: number;
+        active: number;
+        completed: number;
+        failed: number;
+        delayed: number;
+      }
+    > = {};
+
+    for (const [queueName] of this.queues) {
       stats[queueName] = await this.getQueueStats(queueName);
     }
-    
+
     return stats;
   }
-  
+
   async pauseQueue(queueName: string): Promise<void> {
     const queue = this.queues.get(queueName);
     if (!queue) {
       throw new Error(`Queue '${queueName}' not found`);
     }
-    
+
     await queue.pause();
   }
-  
+
   async resumeQueue(queueName: string): Promise<void> {
     const queue = this.queues.get(queueName);
     if (!queue) {
       throw new Error(`Queue '${queueName}' not found`);
     }
-    
+
     await queue.resume();
   }
-  
+
   async cleanQueue(queueName: string, grace: number = 0): Promise<void> {
     const queue = this.queues.get(queueName);
     if (!queue) {
       throw new Error(`Queue '${queueName}' not found`);
     }
-    
+
     await queue.clean(grace, 'completed');
     await queue.clean(grace, 'failed');
   }
-  
+
   async closeAll(): Promise<void> {
-    const closePromises = Array.from(this.queues.values()).map(queue => queue.close());
+    const closePromises = Array.from(this.queues.values()).map(queue =>
+      queue.close()
+    );
     await Promise.all(closePromises);
   }
 }
@@ -193,14 +204,18 @@ export async function addEmailJob(
     to: string;
     subject: string;
     template: string;
-    context?: Record<string, any>;
+    context?: Record<string, unknown>;
   },
   options?: Queue.JobOptions
 ): Promise<Queue.Job> {
-  return queueManager.addJob('email', {
-    type: 'send-email',
-    payload: data,
-  }, options);
+  return queueManager.addJob(
+    'email',
+    {
+      type: 'send-email',
+      payload: data,
+    },
+    options
+  );
 }
 
 export async function addNotificationJob(
@@ -209,15 +224,19 @@ export async function addNotificationJob(
     type: 'push' | 'sms' | 'email';
     title: string;
     message: string;
-    data?: Record<string, any>;
+    data?: Record<string, unknown>;
   },
   options?: Queue.JobOptions
 ): Promise<Queue.Job> {
-  return queueManager.addJob('notification', {
-    type: data.type === 'push' ? 'send-push-notification' : 'send-sms',
-    payload: data,
-    userId: data.userId,
-  }, options);
+  return queueManager.addJob(
+    'notification',
+    {
+      type: data.type === 'push' ? 'send-push-notification' : 'send-sms',
+      payload: data,
+      userId: data.userId,
+    },
+    options
+  );
 }
 
 export async function addPaymentJob(
@@ -229,11 +248,15 @@ export async function addPaymentJob(
   },
   options?: Queue.JobOptions
 ): Promise<Queue.Job> {
-  return queueManager.addJob('payment', {
-    type: 'process-payment',
-    payload: data,
-    bookingId: data.bookingId,
-  }, options);
+  return queueManager.addJob(
+    'payment',
+    {
+      type: 'process-payment',
+      payload: data,
+      bookingId: data.bookingId,
+    },
+    options
+  );
 }
 
 export async function addReportJob(
@@ -245,23 +268,34 @@ export async function addReportJob(
   },
   options?: Queue.JobOptions
 ): Promise<Queue.Job> {
-  return queueManager.addJob('report', {
-    type: 'generate-report',
-    payload: data,
-  }, options);
+  return queueManager.addJob(
+    'report',
+    {
+      type: 'generate-report',
+      payload: data,
+    },
+    options
+  );
 }
 
 export async function addMaintenanceJob(
   data: {
     task: 'cleanup-sessions' | 'sync-data' | 'update-stats';
-    parameters?: Record<string, any>;
+    parameters?: Record<string, unknown>;
   },
   options?: Queue.JobOptions
 ): Promise<Queue.Job> {
-  return queueManager.addJob('maintenance', {
-    type: data.task === 'cleanup-sessions' ? 'cleanup-expired-sessions' : 'sync-external-data',
-    payload: data,
-  }, options);
+  return queueManager.addJob(
+    'maintenance',
+    {
+      type:
+        data.task === 'cleanup-sessions'
+          ? 'cleanup-expired-sessions'
+          : 'sync-external-data',
+      payload: data,
+    },
+    options
+  );
 }
 
 // Scheduled jobs
@@ -269,67 +303,97 @@ export async function scheduleBookingReminders(): Promise<void> {
   // Schedule reminder jobs for upcoming bookings
   const reminderTime = new Date();
   reminderTime.setHours(reminderTime.getHours() + 24); // 24 hours before
-  
-  await queueManager.addJob('notification', {
-    type: 'send-booking-reminder',
-    payload: {
-      reminderTime: reminderTime.toISOString(),
+
+  await queueManager.addJob(
+    'notification',
+    {
+      type: 'send-booking-reminder',
+      payload: {
+        reminderTime: reminderTime.toISOString(),
+      },
     },
-  }, {
-    delay: reminderTime.getTime() - Date.now(),
-  });
+    {
+      delay: reminderTime.getTime() - Date.now(),
+    }
+  );
 }
 
 export async function scheduleStatUpdates(): Promise<void> {
   // Schedule daily stats updates
-  await queueManager.addJob('maintenance', {
-    type: 'update-activity-stats',
-    payload: {
-      date: new Date().toISOString(),
+  await queueManager.addJob(
+    'maintenance',
+    {
+      type: 'update-activity-stats',
+      payload: {
+        date: new Date().toISOString(),
+      },
     },
-  }, {
-    repeat: { cron: '0 2 * * *' }, // Daily at 2 AM
-  });
+    {
+      repeat: { cron: '0 2 * * *' }, // Daily at 2 AM
+    }
+  );
 }
 
 export async function scheduleCleanupJobs(): Promise<void> {
   // Schedule cleanup jobs
-  await queueManager.addJob('maintenance', {
-    type: 'cleanup-expired-sessions',
-    payload: {
-      olderThan: '7d',
+  await queueManager.addJob(
+    'maintenance',
+    {
+      type: 'cleanup-expired-sessions',
+      payload: {
+        olderThan: '7d',
+      },
     },
-  }, {
-    repeat: { cron: '0 3 * * 0' }, // Weekly on Sunday at 3 AM
-  });
+    {
+      repeat: { cron: '0 3 * * 0' }, // Weekly on Sunday at 3 AM
+    }
+  );
 }
 
 // Health check
 export async function checkQueueHealth(): Promise<{
   redis: boolean;
   queues: Record<string, boolean>;
-  stats: Record<string, any>;
+  stats: Record<
+    string,
+    {
+      waiting: number;
+      active: number;
+      completed: number;
+      failed: number;
+      delayed: number;
+    }
+  >;
 }> {
   const health = {
     redis: !!redis,
     queues: {} as Record<string, boolean>,
-    stats: {} as Record<string, any>,
+    stats: {} as Record<
+      string,
+      {
+        waiting: number;
+        active: number;
+        completed: number;
+        failed: number;
+        delayed: number;
+      }
+    >,
   };
-  
+
   try {
     for (const [queueName, queue] of queueManager['queues']) {
       try {
         await queue.getWaiting();
         health.queues[queueName] = true;
-      } catch (error) {
+      } catch {
         health.queues[queueName] = false;
       }
     }
-    
+
     health.stats = await queueManager.getAllStats();
   } catch (error) {
     console.error('Queue health check failed:', error);
   }
-  
+
   return health;
 }

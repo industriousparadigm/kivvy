@@ -1,23 +1,34 @@
-import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { auth } from '@/lib/auth'
-import { z } from 'zod'
+import { NextRequest } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { auth } from '@/lib/auth';
+import { z } from 'zod';
 import {
   createSuccessResponse,
   createErrorResponse,
   handleApiError,
   createPaginationParams,
   parseJsonBody,
-} from '@/lib/api-utils'
+} from '@/lib/api-utils';
 
 const createActivitySchema = z.object({
   title: z.string().min(1).max(200),
   description: z.string().min(10).max(2000),
   shortDescription: z.string().max(200).optional(),
   category: z.enum([
-    'SPORTS', 'ARTS_CRAFTS', 'MUSIC', 'DANCE', 'EDUCATION', 'SCIENCE',
-    'TECHNOLOGY', 'COOKING', 'LANGUAGES', 'OUTDOOR', 'SWIMMING',
-    'MARTIAL_ARTS', 'THEATER', 'OTHER'
+    'SPORTS',
+    'ARTS_CRAFTS',
+    'MUSIC',
+    'DANCE',
+    'EDUCATION',
+    'SCIENCE',
+    'TECHNOLOGY',
+    'COOKING',
+    'LANGUAGES',
+    'OUTDOOR',
+    'SWIMMING',
+    'MARTIAL_ARTS',
+    'THEATER',
+    'OTHER',
   ]),
   ageMin: z.number().int().min(0).max(18),
   ageMax: z.number().int().min(0).max(18),
@@ -25,7 +36,9 @@ const createActivitySchema = z.object({
   price: z.number().min(0),
   duration: z.number().int().min(15).max(480), // 15 minutes to 8 hours
   language: z.string().default('pt'),
-  difficulty: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']).default('BEGINNER'),
+  difficulty: z
+    .enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED'])
+    .default('BEGINNER'),
   location: z.string().max(200).optional(),
   address: z.string().max(500).optional(),
   city: z.string().max(100).optional(),
@@ -38,33 +51,39 @@ const createActivitySchema = z.object({
   included: z.string().max(1000).optional(),
   notIncluded: z.string().max(1000).optional(),
   tags: z.array(z.string()).optional(),
-})
+});
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth()
-    if (!session?.user || (session.user.role !== 'PROVIDER' && session.user.role !== 'ADMIN')) {
-      return createErrorResponse('Unauthorized', 401)
+    const session = await auth();
+    if (
+      !session?.user ||
+      (session.user.role !== 'PROVIDER' && session.user.role !== 'ADMIN')
+    ) {
+      return createErrorResponse('Unauthorized', 401);
     }
 
-    const { searchParams } = new URL(request.url)
-    const { page, limit, skip } = createPaginationParams(searchParams)
+    const { searchParams } = new URL(request.url);
+    const { page, limit, skip } = createPaginationParams(searchParams);
 
     // Get provider ID
     const provider = await prisma.provider.findUnique({
       where: { userId: session.user.id },
-    })
+    });
 
     if (!provider && session.user.role !== 'ADMIN') {
-      return createErrorResponse('Provider profile not found', 404)
+      return createErrorResponse('Provider profile not found', 404);
     }
 
-    const where: any = {
+    const where: {
+      deletedAt: null;
+      providerId?: string;
+    } = {
       deletedAt: null,
-    }
+    };
 
     if (provider) {
-      where.providerId = provider.id
+      where.providerId = provider.id;
     }
 
     const [activities, total] = await Promise.all([
@@ -117,9 +136,9 @@ export async function GET(request: NextRequest) {
         take: limit,
       }),
       prisma.activity.count({ where }),
-    ])
+    ]);
 
-    const totalPages = Math.ceil(total / limit)
+    const totalPages = Math.ceil(total / limit);
 
     return createSuccessResponse({
       activities,
@@ -131,38 +150,44 @@ export async function GET(request: NextRequest) {
         hasNext: page < totalPages,
         hasPrev: page > 1,
       },
-    })
+    });
   } catch (error) {
-    return handleApiError(error)
+    return handleApiError(error);
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth()
+    const session = await auth();
     if (!session?.user || session.user.role !== 'PROVIDER') {
-      return createErrorResponse('Unauthorized', 401)
+      return createErrorResponse('Unauthorized', 401);
     }
 
-    const body = await parseJsonBody(request)
-    const activityData = createActivitySchema.parse(body)
+    const body = await parseJsonBody(request);
+    const activityData = createActivitySchema.parse(body);
 
     // Get provider
     const provider = await prisma.provider.findUnique({
       where: { userId: session.user.id },
-    })
+    });
 
     if (!provider) {
-      return createErrorResponse('Provider profile not found', 404)
+      return createErrorResponse('Provider profile not found', 404);
     }
 
     if (!provider.isActive || !provider.isVerified) {
-      return createErrorResponse('Provider account must be active and verified', 403)
+      return createErrorResponse(
+        'Provider account must be active and verified',
+        403
+      );
     }
 
     // Validate age range
     if (activityData.ageMin > activityData.ageMax) {
-      return createErrorResponse('Minimum age cannot be greater than maximum age', 400)
+      return createErrorResponse(
+        'Minimum age cannot be greater than maximum age',
+        400
+      );
     }
 
     // Create activity
@@ -186,10 +211,10 @@ export async function POST(request: NextRequest) {
           },
         },
       },
-    })
+    });
 
-    return createSuccessResponse(activity, 201)
+    return createSuccessResponse(activity, 201);
   } catch (error) {
-    return handleApiError(error)
+    return handleApiError(error);
   }
 }

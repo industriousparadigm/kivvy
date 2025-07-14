@@ -1,13 +1,17 @@
-import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { createSuccessResponse, createErrorResponse, handleApiError } from '@/lib/api-utils'
+import { NextRequest } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import {
+  createSuccessResponse,
+  createErrorResponse,
+  handleApiError,
+} from '@/lib/api-utils';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params
+    const { id } = await params;
 
     const session = await prisma.activitySession.findUnique({
       where: {
@@ -61,24 +65,27 @@ export async function GET(
           },
         },
       },
-    })
+    });
 
     if (!session) {
-      return createErrorResponse('Session not found', 404)
+      return createErrorResponse('Session not found', 404);
     }
 
-    const bookedSpots = session.bookings.reduce((total, booking) => total + booking.quantity, 0)
-    const actualAvailableSpots = session.capacity - bookedSpots
+    const bookedSpots = session.bookings.reduce(
+      (total, booking) => total + booking.quantity,
+      0
+    );
+    const actualAvailableSpots = session.capacity - bookedSpots;
 
     const response = {
       ...session,
       actualAvailableSpots,
       bookedSpots,
       bookings: session.bookings,
-    }
+    };
 
-    return createSuccessResponse(response)
+    return createSuccessResponse(response);
   } catch (error) {
-    return handleApiError(error)
+    return handleApiError(error);
   }
 }

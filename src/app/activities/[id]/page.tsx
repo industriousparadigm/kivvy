@@ -18,9 +18,9 @@ import {
 import { formatPrice, formatDate } from '@/lib/utils';
 
 interface ActivityPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 interface Activity {
@@ -96,7 +96,8 @@ async function getActivity(id: string): Promise<Activity | null> {
 }
 
 export default async function ActivityPage({ params }: ActivityPageProps) {
-  const activity = await getActivity(params.id);
+  const resolvedParams = await params;
+  const activity = await getActivity(resolvedParams.id);
 
   if (!activity) {
     notFound();

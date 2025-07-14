@@ -1,13 +1,13 @@
-import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { auth } from '@/lib/auth'
-import { z } from 'zod'
+import { NextRequest } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { auth } from '@/lib/auth';
+import { z } from 'zod';
 import {
   createSuccessResponse,
   createErrorResponse,
   handleApiError,
   parseJsonBody,
-} from '@/lib/api-utils'
+} from '@/lib/api-utils';
 
 const updateProfileSchema = z.object({
   firstName: z.string().min(1).max(100).optional(),
@@ -19,38 +19,38 @@ const updateProfileSchema = z.object({
   country: z.string().max(100).optional(),
   dateOfBirth: z.string().datetime().optional(),
   language: z.enum(['pt', 'en'] as const).optional(),
-})
+});
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const session = await auth()
+    const session = await auth();
     if (!session?.user) {
-      return createErrorResponse('Unauthorized', 401)
+      return createErrorResponse('Unauthorized', 401);
     }
 
     const profile = await prisma.userProfile.findUnique({
       where: { userId: session.user.id },
-    })
+    });
 
     if (!profile) {
-      return createErrorResponse('Profile not found', 404)
+      return createErrorResponse('Profile not found', 404);
     }
 
-    return createSuccessResponse(profile)
+    return createSuccessResponse(profile);
   } catch (error) {
-    return handleApiError(error)
+    return handleApiError(error);
   }
 }
 
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await auth()
+    const session = await auth();
     if (!session?.user) {
-      return createErrorResponse('Unauthorized', 401)
+      return createErrorResponse('Unauthorized', 401);
     }
 
-    const body = await parseJsonBody(request)
-    const profileData = updateProfileSchema.parse(body)
+    const body = await parseJsonBody(request);
+    const profileData = updateProfileSchema.parse(body);
 
     // Update user profile
     const updatedProfile = await prisma.userProfile.upsert({
@@ -58,25 +58,25 @@ export async function PATCH(request: NextRequest) {
       create: {
         userId: session.user.id,
         ...profileData,
-        ...(profileData.dateOfBirth && { 
-          dateOfBirth: new Date(profileData.dateOfBirth) 
+        ...(profileData.dateOfBirth && {
+          dateOfBirth: new Date(profileData.dateOfBirth),
         }),
       },
       update: {
         ...profileData,
-        ...(profileData.dateOfBirth && { 
-          dateOfBirth: new Date(profileData.dateOfBirth) 
+        ...(profileData.dateOfBirth && {
+          dateOfBirth: new Date(profileData.dateOfBirth),
         }),
       },
-    })
+    });
 
-    return createSuccessResponse(updatedProfile)
+    return createSuccessResponse(updatedProfile);
   } catch (error) {
-    return handleApiError(error)
+    return handleApiError(error);
   }
 }
 
 // PUT method for better frontend compatibility
 export async function PUT(request: NextRequest) {
-  return PATCH(request)
+  return PATCH(request);
 }

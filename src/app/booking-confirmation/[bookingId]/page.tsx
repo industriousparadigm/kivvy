@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -21,9 +21,9 @@ import {
 import { formatPrice, formatDate, formatTime } from '@/lib/utils';
 
 interface BookingConfirmationProps {
-  params: {
+  params: Promise<{
     bookingId: string;
-  };
+  }>;
 }
 
 interface Booking {
@@ -59,6 +59,7 @@ interface Booking {
 export default function BookingConfirmationPage({
   params,
 }: BookingConfirmationProps) {
+  const resolvedParams = use(params);
   const { data: session } = useSession();
   const router = useRouter();
   const [booking, setBooking] = useState<Booking | null>(null);
@@ -72,11 +73,11 @@ export default function BookingConfirmationPage({
 
     fetchBooking();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, params.bookingId]);
+  }, [session, resolvedParams.bookingId]);
 
   const fetchBooking = async () => {
     try {
-      const response = await fetch(`/api/bookings/${params.bookingId}`);
+      const response = await fetch(`/api/bookings/${resolvedParams.bookingId}`);
       if (!response.ok) throw new Error('Failed to fetch booking');
 
       const bookingData = await response.json();

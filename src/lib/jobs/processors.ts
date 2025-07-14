@@ -6,21 +6,44 @@ import { pushNotificationService } from '@/lib/notifications';
 import { prisma } from '@/lib/prisma';
 import { stripe } from '@/lib/stripe';
 import { logger } from '@/lib/logger';
+import type {
+  Booking,
+  Payment,
+  User,
+  Activity,
+  ActivitySession,
+  Prisma,
+} from '@prisma/client';
+
+type BookingWithRelations = Booking & {
+  payment: Payment | null;
+  user: User;
+  session: ActivitySession & {
+    activity: Activity;
+  };
+};
+
+interface ReportPayload {
+  type: string;
+  period: string;
+  providerId?: string;
+  date?: string;
+}
 
 // Email job processor
 export const processEmailJob = async (job: Queue.Job<JobData>) => {
   const { payload } = job.data;
-  
+
   try {
     logger.info('Processing email job', { jobId: job.id, payload });
-    
+
     await emailService.sendEmail({
       to: payload.to,
       subject: payload.subject,
       template: payload.template,
       context: payload.context || {},
     });
-    
+
     logger.info('Email job completed successfully', { jobId: job.id });
   } catch (error) {
     logger.error('Email job failed', { jobId: job.id, error: error.message });
@@ -31,15 +54,15 @@ export const processEmailJob = async (job: Queue.Job<JobData>) => {
 // SMS job processor
 export const processSMSJob = async (job: Queue.Job<JobData>) => {
   const { payload } = job.data;
-  
+
   try {
     logger.info('Processing SMS job', { jobId: job.id, payload });
-    
+
     await smsService.sendSMS({
       to: payload.phoneNumber,
       message: payload.message,
     });
-    
+
     logger.info('SMS job completed successfully', { jobId: job.id });
   } catch (error) {
     logger.error('SMS job failed', { jobId: job.id, error: error.message });
@@ -50,20 +73,25 @@ export const processSMSJob = async (job: Queue.Job<JobData>) => {
 // Push notification job processor
 export const processPushNotificationJob = async (job: Queue.Job<JobData>) => {
   const { payload } = job.data;
-  
+
   try {
     logger.info('Processing push notification job', { jobId: job.id, payload });
-    
+
     await pushNotificationService.sendNotification({
       userId: payload.userId,
       title: payload.title,
       message: payload.message,
       data: payload.data,
     });
-    
-    logger.info('Push notification job completed successfully', { jobId: job.id });
+
+    logger.info('Push notification job completed successfully', {
+      jobId: job.id,
+    });
   } catch (error) {
-    logger.error('Push notification job failed', { jobId: job.id, error: error.message });
+    logger.error('Push notification job failed', {
+      jobId: job.id,
+      error: error.message,
+    });
     throw error;
   }
 };
@@ -71,10 +99,14 @@ export const processPushNotificationJob = async (job: Queue.Job<JobData>) => {
 // Payment job processor
 export const processPaymentJob = async (job: Queue.Job<JobData>) => {
   const { payload, bookingId } = job.data;
-  
+
   try {
-    logger.info('Processing payment job', { jobId: job.id, payload, bookingId });
-    
+    logger.info('Processing payment job', {
+      jobId: job.id,
+      payload,
+      bookingId,
+    });
+
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId },
       include: {
@@ -87,11 +119,11 @@ export const processPaymentJob = async (job: Queue.Job<JobData>) => {
         },
       },
     });
-    
+
     if (!booking) {
       throw new Error(`Booking not found: ${bookingId}`);
     }
-    
+
     switch (payload.action) {
       case 'process':
         await processPaymentCapture(booking);
@@ -105,24 +137,29 @@ export const processPaymentJob = async (job: Queue.Job<JobData>) => {
       default:
         throw new Error(`Unknown payment action: ${payload.action}`);
     }
-    
-    logger.info('Payment job completed successfully', { jobId: job.id, bookingId });
+
+    logger.info('Payment job completed successfully', {
+      jobId: job.id,
+      bookingId,
+    });
   } catch (error) {
-    logger.error('Payment job failed', { jobId: job.id, bookingId, error: error.message });
+    logger.error('Payment job failed', {
+      jobId: job.id,
+      bookingId,
+      error: error.message,
+    });
     throw error;
   }
 };
 
 // Helper functions for payment processing
-async function processPaymentCapture(booking: any) {
+async function processPaymentCapture(booking: BookingWithRelations) {
   if (!booking.payment?.stripePaymentIntentId) {
     throw new Error('No payment intent found for booking');
   }
-  
-  const paymentIntent = await stripe.paymentIntents.capture(
-    booking.payment.stripePaymentIntentId
-  );
-  
+
+  await stripe.paymentIntents.capture(booking.payment.stripePaymentIntentId);
+
   await prisma.payment.update({
     where: { id: booking.payment.id },
     data: {
@@ -130,24 +167,28 @@ async function processPaymentCapture(booking: any) {
       capturedAt: new Date(),
     },
   });
-  
+
   await prisma.booking.update({
     where: { id: booking.id },
     data: { status: 'confirmed' },
   });
 }
 
-async function processPaymentRefund(booking: any, amount?: number, reason?: string) {
+async function processPaymentRefund(
+  booking: BookingWithRelations,
+  amount?: number,
+  reason?: string
+) {
   if (!booking.payment?.stripePaymentIntentId) {
     throw new Error('No payment intent found for booking');
   }
-  
-  const refund = await stripe.refunds.create({
+
+  await stripe.refunds.create({
     payment_intent: booking.payment.stripePaymentIntentId,
     amount: amount ? Math.round(amount * 100) : undefined, // Convert to cents
     reason: reason || 'requested_by_customer',
   });
-  
+
   await prisma.payment.update({
     where: { id: booking.payment.id },
     data: {
@@ -155,7 +196,7 @@ async function processPaymentRefund(booking: any, amount?: number, reason?: stri
       refundedAt: new Date(),
     },
   });
-  
+
   await prisma.booking.update({
     where: { id: booking.id },
     data: { status: 'cancelled' },
@@ -165,12 +206,12 @@ async function processPaymentRefund(booking: any, amount?: number, reason?: stri
 // Report generation job processor
 export const processReportJob = async (job: Queue.Job<JobData>) => {
   const { payload } = job.data;
-  
+
   try {
     logger.info('Processing report job', { jobId: job.id, payload });
-    
+
     let reportData;
-    
+
     switch (payload.type) {
       case 'activity-stats':
         reportData = await generateActivityStatsReport(payload);
@@ -184,7 +225,7 @@ export const processReportJob = async (job: Queue.Job<JobData>) => {
       default:
         throw new Error(`Unknown report type: ${payload.type}`);
     }
-    
+
     // Store report in database
     await prisma.report.create({
       data: {
@@ -195,7 +236,7 @@ export const processReportJob = async (job: Queue.Job<JobData>) => {
         providerId: payload.providerId,
       },
     });
-    
+
     logger.info('Report job completed successfully', { jobId: job.id });
   } catch (error) {
     logger.error('Report job failed', { jobId: job.id, error: error.message });
@@ -204,25 +245,29 @@ export const processReportJob = async (job: Queue.Job<JobData>) => {
 };
 
 // Report generation helper functions
-async function generateActivityStatsReport(payload: any) {
-  const whereClause: any = {};
-  
+async function generateActivityStatsReport(payload: ReportPayload) {
+  const whereClause: Prisma.ActivityWhereInput = {};
+
   if (payload.providerId) {
     whereClause.providerId = payload.providerId;
   }
-  
+
   if (payload.date) {
     const date = new Date(payload.date);
-    const startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const startDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
     const endDate = new Date(startDate);
     endDate.setDate(endDate.getDate() + 1);
-    
+
     whereClause.createdAt = {
       gte: startDate,
       lt: endDate,
     };
   }
-  
+
   const [totalActivities, totalBookings, totalRevenue] = await Promise.all([
     prisma.activity.count({ where: whereClause }),
     prisma.booking.count({
@@ -239,7 +284,7 @@ async function generateActivityStatsReport(payload: any) {
       _sum: { amount: true },
     }),
   ]);
-  
+
   return {
     totalActivities,
     totalBookings,
@@ -249,9 +294,9 @@ async function generateActivityStatsReport(payload: any) {
   };
 }
 
-async function generateRevenueReport(payload: any) {
-  const whereClause: any = { status: 'succeeded' };
-  
+async function generateRevenueReport(payload: ReportPayload) {
+  const whereClause: Prisma.PaymentWhereInput = { status: 'SUCCEEDED' };
+
   if (payload.providerId) {
     whereClause.booking = {
       session: {
@@ -261,7 +306,7 @@ async function generateRevenueReport(payload: any) {
       },
     };
   }
-  
+
   const payments = await prisma.payment.findMany({
     where: whereClause,
     include: {
@@ -276,10 +321,13 @@ async function generateRevenueReport(payload: any) {
       },
     },
   });
-  
-  const revenue = payments.reduce((total, payment) => total + payment.amount, 0);
+
+  const revenue = payments.reduce(
+    (total, payment) => total + payment.amount,
+    0
+  );
   const bookingsCount = payments.length;
-  
+
   return {
     totalRevenue: revenue,
     totalBookings: bookingsCount,
@@ -289,7 +337,7 @@ async function generateRevenueReport(payload: any) {
   };
 }
 
-async function generateUserEngagementReport(payload: any) {
+async function generateUserEngagementReport(payload: ReportPayload) {
   const [totalUsers, activeUsers, newUsers] = await Promise.all([
     prisma.user.count(),
     prisma.user.count({
@@ -311,7 +359,7 @@ async function generateUserEngagementReport(payload: any) {
       },
     }),
   ]);
-  
+
   return {
     totalUsers,
     activeUsers,
@@ -325,10 +373,10 @@ async function generateUserEngagementReport(payload: any) {
 // Maintenance job processor
 export const processMaintenanceJob = async (job: Queue.Job<JobData>) => {
   const { payload } = job.data;
-  
+
   try {
     logger.info('Processing maintenance job', { jobId: job.id, payload });
-    
+
     switch (payload.task) {
       case 'cleanup-sessions':
         await cleanupExpiredSessions();
@@ -342,10 +390,13 @@ export const processMaintenanceJob = async (job: Queue.Job<JobData>) => {
       default:
         throw new Error(`Unknown maintenance task: ${payload.task}`);
     }
-    
+
     logger.info('Maintenance job completed successfully', { jobId: job.id });
   } catch (error) {
-    logger.error('Maintenance job failed', { jobId: job.id, error: error.message });
+    logger.error('Maintenance job failed', {
+      jobId: job.id,
+      error: error.message,
+    });
     throw error;
   }
 };
@@ -353,7 +404,7 @@ export const processMaintenanceJob = async (job: Queue.Job<JobData>) => {
 // Maintenance helper functions
 async function cleanupExpiredSessions() {
   const expiredDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
-  
+
   const result = await prisma.session.deleteMany({
     where: {
       expires: {
@@ -361,7 +412,7 @@ async function cleanupExpiredSessions() {
       },
     },
   });
-  
+
   logger.info(`Cleaned up ${result.count} expired sessions`);
 }
 
@@ -379,14 +430,16 @@ async function updateActivityStats() {
       reviews: true,
     },
   });
-  
+
   for (const activity of activities) {
     const totalBookings = activity.bookings.length;
     const totalReviews = activity.reviews.length;
-    const averageRating = totalReviews > 0 
-      ? activity.reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews 
-      : 0;
-    
+    const averageRating =
+      totalReviews > 0
+        ? activity.reviews.reduce((sum, review) => sum + review.rating, 0) /
+          totalReviews
+        : 0;
+
     await prisma.activity.update({
       where: { id: activity.id },
       data: {
@@ -396,22 +449,22 @@ async function updateActivityStats() {
       },
     });
   }
-  
+
   logger.info(`Updated stats for ${activities.length} activities`);
 }
 
 // Booking reminder job processor
 export const processBookingReminderJob = async (job: Queue.Job<JobData>) => {
   const { payload } = job.data;
-  
+
   try {
     logger.info('Processing booking reminder job', { jobId: job.id, payload });
-    
+
     // Find bookings that need reminders
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
-    
+
     const bookings = await prisma.booking.findMany({
       where: {
         status: 'confirmed',
@@ -431,7 +484,7 @@ export const processBookingReminderJob = async (job: Queue.Job<JobData>) => {
         },
       },
     });
-    
+
     // Send reminders
     for (const booking of bookings) {
       await emailService.sendEmail({
@@ -446,10 +499,13 @@ export const processBookingReminderJob = async (job: Queue.Job<JobData>) => {
         },
       });
     }
-    
+
     logger.info(`Sent ${bookings.length} booking reminders`);
   } catch (error) {
-    logger.error('Booking reminder job failed', { jobId: job.id, error: error.message });
+    logger.error('Booking reminder job failed', {
+      jobId: job.id,
+      error: error.message,
+    });
     throw error;
   }
 };

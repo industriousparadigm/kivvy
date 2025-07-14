@@ -552,7 +552,7 @@ async function main() {
         childId: child1.id,
         sessionId: sessions[0].id,
         quantity: 8,
-        totalAmount: sessions[0].price * 8,
+        totalAmount: sessions[0]?.price ? sessions[0].price * 8 : 0,
         status: 'CONFIRMED',
         notes: 'Festa da Sofia - tema princesas',
       },

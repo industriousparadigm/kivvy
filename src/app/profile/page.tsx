@@ -11,15 +11,15 @@ import { MagicalError } from '@/components/ui/magical-error';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  User, 
-  Baby, 
-  Plus, 
-  Edit, 
-  Trash2, 
+import {
+  User,
+  Baby,
+  Plus,
+  Edit,
+  Trash2,
   ArrowLeft,
   Settings,
-  Shield
+  Shield,
 } from 'lucide-react';
 
 interface UserProfile {
@@ -44,12 +44,14 @@ interface Child {
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  
+
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [children, setChildren] = useState<Child[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeView, setActiveView] = useState<'overview' | 'edit-profile' | 'add-child' | 'edit-child'>('overview');
+  const [activeView, setActiveView] = useState<
+    'overview' | 'edit-profile' | 'add-child' | 'edit-child'
+  >('overview');
   const [editingChild, setEditingChild] = useState<Child | null>(null);
 
   useEffect(() => {
@@ -67,7 +69,7 @@ export default function ProfilePage() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const [profileRes, childrenRes] = await Promise.all([
         fetch('/api/users/profile'),
         fetch('/api/users/children'),
@@ -88,7 +90,9 @@ export default function ProfilePage() {
       }
     } catch (error) {
       console.error('Error fetching profile data:', error);
-      setError(error instanceof Error ? error.message : 'Erro ao carregar dados');
+      setError(
+        error instanceof Error ? error.message : 'Erro ao carregar dados'
+      );
     } finally {
       setLoading(false);
     }
@@ -100,7 +104,7 @@ export default function ProfilePage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(profile),
     });
-    
+
     setUserProfile(profile);
     setActiveView('overview');
   };
@@ -121,7 +125,7 @@ export default function ProfilePage() {
         body: JSON.stringify(child),
       });
     }
-    
+
     await fetchProfileData(); // Refresh the children list
     setActiveView('overview');
     setEditingChild(null);
@@ -133,7 +137,9 @@ export default function ProfilePage() {
   };
 
   const handleDeleteChild = async (childId: string) => {
-    if (!confirm('Tens a certeza que queres remover este filho do teu perfil?')) {
+    if (
+      !confirm('Tens a certeza que queres remover este filho do teu perfil?')
+    ) {
       return;
     }
 
@@ -156,7 +162,9 @@ export default function ProfilePage() {
   const calculateAge = (birthDate: string) => {
     const birth = new Date(birthDate);
     const today = new Date();
-    return Math.floor((today.getTime() - birth.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
+    return Math.floor(
+      (today.getTime() - birth.getTime()) / (1000 * 60 * 60 * 24 * 365.25)
+    );
   };
 
   if (loading) {
@@ -175,7 +183,7 @@ export default function ProfilePage() {
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50">
         <Header />
         <div className="container mx-auto px-4 py-8">
-          <MagicalError 
+          <MagicalError
             title="Erro ao Carregar Perfil"
             message={error}
             onRetry={fetchProfileData}
@@ -188,7 +196,7 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50">
       <Header />
-      
+
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header with navigation */}
         <div className="mb-8">
@@ -205,7 +213,7 @@ export default function ProfilePage() {
               Voltar
             </Button>
           )}
-          
+
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-2">
               <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 bg-clip-text text-transparent">
@@ -240,7 +248,10 @@ export default function ProfilePage() {
                   </div>
                   <div className="flex items-center space-x-3">
                     {userProfile && (
-                      <Badge variant="success" className="flex items-center gap-1">
+                      <Badge
+                        variant="success"
+                        className="flex items-center gap-1"
+                      >
                         <Shield className="h-3 w-3" />
                         Verificado
                       </Badge>
@@ -258,8 +269,12 @@ export default function ProfilePage() {
                 {userProfile ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <p className="text-sm text-gray-500 mb-1">Nome Completo</p>
-                      <p className="font-medium">{userProfile.firstName} {userProfile.lastName}</p>
+                      <p className="text-sm text-gray-500 mb-1">
+                        Nome Completo
+                      </p>
+                      <p className="font-medium">
+                        {userProfile.firstName} {userProfile.lastName}
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500 mb-1">Email</p>
@@ -267,11 +282,15 @@ export default function ProfilePage() {
                     </div>
                     <div>
                       <p className="text-sm text-gray-500 mb-1">Telemóvel</p>
-                      <p className="font-medium">{userProfile.phone || 'Não definido'}</p>
+                      <p className="font-medium">
+                        {userProfile.phone || 'Não definido'}
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500 mb-1">Cidade</p>
-                      <p className="font-medium">{userProfile.city || 'Não definida'}</p>
+                      <p className="font-medium">
+                        {userProfile.city || 'Não definida'}
+                      </p>
                     </div>
                   </div>
                 ) : (
@@ -298,7 +317,10 @@ export default function ProfilePage() {
                         Os Meus Filhos
                       </h2>
                       <p className="text-gray-600">
-                        {children.length} {children.length === 1 ? 'filho registado' : 'filhos registados'}
+                        {children.length}{' '}
+                        {children.length === 1
+                          ? 'filho registado'
+                          : 'filhos registados'}
                       </p>
                     </div>
                   </div>
@@ -313,8 +335,11 @@ export default function ProfilePage() {
 
                 {children.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {children.map((child) => (
-                      <Card key={child.id} className="border border-purple-100 hover:shadow-lg transition-shadow">
+                    {children.map(child => (
+                      <Card
+                        key={child.id}
+                        className="border border-purple-100 hover:shadow-lg transition-shadow"
+                      >
                         <CardContent className="p-6">
                           <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center space-x-3">
@@ -348,17 +373,19 @@ export default function ProfilePage() {
                               </Button>
                             </div>
                           </div>
-                          
+
                           {(child.allergies || child.medicalNotes) && (
                             <div className="text-sm text-gray-600">
                               {child.allergies && (
                                 <p className="mb-1">
-                                  <span className="font-medium">Alergias:</span> {child.allergies}
+                                  <span className="font-medium">Alergias:</span>{' '}
+                                  {child.allergies}
                                 </p>
                               )}
                               {child.medicalNotes && (
                                 <p>
-                                  <span className="font-medium">Notas:</span> {child.medicalNotes}
+                                  <span className="font-medium">Notas:</span>{' '}
+                                  {child.medicalNotes}
                                 </p>
                               )}
                             </div>
@@ -374,7 +401,8 @@ export default function ProfilePage() {
                       Nenhum filho registado
                     </h3>
                     <p className="text-gray-600 mb-6">
-                      Adiciona informações sobre os teus filhos para personalizar as recomendações
+                      Adiciona informações sobre os teus filhos para
+                      personalizar as recomendações
                     </p>
                   </div>
                 )}
@@ -395,8 +423,8 @@ export default function ProfilePage() {
         {/* Add/Edit Child Form */}
         {(activeView === 'add-child' || activeView === 'edit-child') && (
           <ChildForm
-            initialChild={editingChild || undefined}
-            onSave={handleChildSave}
+            initialChild={(editingChild as any) || undefined}
+            onSave={handleChildSave as any}
             onCancel={() => {
               setActiveView('overview');
               setEditingChild(null);

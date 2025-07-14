@@ -1,36 +1,48 @@
-import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { createSuccessResponse, handleApiError, createPaginationParams } from '@/lib/api-utils'
+import { NextRequest } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import {
+  createSuccessResponse,
+  handleApiError,
+  createPaginationParams,
+} from '@/lib/api-utils';
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const { page, limit, skip } = createPaginationParams(searchParams)
-    
-    const activityId = searchParams.get('activityId')
-    const from = searchParams.get('from')
-    const to = searchParams.get('to')
+    const { searchParams } = new URL(request.url);
+    const { page, limit, skip } = createPaginationParams(searchParams);
 
-    const where: any = {
+    const activityId = searchParams.get('activityId');
+    const from = searchParams.get('from');
+    const to = searchParams.get('to');
+
+    const where: {
+      deletedAt: null;
+      status: 'SCHEDULED';
+      activityId?: string;
+      startTime?: {
+        gte?: Date;
+        lte?: Date;
+      };
+    } = {
       deletedAt: null,
       status: 'SCHEDULED',
-    }
+    };
 
     if (activityId) {
-      where.activityId = activityId
+      where.activityId = activityId;
     }
 
     if (from || to) {
-      where.startTime = {}
+      where.startTime = {};
       if (from) {
-        where.startTime.gte = new Date(from)
+        where.startTime.gte = new Date(from);
       }
       if (to) {
-        where.startTime.lte = new Date(to)
+        where.startTime.lte = new Date(to);
       }
     } else {
       // Default: only future sessions
-      where.startTime = { gte: new Date() }
+      where.startTime = { gte: new Date() };
     }
 
     const [sessions, total] = await Promise.all([
@@ -72,9 +84,9 @@ export async function GET(request: NextRequest) {
         take: limit,
       }),
       prisma.activitySession.count({ where }),
-    ])
+    ]);
 
-    const totalPages = Math.ceil(total / limit)
+    const totalPages = Math.ceil(total / limit);
 
     return createSuccessResponse({
       sessions,
@@ -86,8 +98,8 @@ export async function GET(request: NextRequest) {
         hasNext: page < totalPages,
         hasPrev: page > 1,
       },
-    })
+    });
   } catch (error) {
-    return handleApiError(error)
+    return handleApiError(error);
   }
 }

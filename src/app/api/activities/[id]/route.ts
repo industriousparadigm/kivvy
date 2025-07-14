@@ -1,13 +1,17 @@
-import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { createSuccessResponse, createErrorResponse, handleApiError } from '@/lib/api-utils'
+import { NextRequest } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import {
+  createSuccessResponse,
+  createErrorResponse,
+  handleApiError,
+} from '@/lib/api-utils';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params
+    const { id } = await params;
 
     const activity = await prisma.activity.findUnique({
       where: {
@@ -79,16 +83,18 @@ export async function GET(
           },
         },
       },
-    })
+    });
 
     if (!activity) {
-      return createErrorResponse('Activity not found', 404)
+      return createErrorResponse('Activity not found', 404);
     }
 
     // Calculate average rating
-    const averageRating = activity.reviews.length > 0
-      ? activity.reviews.reduce((sum, review) => sum + review.rating, 0) / activity.reviews.length
-      : null
+    const averageRating =
+      activity.reviews.length > 0
+        ? activity.reviews.reduce((sum, review) => sum + review.rating, 0) /
+          activity.reviews.length
+        : null;
 
     // Format the response
     const response = {
@@ -98,10 +104,10 @@ export async function GET(
       savedCount: activity._count.savedBy,
       upcomingSessions: activity.sessions,
       recentReviews: activity.reviews,
-    }
+    };
 
-    return createSuccessResponse(response)
+    return createSuccessResponse(response);
   } catch (error) {
-    return handleApiError(error)
+    return handleApiError(error);
   }
 }

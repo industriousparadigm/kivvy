@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth';
+import { auth } from '@/lib/auth';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
@@ -8,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -78,7 +77,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Alternative implementation using Cloudinary
-export async function uploadToCloudinary(file: File): Promise<string> {
+async function uploadToCloudinary(file: File): Promise<string> {
   const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`;
 
   const formData = new FormData();
@@ -100,9 +99,9 @@ export async function uploadToCloudinary(file: File): Promise<string> {
 }
 
 // Enhanced POST handler with Cloudinary support
-export async function POST_CLOUDINARY(request: NextRequest) {
+async function POST_CLOUDINARY(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

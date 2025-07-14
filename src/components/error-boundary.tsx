@@ -14,11 +14,18 @@ interface ErrorBoundaryState {
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
-  fallback?: React.ComponentType<{ error: Error; resetError: () => void; errorId?: string }>;
+  fallback?: React.ComponentType<{
+    error: Error;
+    resetError: () => void;
+    errorId?: string;
+  }>;
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
 
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
@@ -70,7 +77,13 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       }
 
       // Default fallback UI
-      return <DefaultErrorFallback error={this.state.error!} resetError={this.handleReset} errorId={this.state.errorId} />;
+      return (
+        <DefaultErrorFallback
+          error={this.state.error!}
+          resetError={this.handleReset}
+          errorId={this.state.errorId}
+        />
+      );
     }
 
     return this.props.children;
@@ -83,7 +96,11 @@ interface ErrorFallbackProps {
   errorId?: string;
 }
 
-function DefaultErrorFallback({ error, resetError, errorId }: ErrorFallbackProps) {
+function DefaultErrorFallback({
+  error,
+  resetError,
+  errorId,
+}: ErrorFallbackProps) {
   const isDevelopment = process.env.NODE_ENV === 'development';
 
   return (
@@ -99,12 +116,15 @@ function DefaultErrorFallback({ error, resetError, errorId }: ErrorFallbackProps
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-gray-600 text-center">
-            Pedimos desculpa, mas ocorreu um erro inesperado. A nossa equipa foi notificada e está a trabalhar para resolver o problema.
+            Pedimos desculpa, mas ocorreu um erro inesperado. A nossa equipa foi
+            notificada e está a trabalhar para resolver o problema.
           </p>
 
           {isDevelopment && (
             <div className="rounded-md bg-red-50 p-4 border border-red-200">
-              <h4 className="text-sm font-medium text-red-800 mb-2">Detalhes do erro (desenvolvimento):</h4>
+              <h4 className="text-sm font-medium text-red-800 mb-2">
+                Detalhes do erro (desenvolvimento):
+              </h4>
               <pre className="text-xs text-red-700 whitespace-pre-wrap break-all">
                 {error.message}
               </pre>
@@ -134,7 +154,7 @@ function DefaultErrorFallback({ error, resetError, errorId }: ErrorFallbackProps
             </Button>
             <Button
               variant="outline"
-              onClick={() => window.location.href = '/'}
+              onClick={() => (window.location.href = '/')}
               className="w-full"
             >
               <Home className="h-4 w-4 mr-2" />
@@ -160,14 +180,17 @@ function DefaultErrorFallback({ error, resetError, errorId }: ErrorFallbackProps
 
 // Hook for functional components to report errors
 export function useErrorHandler() {
-  return React.useCallback((error: Error, errorInfo?: Record<string, any>) => {
-    Sentry.captureException(error, {
-      tags: {
-        component: 'useErrorHandler',
-      },
-      extra: errorInfo,
-    });
-  }, []);
+  return React.useCallback(
+    (error: Error, errorInfo?: Record<string, unknown>) => {
+      Sentry.captureException(error, {
+        tags: {
+          component: 'useErrorHandler',
+        },
+        extra: errorInfo,
+      });
+    },
+    []
+  );
 }
 
 // HOC for wrapping components with error boundary

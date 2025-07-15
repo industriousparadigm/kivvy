@@ -16,6 +16,7 @@ import {
   Shield,
 } from 'lucide-react';
 import { formatPrice, formatDate } from '@/lib/utils';
+import { prisma } from '@/lib/prisma';
 
 interface ActivityPageProps {
   params: Promise<{
@@ -81,14 +82,140 @@ interface Activity {
 
 async function getActivity(id: string): Promise<Activity | null> {
   try {
-    const response = await fetch(
-      `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/activities/${id}`,
-      {
-        cache: 'no-store',
-      }
-    );
-    if (!response.ok) return null;
-    return await response.json();
+    const activity = await prisma.activity.findUnique({
+      where: {
+        id,
+        isActive: true,
+        deletedAt: null,
+      },
+      include: {
+        provider: {
+          select: {
+            id: true,
+            businessName: true,
+            description: true,
+            isVerified: true,
+            businessType: true,
+            address: true,
+            city: true,
+            postalCode: true,
+            country: true,
+            latitude: true,
+            longitude: true,
+            phone: true,
+            email: true,
+            website: true,
+          },
+        },
+        sessions: {
+          where: {
+            status: 'SCHEDULED',
+            startTime: {
+              gte: new Date(),
+            },
+          },
+          select: {
+            id: true,
+            startTime: true,
+            endTime: true,
+            capacity: true,
+            availableSpots: true,
+            price: true,
+            status: true,
+            notes: true,
+          },
+          orderBy: {
+            startTime: 'asc',
+          },
+          take: 10,
+        },
+        reviews: {
+          where: {
+            isVerified: true,
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+          take: 10,
+        },
+      },
+    });
+
+    if (!activity) return null;
+
+    // Transform the data to match the expected format
+    const averageRating =
+      activity.reviews.length > 0
+        ? activity.reviews.reduce((sum, review) => sum + review.rating, 0) /
+          activity.reviews.length
+        : undefined;
+
+    const formattedActivity: Activity = {
+      id: activity.id,
+      title: activity.title,
+      description: activity.description,
+      imageUrl: activity.imageUrl || undefined,
+      price: activity.price,
+      location: activity.location || '',
+      category: activity.category,
+      ageGroup: `${activity.ageMin}-${activity.ageMax} anos`,
+      rating: averageRating,
+      totalReviews: activity.reviews.length,
+      duration: activity.duration,
+      maxParticipants: activity.capacity,
+      requirements: activity.requirements || undefined,
+      whatToExpect: activity.included || undefined,
+      provider: {
+        id: activity.provider.id,
+        businessName: activity.provider.businessName,
+        description: activity.provider.description || undefined,
+        isVerified: activity.provider.isVerified,
+        businessType: activity.provider.businessType || undefined,
+        address: activity.provider.address || '',
+        city: activity.provider.city || '',
+        postalCode: activity.provider.postalCode || '',
+        country: activity.provider.country || '',
+        latitude: activity.provider.latitude || undefined,
+        longitude: activity.provider.longitude || undefined,
+        phone: activity.provider.phone || undefined,
+        email: activity.provider.email || undefined,
+        website: activity.provider.website || undefined,
+      },
+      upcomingSessions: activity.sessions.map(session => ({
+        id: session.id,
+        startTime: session.startTime.toISOString(),
+        endTime: session.endTime?.toISOString(),
+        capacity: session.capacity,
+        availableSpots: session.availableSpots,
+        price: session.price || undefined,
+        status: session.status,
+        notes: session.notes || undefined,
+      })),
+      recentReviews: activity.reviews.map(review => ({
+        id: review.id,
+        rating: review.rating,
+        comment: review.comment || '',
+        user: {
+          id: review.user.id,
+          name: review.user.name || 'Utilizador Anónimo',
+          image: review.user.image || undefined,
+        },
+        createdAt: review.createdAt.toISOString(),
+      })),
+      reviewCount: activity.reviews.length,
+      averageRating,
+    };
+
+    return formattedActivity;
   } catch (error) {
     console.error('Failed to fetch activity:', error);
     return null;

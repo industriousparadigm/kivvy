@@ -442,3 +442,15 @@
 {"timestamp":"2025-07-15 07:35:17","level":"info","message":"Received SIGINT, shutting down gracefully...","service":"kivvy","environment":"production"}
 {"timestamp":"2025-07-15 07:35:17","level":"info","message":"Shutting down job workers...","service":"kivvy","environment":"production"}
 {"timestamp":"2025-07-15 07:35:18","level":"info","message":"Job workers shut down successfully","service":"kivvy","environment":"production"}
+{"timestamp":"2025-07-15 07:55:35","level":"warn","message":"SMTP not configured, email service will use console logging","service":"kivvy","environment":"production"}
+{"timestamp":"2025-07-15 07:55:35","level":"warn","message":"SMS service not configured, will use console logging","service":"kivvy","environment":"production"}
+{"timestamp":"2025-07-15 07:55:35","level":"warn","message":"Push notifications not configured, will use console logging","service":"kivvy","environment":"production"}
+{"timestamp":"2025-07-15 07:55:37","level":"warn","message":"SMTP not configured, email service will use console logging","service":"kivvy","environment":"production"}
+{"timestamp":"2025-07-15 07:55:37","level":"warn","message":"SMS service not configured, will use console logging","service":"kivvy","environment":"production"}
+{"timestamp":"2025-07-15 07:55:37","level":"warn","message":"Push notifications not configured, will use console logging","service":"kivvy","environment":"production"}
+{"timestamp":"2025-07-15 07:55:38","level":"info","message":"Received SIGINT, shutting down gracefully...","service":"kivvy","environment":"production"}
+{"timestamp":"2025-07-15 07:55:38","level":"info","message":"Shutting down job workers...","service":"kivvy","environment":"production"}
+{"timestamp":"2025-07-15 07:55:39","level":"info","message":"Job workers shut down successfully","service":"kivvy","environment":"production"}
+{"timestamp":"2025-07-15 07:55:40","level":"info","message":"Received SIGINT, shutting down gracefully...","service":"kivvy","environment":"production"}
+{"timestamp":"2025-07-15 07:55:40","level":"info","message":"Shutting down job workers...","service":"kivvy","environment":"production"}
+{"timestamp":"2025-07-15 07:55:40","level":"info","message":"Job workers shut down successfully","service":"kivvy","environment":"production"}

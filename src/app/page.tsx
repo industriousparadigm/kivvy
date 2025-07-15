@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ActivityCard } from '@/components/activities/activity-card';
 import { Header } from '@/components/layout/header';
 import { Heart, Shield, Star } from 'lucide-react';
+import { prisma } from '@/lib/prisma';
 
 interface Activity {
   id: string;
@@ -31,18 +32,83 @@ interface Activity {
   }>;
 }
 
-// Fetch featured activities
+// Fetch featured activities directly from database
 async function getFeaturedActivities() {
   try {
-    const response = await fetch(
-      `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/activities?limit=6`,
-      {
-        next: { revalidate: 3600 }, // Revalidate every hour
-      }
-    );
-    if (!response.ok) return { activities: [] };
-    const data = await response.json();
-    return data;
+    const activities = await prisma.activity.findMany({
+      where: {
+        isActive: true,
+        deletedAt: null,
+      },
+      include: {
+        provider: {
+          select: {
+            id: true,
+            businessName: true,
+            city: true,
+            isVerified: true,
+          },
+        },
+        sessions: {
+          where: {
+            status: 'SCHEDULED',
+            startTime: {
+              gte: new Date(),
+            },
+          },
+          select: {
+            id: true,
+            startTime: true,
+            availableSpots: true,
+          },
+          orderBy: {
+            startTime: 'asc',
+          },
+          take: 3,
+        },
+        reviews: {
+          select: {
+            rating: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 6,
+    });
+
+    // Transform the data to match the expected format
+    const formattedActivities = activities.map(activity => ({
+      id: activity.id,
+      title: activity.title,
+      description: activity.description,
+      imageUrl: activity.imageUrl || undefined,
+      price: activity.price,
+      location: activity.location || '',
+      category: activity.category,
+      ageMin: activity.ageMin,
+      ageMax: activity.ageMax,
+      provider: {
+        id: activity.provider.id,
+        businessName: activity.provider.businessName,
+        city: activity.provider.city,
+        isVerified: activity.provider.isVerified,
+      },
+      nextSessions: activity.sessions.map(session => ({
+        id: session.id,
+        startTime: session.startTime.toISOString(),
+        availableSpots: session.availableSpots,
+      })),
+      averageRating:
+        activity.reviews.length > 0
+          ? activity.reviews.reduce((sum, review) => sum + review.rating, 0) /
+            activity.reviews.length
+          : undefined,
+      reviewCount: activity.reviews.length,
+    }));
+
+    return { activities: formattedActivities };
   } catch (error) {
     console.error('Failed to fetch featured activities:', error);
     return { activities: [] };
@@ -142,6 +208,69 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Featured Activities */}
+      <section
+        id="featured"
+        className="py-20 bg-gradient-to-b from-amber-50 to-rose-50"
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-light text-rose-900 mb-4">
+              Aventuras que esperam pelo teu pequeno
+            </h2>
+            <p className="text-lg text-rose-700 max-w-xl mx-auto">
+              Cada atividade é uma nova descoberta, um novo sorriso
+            </p>
+          </div>
+
+          <Suspense
+            fallback={
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-80 bg-white/60 rounded-3xl animate-pulse border border-rose-100"
+                  />
+                ))}
+              </div>
+            }
+          >
+            {featuredActivities.length > 0 ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {featuredActivities.slice(0, 6).map((activity: Activity) => (
+                  <div
+                    key={activity.id}
+                    className="transform hover:scale-[1.02] transition-transform duration-300"
+                  >
+                    <ActivityCard activity={activity} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <div className="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Heart className="h-10 w-10 text-rose-600" />
+                </div>
+                <p className="text-rose-700 text-lg">
+                  A preparar experiências especiais...
+                </p>
+              </div>
+            )}
+          </Suspense>
+
+          <div className="text-center mt-16">
+            <Link href="/activities">
+              <Button
+                size="lg"
+                className="bg-amber-600 hover:bg-amber-700 text-white px-12 py-4 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                Ver Todas as Aventuras
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Stories from Mothers */}
       <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -211,69 +340,6 @@ export default async function HomePage() {
                 — Carla, mãe da Beatriz (6 anos)
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Activities */}
-      <section
-        id="featured"
-        className="py-20 bg-gradient-to-b from-amber-50 to-rose-50"
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-light text-rose-900 mb-4">
-              Aventuras que esperam pelo teu pequeno
-            </h2>
-            <p className="text-lg text-rose-700 max-w-xl mx-auto">
-              Cada atividade é uma nova descoberta, um novo sorriso
-            </p>
-          </div>
-
-          <Suspense
-            fallback={
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-80 bg-white/60 rounded-3xl animate-pulse border border-rose-100"
-                  />
-                ))}
-              </div>
-            }
-          >
-            {featuredActivities.length > 0 ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {featuredActivities.slice(0, 6).map((activity: Activity) => (
-                  <div
-                    key={activity.id}
-                    className="transform hover:scale-[1.02] transition-transform duration-300"
-                  >
-                    <ActivityCard activity={activity} />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-16">
-                <div className="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Heart className="h-10 w-10 text-rose-600" />
-                </div>
-                <p className="text-rose-700 text-lg">
-                  A preparar experiências especiais...
-                </p>
-              </div>
-            )}
-          </Suspense>
-
-          <div className="text-center mt-16">
-            <Link href="/activities">
-              <Button
-                size="lg"
-                className="bg-amber-600 hover:bg-amber-700 text-white px-12 py-4 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                Ver Todas as Aventuras
-              </Button>
-            </Link>
           </div>
         </div>
       </section>

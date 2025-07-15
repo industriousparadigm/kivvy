@@ -37,7 +37,7 @@ async function getFeaturedActivities() {
     const response = await fetch(
       `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/activities?limit=6`,
       {
-        cache: 'no-store',
+        next: { revalidate: 3600 }, // Revalidate every hour
       }
     );
     if (!response.ok) return { activities: [] };

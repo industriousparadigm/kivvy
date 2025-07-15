@@ -117,7 +117,7 @@ class PushNotificationService {
     } catch (error) {
       logger.error('Failed to send push notification', {
         userId: options.userId,
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
       });
       throw error;
     }
@@ -143,7 +143,7 @@ class PushNotificationService {
     } catch (error) {
       logger.error('Failed to send to subscription', {
         endpoint: subscription.endpoint,
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
       });
       // Don't throw error for individual subscription failures
     }

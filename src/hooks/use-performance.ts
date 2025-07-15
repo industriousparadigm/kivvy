@@ -187,10 +187,18 @@ export function useMemoryMonitoring() {
     if (
       typeof window !== 'undefined' &&
       'performance' in window &&
-      'memory' in (window.performance as any)
+      'memory' in (window.performance as unknown as { memory: unknown })
     ) {
       const checkMemory = () => {
-        const memory = (window.performance as any).memory;
+        const memory = (
+          window.performance as unknown as {
+            memory: {
+              usedJSHeapSize: number;
+              totalJSHeapSize: number;
+              jsHeapSizeLimit: number;
+            };
+          }
+        ).memory;
 
         monitoring.captureMetric(
           'browser.memory.used',

@@ -21,35 +21,35 @@ export function initializeWorkers() {
   logger.info('Initializing job workers...');
 
   // Email queue processors
-  emailQueue.process('send-email', 5, processEmailJob);
+  emailQueue().process('send-email', 5, processEmailJob);
 
   // Notification queue processors
-  notificationQueue.process('send-sms', 3, processSMSJob);
-  notificationQueue.process(
+  notificationQueue().process('send-sms', 3, processSMSJob);
+  notificationQueue().process(
     'send-push-notification',
     10,
     processPushNotificationJob
   );
-  notificationQueue.process(
+  notificationQueue().process(
     'send-booking-reminder',
     5,
     processBookingReminderJob
   );
 
   // Payment queue processors
-  paymentQueue.process('process-payment', 2, processPaymentJob);
+  paymentQueue().process('process-payment', 2, processPaymentJob);
 
   // Report queue processors
-  reportQueue.process('generate-report', 1, processReportJob);
+  reportQueue().process('generate-report', 1, processReportJob);
 
   // Maintenance queue processors
-  maintenanceQueue.process(
+  maintenanceQueue().process(
     'cleanup-expired-sessions',
     1,
     processMaintenanceJob
   );
-  maintenanceQueue.process('sync-external-data', 1, processMaintenanceJob);
-  maintenanceQueue.process('update-activity-stats', 1, processMaintenanceJob);
+  maintenanceQueue().process('sync-external-data', 1, processMaintenanceJob);
+  maintenanceQueue().process('update-activity-stats', 1, processMaintenanceJob);
 
   // Set up global event handlers
   setupEventHandlers();
@@ -59,11 +59,11 @@ export function initializeWorkers() {
 
 function setupEventHandlers() {
   const queues = [
-    emailQueue,
-    notificationQueue,
-    paymentQueue,
-    reportQueue,
-    maintenanceQueue,
+    emailQueue(),
+    notificationQueue(),
+    paymentQueue(),
+    reportQueue(),
+    maintenanceQueue(),
   ];
 
   queues.forEach(queue => {
@@ -135,11 +135,11 @@ export async function shutdownWorkers() {
   logger.info('Shutting down job workers...');
 
   const queues = [
-    emailQueue,
-    notificationQueue,
-    paymentQueue,
-    reportQueue,
-    maintenanceQueue,
+    emailQueue(),
+    notificationQueue(),
+    paymentQueue(),
+    reportQueue(),
+    maintenanceQueue(),
   ];
 
   // Close all queues
@@ -161,11 +161,11 @@ interface QueueHealth {
 // Health check for workers
 export async function checkWorkerHealth() {
   const queues = [
-    emailQueue,
-    notificationQueue,
-    paymentQueue,
-    reportQueue,
-    maintenanceQueue,
+    emailQueue(),
+    notificationQueue(),
+    paymentQueue(),
+    reportQueue(),
+    maintenanceQueue(),
   ];
   const health: Record<string, QueueHealth> = {};
 

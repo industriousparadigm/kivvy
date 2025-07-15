@@ -4,6 +4,7 @@ import { stripe, STRIPE_WEBHOOK_SECRET } from '@/lib/stripe';
 import PaymentService from '@/lib/payment-service';
 import { prisma } from '@/lib/prisma';
 import { createSuccessResponse, createErrorResponse } from '@/lib/api-utils';
+import Stripe from 'stripe';
 
 export async function POST(request: NextRequest) {
   try {
@@ -58,7 +59,9 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function handlePaymentIntentSucceeded(paymentIntent: any) {
+async function handlePaymentIntentSucceeded(
+  paymentIntent: Stripe.PaymentIntent
+) {
   try {
     const { id: paymentIntentId, metadata } = paymentIntent;
 
@@ -92,7 +95,7 @@ async function handlePaymentIntentSucceeded(paymentIntent: any) {
   }
 }
 
-async function handlePaymentIntentFailed(paymentIntent: any) {
+async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
   try {
     const { id: paymentIntentId, last_payment_error, metadata } = paymentIntent;
 
@@ -131,7 +134,9 @@ async function handlePaymentIntentFailed(paymentIntent: any) {
   }
 }
 
-async function handlePaymentIntentCanceled(paymentIntent: any) {
+async function handlePaymentIntentCanceled(
+  paymentIntent: Stripe.PaymentIntent
+) {
   try {
     const { id: paymentIntentId, metadata } = paymentIntent;
 
@@ -161,14 +166,25 @@ async function handlePaymentIntentCanceled(paymentIntent: any) {
   }
 }
 
-async function handleChargeDisputeCreated(dispute: any) {
+async function handleChargeDisputeCreated(dispute: Stripe.Dispute) {
   try {
     const {
       id: disputeId,
-      payment_intent: paymentIntentId,
+      payment_intent: paymentIntentRaw,
       reason,
       amount,
     } = dispute;
+
+    // Extract payment intent ID as string
+    const paymentIntentId =
+      typeof paymentIntentRaw === 'string'
+        ? paymentIntentRaw
+        : paymentIntentRaw?.id;
+
+    if (!paymentIntentId) {
+      console.error('No payment intent ID found for dispute:', disputeId);
+      return;
+    }
 
     console.log(
       'Charge dispute created:',

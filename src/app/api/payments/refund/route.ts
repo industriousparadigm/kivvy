@@ -114,6 +114,7 @@ export async function POST(request: NextRequest) {
               : 'PARTIALLY_REFUNDED',
           refundAmount: (booking.payment.refundAmount || 0) + refundAmount,
           refundReason: reason || 'Customer request',
+
           metadata: {
             ...((booking.payment.metadata as any) || {}),
             mbwayRefundProcessedAt: new Date().toISOString(),

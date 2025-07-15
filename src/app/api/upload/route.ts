@@ -99,6 +99,8 @@ async function uploadToCloudinary(file: File): Promise<string> {
 }
 
 // Enhanced POST handler with Cloudinary support
+// Currently unused, but kept for future implementation
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function _POST_CLOUDINARY(request: NextRequest) {
   try {
     const session = await auth();

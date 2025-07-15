@@ -1,55 +1,55 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { signIn, getSession } from 'next-auth/react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import Link from 'next/link'
+import { useState, Suspense } from 'react';
+import { signIn, getSession } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
-export default function SignInPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-  
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
+function SignInForm() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError('')
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
 
     try {
       const result = await signIn('credentials', {
         email,
         password,
         redirect: false,
-      })
+      });
 
       if (result?.error) {
-        setError('Invalid email or password')
+        setError('Invalid email or password');
       } else {
         // Get updated session to check role
-        const session = await getSession()
+        const session = await getSession();
         if (session?.user?.role === 'PROVIDER') {
-          router.push('/provider/dashboard')
+          router.push('/provider/dashboard');
         } else if (session?.user?.role === 'ADMIN') {
-          router.push('/admin/dashboard')
+          router.push('/admin/dashboard');
         } else {
-          router.push(callbackUrl)
+          router.push(callbackUrl);
         }
       }
     } catch {
-      setError('An error occurred. Please try again.')
+      setError('An error occurred. Please try again.');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleGoogleSignIn = () => {
-    signIn('google', { callbackUrl })
-  }
+    signIn('google', { callbackUrl });
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 to-amber-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -68,7 +68,10 @@ export default function SignInPage() {
             </Link>
           </p>
         </div>
-        <form className="mt-8 space-y-6 bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-rose-100" onSubmit={handleSubmit}>
+        <form
+          className="mt-8 space-y-6 bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-rose-100"
+          onSubmit={handleSubmit}
+        >
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="sr-only">
@@ -81,7 +84,7 @@ export default function SignInPage() {
                 autoComplete="email"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 className="appearance-none relative block w-full px-4 py-3 border border-rose-200 placeholder-rose-400 text-rose-900 rounded-2xl bg-white/70 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition-all duration-200 sm:text-sm"
                 placeholder="Email"
               />
@@ -97,7 +100,7 @@ export default function SignInPage() {
                 autoComplete="current-password"
                 required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 className="appearance-none relative block w-full px-4 py-3 border border-rose-200 placeholder-rose-400 text-rose-900 rounded-2xl bg-white/70 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition-all duration-200 sm:text-sm"
                 placeholder="Password"
               />
@@ -105,7 +108,9 @@ export default function SignInPage() {
           </div>
 
           {error && (
-            <div className="text-rose-700 text-sm text-center bg-rose-50 border border-rose-200 rounded-2xl p-3">{error}</div>
+            <div className="text-rose-700 text-sm text-center bg-rose-50 border border-rose-200 rounded-2xl p-3">
+              {error}
+            </div>
           )}
 
           <div>
@@ -124,7 +129,9 @@ export default function SignInPage() {
                 <div className="w-full border-t border-rose-200" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-gradient-to-br from-rose-50 to-amber-50 text-rose-600">Ou</span>
+                <span className="px-2 bg-gradient-to-br from-rose-50 to-amber-50 text-rose-600">
+                  Ou
+                </span>
               </div>
             </div>
 
@@ -159,5 +166,28 @@ export default function SignInPage() {
         </form>
       </div>
     </div>
-  )
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 to-amber-50">
+          <div className="animate-pulse">
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-rose-100">
+              <div className="h-8 bg-rose-200 rounded w-3/4 mx-auto mb-4"></div>
+              <div className="space-y-4">
+                <div className="h-12 bg-rose-100 rounded-2xl"></div>
+                <div className="h-12 bg-rose-100 rounded-2xl"></div>
+                <div className="h-12 bg-rose-100 rounded-2xl"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <SignInForm />
+    </Suspense>
+  );
 }

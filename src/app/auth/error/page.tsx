@@ -1,42 +1,43 @@
-'use client'
+'use client';
 
-import { useSearchParams } from 'next/navigation'
-import Link from 'next/link'
+import { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
-export default function AuthErrorPage() {
-  const searchParams = useSearchParams()
-  const error = searchParams.get('error')
+function ErrorContent() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get('error');
 
   const getErrorMessage = (error: string | null) => {
     switch (error) {
       case 'Configuration':
-        return 'There is a problem with the server configuration.'
+        return 'There is a problem with the server configuration.';
       case 'AccessDenied':
-        return 'Access denied. You do not have permission to sign in.'
+        return 'Access denied. You do not have permission to sign in.';
       case 'Verification':
-        return 'The verification token has expired or has already been used.'
+        return 'The verification token has expired or has already been used.';
       case 'OAuthSignin':
-        return 'Error in constructing an authorization URL.'
+        return 'Error in constructing an authorization URL.';
       case 'OAuthCallback':
-        return 'Error in handling the response from an OAuth provider.'
+        return 'Error in handling the response from an OAuth provider.';
       case 'OAuthCreateAccount':
-        return 'Could not create OAuth account in the database.'
+        return 'Could not create OAuth account in the database.';
       case 'EmailCreateAccount':
-        return 'Could not create email account in the database.'
+        return 'Could not create email account in the database.';
       case 'Callback':
-        return 'Error in the OAuth callback handler route.'
+        return 'Error in the OAuth callback handler route.';
       case 'OAuthAccountNotLinked':
-        return 'Email on the account is already linked, but not with this OAuth account.'
+        return 'Email on the account is already linked, but not with this OAuth account.';
       case 'EmailSignin':
-        return 'Sending the e-mail with the verification token failed.'
+        return 'Sending the e-mail with the verification token failed.';
       case 'CredentialsSignin':
-        return 'The credentials you provided are not valid.'
+        return 'The credentials you provided are not valid.';
       case 'SessionRequired':
-        return 'You must be signed in to view this page.'
+        return 'You must be signed in to view this page.';
       default:
-        return 'An error occurred during authentication.'
+        return 'An error occurred during authentication.';
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -82,5 +83,27 @@ export default function AuthErrorPage() {
         </div>
       </div>
     </div>
-  )
+  );
+}
+
+export default function AuthErrorPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="animate-pulse">
+            <div className="bg-gray-200 rounded-full h-12 w-12 mx-auto mb-4"></div>
+            <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded w-48 mx-auto mb-8"></div>
+            <div className="space-y-4">
+              <div className="h-10 bg-gray-200 rounded w-64 mx-auto"></div>
+              <div className="h-10 bg-gray-200 rounded w-64 mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <ErrorContent />
+    </Suspense>
+  );
 }

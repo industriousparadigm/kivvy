@@ -12,17 +12,35 @@ const redisConfig = {
   maxRetriesPerRequest: null,
 };
 
-// Create Redis connection
+// Create Redis connection lazily
 let redis: Redis | null = null;
-try {
-  redis = new Redis(redisConfig);
-  redis.on('error', err => {
-    console.warn('Redis connection error:', err);
+let redisInitialized = false;
+
+function initializeRedis(): void {
+  if (redisInitialized) return;
+
+  // Skip Redis connection during build time
+  if (
+    process.env.NODE_ENV === 'production' &&
+    process.env.NEXT_PHASE === 'phase-production-build'
+  ) {
+    console.log('Skipping Redis connection during build phase');
+    redisInitialized = true;
+    return;
+  }
+
+  try {
+    redis = new Redis(redisConfig);
+    redis.on('error', err => {
+      console.warn('Redis connection error:', err);
+      redis = null;
+    });
+  } catch (error) {
+    console.warn('Failed to connect to Redis:', error);
     redis = null;
-  });
-} catch (error) {
-  console.warn('Failed to connect to Redis:', error);
-  redis = null;
+  }
+
+  redisInitialized = true;
 }
 
 // Job types
@@ -49,6 +67,8 @@ export interface JobData {
 
 // Create queues
 const createQueue = (name: string): Queue.Queue => {
+  initializeRedis();
+
   if (redis) {
     return new Queue(name, {
       redis: redisConfig,
@@ -78,12 +98,46 @@ const createQueue = (name: string): Queue.Queue => {
   });
 };
 
-// Define queues
-export const emailQueue = createQueue('email');
-export const notificationQueue = createQueue('notification');
-export const paymentQueue = createQueue('payment');
-export const reportQueue = createQueue('report');
-export const maintenanceQueue = createQueue('maintenance');
+// Define queues lazily
+let emailQueue: Queue.Queue | null = null;
+let notificationQueue: Queue.Queue | null = null;
+let paymentQueue: Queue.Queue | null = null;
+let reportQueue: Queue.Queue | null = null;
+let maintenanceQueue: Queue.Queue | null = null;
+
+function getEmailQueue(): Queue.Queue {
+  if (!emailQueue) emailQueue = createQueue('email');
+  return emailQueue;
+}
+
+function getNotificationQueue(): Queue.Queue {
+  if (!notificationQueue) notificationQueue = createQueue('notification');
+  return notificationQueue;
+}
+
+function getPaymentQueue(): Queue.Queue {
+  if (!paymentQueue) paymentQueue = createQueue('payment');
+  return paymentQueue;
+}
+
+function getReportQueue(): Queue.Queue {
+  if (!reportQueue) reportQueue = createQueue('report');
+  return reportQueue;
+}
+
+function getMaintenanceQueue(): Queue.Queue {
+  if (!maintenanceQueue) maintenanceQueue = createQueue('maintenance');
+  return maintenanceQueue;
+}
+
+// Export lazy queue getters
+export {
+  getEmailQueue as emailQueue,
+  getNotificationQueue as notificationQueue,
+  getPaymentQueue as paymentQueue,
+  getReportQueue as reportQueue,
+  getMaintenanceQueue as maintenanceQueue,
+};
 
 // Queue management
 export class QueueManager {
@@ -91,11 +145,11 @@ export class QueueManager {
   private queues: Map<string, Queue.Queue> = new Map();
 
   private constructor() {
-    this.queues.set('email', emailQueue);
-    this.queues.set('notification', notificationQueue);
-    this.queues.set('payment', paymentQueue);
-    this.queues.set('report', reportQueue);
-    this.queues.set('maintenance', maintenanceQueue);
+    this.queues.set('email', getEmailQueue());
+    this.queues.set('notification', getNotificationQueue());
+    this.queues.set('payment', getPaymentQueue());
+    this.queues.set('report', getReportQueue());
+    this.queues.set('maintenance', getMaintenanceQueue());
   }
 
   static getInstance(): QueueManager {
@@ -365,6 +419,44 @@ export async function checkQueueHealth(): Promise<{
     }
   >;
 }> {
+  // Skip queue health check during build time
+  if (
+    process.env.NODE_ENV === 'production' &&
+    process.env.NEXT_PHASE === 'phase-production-build'
+  ) {
+    return {
+      redis: false,
+      queues: {
+        email: false,
+        notification: false,
+        payment: false,
+        report: false,
+        maintenance: false,
+      },
+      stats: {
+        email: { waiting: 0, active: 0, completed: 0, failed: 0, delayed: 0 },
+        notification: {
+          waiting: 0,
+          active: 0,
+          completed: 0,
+          failed: 0,
+          delayed: 0,
+        },
+        payment: { waiting: 0, active: 0, completed: 0, failed: 0, delayed: 0 },
+        report: { waiting: 0, active: 0, completed: 0, failed: 0, delayed: 0 },
+        maintenance: {
+          waiting: 0,
+          active: 0,
+          completed: 0,
+          failed: 0,
+          delayed: 0,
+        },
+      },
+    };
+  }
+
+  initializeRedis();
+
   const health = {
     redis: !!redis,
     queues: {} as Record<string, boolean>,

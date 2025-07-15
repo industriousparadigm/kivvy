@@ -5,6 +5,7 @@ import { logger } from '@/lib/logger';
 
 export async function GET() {
   const startTime = Date.now();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const healthChecks: Record<string, any> = {};
   let overallStatus = 'healthy';
 

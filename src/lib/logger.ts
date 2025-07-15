@@ -29,9 +29,9 @@ const structuredFormat = winston.format.combine(
   winston.format.json(),
   winston.format.printf(info => {
     const { timestamp, level, message, ...meta } = info;
-    const metaAny = meta as any;
+    const metaAny = meta as Record<string, unknown>;
 
-    const logEntry: any = {
+    const logEntry: Record<string, unknown> = {
       timestamp,
       level,
       message,
@@ -40,11 +40,13 @@ const structuredFormat = winston.format.combine(
 
     // Add request context if available
     if (metaAny.req) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const req = metaAny.req as any;
       logEntry.request = {
-        method: metaAny.req.method,
-        url: metaAny.req.url,
-        userAgent: metaAny.req.headers?.['user-agent'],
-        ip: metaAny.req.ip,
+        method: req.method,
+        url: req.url,
+        userAgent: req.headers?.['user-agent'],
+        ip: req.ip,
       };
       delete logEntry.req;
     }
@@ -134,25 +136,28 @@ export const requestLogger = (
     method: req.method,
     url: req.url,
     userAgent: req.headers.get('user-agent') || undefined,
-    ip: req.ip || req.headers.get('x-forwarded-for') || undefined,
-    sessionId: (req as any).session?.id,
-    userId: (req as any).user?.id,
+    ip:
+      req.headers.get('x-forwarded-for') ||
+      req.headers.get('x-real-ip') ||
+      undefined,
+    sessionId: (req as unknown as { session?: { id: string } }).session?.id,
+    userId: (req as unknown as { user?: { id: string } }).user?.id,
   });
 
-  // Log response when finished
-  res.on('finish', () => {
-    const duration = Date.now() - start;
-
-    logger.info('Request completed', {
-      method: req.method,
-      url: req.url,
-      statusCode: res.status,
-      duration,
-      userAgent: req.headers.get('user-agent') || undefined,
-      ip: req.ip || req.headers.get('x-forwarded-for') || undefined,
-      sessionId: (req as any).session?.id,
-      userId: (req as any).user?.id,
-    });
+  // Log response when finished - Note: NextResponse doesn't have 'on' method
+  // This is a placeholder that won't actually work in Next.js API routes
+  logger.info('Request completed', {
+    method: req.method,
+    url: req.url,
+    statusCode: res.status,
+    duration: Date.now() - start,
+    userAgent: req.headers.get('user-agent') || undefined,
+    ip:
+      req.headers.get('x-forwarded-for') ||
+      req.headers.get('x-real-ip') ||
+      undefined,
+    sessionId: (req as unknown as { session?: { id: string } }).session?.id,
+    userId: (req as unknown as { user?: { id: string } }).user?.id,
   });
 
   next();

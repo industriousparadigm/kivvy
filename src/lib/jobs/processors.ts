@@ -193,7 +193,11 @@ async function processPaymentRefund(
     throw new Error('No payment intent found for booking');
   }
 
-  const refundData: any = {
+  const refundData: {
+    payment_intent: string;
+    reason: string;
+    amount?: number;
+  } = {
     payment_intent: booking.payment.stripePaymentIntentId,
     reason: reason || 'requested_by_customer',
   };
@@ -202,7 +206,8 @@ async function processPaymentRefund(
     refundData.amount = Math.round(amount * 100); // Convert to cents
   }
 
-  await stripe.refunds.create(refundData);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await stripe.refunds.create(refundData as any);
 
   await prisma.payment.update({
     where: { id: booking.payment.id },
@@ -229,12 +234,15 @@ export const processReportJob = async (job: Queue.Job<JobData>) => {
 
     switch (payload.type) {
       case 'activity-stats':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         reportData = await generateActivityStatsReport(payload as any);
         break;
       case 'revenue-report':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         reportData = await generateRevenueReport(payload as any);
         break;
       case 'user-engagement':
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         reportData = await generateUserEngagementReport(payload as any);
         break;
       default:
@@ -246,6 +254,7 @@ export const processReportJob = async (job: Queue.Job<JobData>) => {
       data: {
         type: payload.type as string,
         period: payload.period as string,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         data: reportData as any,
         generatedAt: new Date(),
         providerId: payload.providerId as string,
@@ -290,13 +299,13 @@ async function generateActivityStatsReport(payload: ReportPayload) {
     prisma.activity.count({ where: whereClause }),
     prisma.booking.count({
       where: {
-        ...(whereClause as any),
+        ...(whereClause as Record<string, unknown>),
         status: 'CONFIRMED',
       },
     }),
     prisma.payment.aggregate({
       where: {
-        ...(whereClause as any),
+        ...(whereClause as Record<string, unknown>),
         status: 'SUCCEEDED',
       },
       _sum: { amount: true },

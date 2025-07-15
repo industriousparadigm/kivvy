@@ -423,7 +423,9 @@ export default function ProfilePage() {
         {/* Add/Edit Child Form */}
         {(activeView === 'add-child' || activeView === 'edit-child') && (
           <ChildForm
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             initialChild={(editingChild as any) || undefined}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onSave={handleChildSave as any}
             onCancel={() => {
               setActiveView('overview');

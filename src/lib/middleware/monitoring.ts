@@ -20,7 +20,7 @@ export function withMonitoring<
     const endpointName = endpoint || pathname;
 
     let userId: string | undefined;
-    let response: NextResponse;
+    let response: NextResponse | undefined;
     let error: Error | null = null;
 
     try {

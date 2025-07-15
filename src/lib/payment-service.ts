@@ -1,26 +1,34 @@
-import { stripe, calculatePlatformFee, calculateNetAmount } from './stripe'
-import { prisma } from './prisma'
-import { PaymentMethod } from '@prisma/client'
+import { stripe, calculatePlatformFee, calculateNetAmount } from './stripe';
+import { prisma } from './prisma';
+import { PaymentMethod } from '@prisma/client';
 
 export interface CreatePaymentIntentRequest {
-  bookingId: string
-  amount: number
-  currency?: string
-  paymentMethodType: PaymentMethod
-  metadata?: Record<string, string>
+  bookingId: string;
+  amount: number;
+  currency?: string;
+  paymentMethodType: PaymentMethod;
+  metadata?: Record<string, string>;
 }
 
 export interface CreatePaymentIntentResponse {
-  paymentIntentId: string
-  clientSecret: string
-  publishableKey: string
-  amount: number
-  currency: string
+  paymentIntentId: string;
+  clientSecret: string;
+  publishableKey: string;
+  amount: number;
+  currency: string;
 }
 
 export class PaymentService {
-  static async createPaymentIntent(request: CreatePaymentIntentRequest): Promise<CreatePaymentIntentResponse> {
-    const { bookingId, amount, currency = 'EUR', paymentMethodType, metadata = {} } = request
+  static async createPaymentIntent(
+    request: CreatePaymentIntentRequest
+  ): Promise<CreatePaymentIntentResponse> {
+    const {
+      bookingId,
+      amount,
+      currency = 'EUR',
+      paymentMethodType,
+      metadata = {},
+    } = request;
 
     // Get booking details
     const booking = await prisma.booking.findUnique({
@@ -38,25 +46,26 @@ export class PaymentService {
         user: true,
         child: true,
       },
-    })
+    });
 
     if (!booking) {
-      throw new Error('Booking not found')
+      throw new Error('Booking not found');
     }
 
     if (booking.paymentStatus !== 'PENDING') {
-      throw new Error('Booking payment is not in pending state')
+      throw new Error('Booking payment is not in pending state');
     }
 
-    const platformFee = calculatePlatformFee(amount)
-    const netAmount = calculateNetAmount(amount)
+    const platformFee = calculatePlatformFee(amount);
+    const netAmount = calculateNetAmount(amount);
 
     // Create Stripe Payment Intent
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100), // Convert to cents
       currency: currency.toLowerCase(),
       customer: undefined, // We could create/link Stripe customers here
-      payment_method_types: paymentMethodType === 'STRIPE_CARD' ? ['card'] : ['sepa_debit'],
+      payment_method_types:
+        paymentMethodType === 'STRIPE_CARD' ? ['card'] : ['sepa_debit'],
       metadata: {
         bookingId,
         providerId: booking.session.activity.provider.id,
@@ -70,13 +79,13 @@ export class PaymentService {
       },
       description: `Kivvy - ${booking.session.activity.title} for ${booking.child.firstName}`,
       statement_descriptor: 'KIVVY',
-    })
+    });
 
     // Create payment record
     await prisma.payment.create({
       data: {
         bookingId,
-        paymentIntentId: paymentIntent.id,
+        stripePaymentIntentId: paymentIntent.id,
         paymentMethodType,
         amount,
         currency: currency.toUpperCase(),
@@ -89,7 +98,7 @@ export class PaymentService {
           ...metadata,
         },
       },
-    })
+    });
 
     return {
       paymentIntentId: paymentIntent.id,
@@ -97,18 +106,25 @@ export class PaymentService {
       publishableKey: process.env.STRIPE_PUBLISHABLE_KEY!,
       amount,
       currency: currency.toUpperCase(),
-    }
+    };
   }
 
-  static async handleMBWayPayment(request: CreatePaymentIntentRequest): Promise<{
+  static async handleMBWayPayment(
+    request: CreatePaymentIntentRequest
+  ): Promise<{
     success: boolean;
     paymentId?: string;
     transactionId?: string;
     error?: string;
+    mbwayReference?: string;
+    amount?: number;
+    currency?: string;
+    expiresAt?: string;
+    instructions?: string;
   }> {
     // MBWay integration would go here
     // For now, we'll simulate the process
-    const { bookingId, amount, currency = 'EUR', metadata = {} } = request
+    const { bookingId, amount, currency = 'EUR', metadata = {} } = request;
 
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId },
@@ -125,14 +141,14 @@ export class PaymentService {
         user: true,
         child: true,
       },
-    })
+    });
 
     if (!booking) {
-      throw new Error('Booking not found')
+      throw new Error('Booking not found');
     }
 
-    const platformFee = calculatePlatformFee(amount)
-    const netAmount = calculateNetAmount(amount)
+    const platformFee = calculatePlatformFee(amount);
+    const netAmount = calculateNetAmount(amount);
 
     // Create payment record for MBWay
     const payment = await prisma.payment.create({
@@ -150,66 +166,75 @@ export class PaymentService {
           ...metadata,
         }),
       },
-    })
+    });
 
     return {
+      success: true,
       paymentId: payment.id,
-      mbwayReference: payment.metadata ? JSON.parse(payment.metadata as string)?.mbwayReference : undefined,
+      mbwayReference: payment.metadata
+        ? JSON.parse(payment.metadata as string)?.mbwayReference
+        : undefined,
       amount,
       currency: currency.toUpperCase(),
-      expiresAt: payment.metadata ? JSON.parse(payment.metadata as string)?.expiresAt : undefined,
+      expiresAt: payment.metadata
+        ? JSON.parse(payment.metadata as string)?.expiresAt
+        : undefined,
       instructions: 'Abra a aplicação MB WAY e introduza a referência acima',
-    }
+    };
   }
 
   static async confirmPayment(paymentIntentId: string): Promise<void> {
     const payment = await prisma.payment.findFirst({
-      where: { paymentIntentId },
+      where: { stripePaymentIntentId: paymentIntentId },
       include: { booking: true },
-    })
+    });
 
     if (!payment) {
-      throw new Error('Payment not found')
+      throw new Error('Payment not found');
     }
 
     // Update payment status
     await prisma.payment.update({
       where: { id: payment.id },
-      data: { status: 'COMPLETED' },
-    })
+      data: { status: 'SUCCEEDED' },
+    });
 
     // Update booking status
     await prisma.booking.update({
       where: { id: payment.bookingId },
       data: {
         status: 'CONFIRMED',
-        paymentStatus: 'COMPLETED',
+        paymentStatus: 'SUCCEEDED',
         paymentId: paymentIntentId,
       },
-    })
+    });
 
     // Update session available spots
     await prisma.activitySession.update({
-      where: { id: payment.booking.sessionId },
+      where: { id: payment.booking!.sessionId },
       data: {
         availableSpots: {
-          decrement: payment.booking.quantity,
+          decrement: payment.booking!.quantity,
         },
       },
-    })
+    });
   }
 
-  static async refundPayment(paymentIntentId: string, amount?: number, reason?: string): Promise<void> {
+  static async refundPayment(
+    paymentIntentId: string,
+    amount?: number,
+    reason?: string
+  ): Promise<void> {
     const payment = await prisma.payment.findFirst({
-      where: { paymentIntentId },
+      where: { stripePaymentIntentId: paymentIntentId },
       include: { booking: true },
-    })
+    });
 
     if (!payment) {
-      throw new Error('Payment not found')
+      throw new Error('Payment not found');
     }
 
-    const refundAmount = amount || payment.amount
+    const refundAmount = amount || payment.amount;
 
     // Create Stripe refund
     const refund = await stripe.refunds.create({
@@ -220,13 +245,14 @@ export class PaymentService {
         bookingId: payment.bookingId,
         reason: reason || 'Customer request',
       },
-    })
+    });
 
     // Update payment record
     await prisma.payment.update({
       where: { id: payment.id },
       data: {
-        status: refundAmount >= payment.amount ? 'REFUNDED' : 'PARTIALLY_REFUNDED',
+        status:
+          refundAmount >= payment.amount ? 'REFUNDED' : 'PARTIALLY_REFUNDED',
         refundAmount,
         refundReason: reason,
         metadata: JSON.stringify({
@@ -235,7 +261,7 @@ export class PaymentService {
           refundedAt: new Date().toISOString(),
         }),
       },
-    })
+    });
 
     // Update booking status if fully refunded
     if (refundAmount >= payment.amount) {
@@ -245,24 +271,24 @@ export class PaymentService {
           status: 'CANCELLED',
           paymentStatus: 'REFUNDED',
         },
-      })
+      });
 
       // Restore session available spots
       await prisma.activitySession.update({
-        where: { id: payment.booking.sessionId },
+        where: { id: payment.booking!.sessionId },
         data: {
           availableSpots: {
             increment: payment.booking.quantity,
           },
         },
-      })
+      });
     }
   }
 
   private static generateMBWayReference(): string {
     // Generate a 9-digit reference for MBWay
-    return Math.random().toString().substr(2, 9)
+    return Math.random().toString().substr(2, 9);
   }
 }
 
-export default PaymentService
+export default PaymentService;

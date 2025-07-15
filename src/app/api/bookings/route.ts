@@ -1,54 +1,55 @@
-import { NextRequest } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { auth } from '@/lib/auth'
-import { z } from 'zod'
+import { NextRequest } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { auth } from '@/lib/auth';
+import { z } from 'zod';
 import {
   createSuccessResponse,
   createErrorResponse,
   handleApiError,
   createPaginationParams,
   parseJsonBody,
-} from '@/lib/api-utils'
+} from '@/lib/api-utils';
 
 const createBookingSchema = z.object({
   sessionId: z.string().cuid(),
   childId: z.string().cuid(),
   quantity: z.number().int().min(1).max(10),
   notes: z.string().optional(),
-})
+});
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth()
+    const session = await auth();
     if (!session?.user) {
-      return createErrorResponse('Unauthorized', 401)
+      return createErrorResponse('Unauthorized', 401);
     }
 
-    const { searchParams } = new URL(request.url)
-    const { page, limit, skip } = createPaginationParams(searchParams)
-    
-    const status = searchParams.get('status')
-    const fromDate = searchParams.get('from')
-    const toDate = searchParams.get('to')
+    const { searchParams } = new URL(request.url);
+    const { page, limit, skip } = createPaginationParams(searchParams);
 
+    const status = searchParams.get('status');
+    const fromDate = searchParams.get('from');
+    const toDate = searchParams.get('to');
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {
       userId: session.user.id,
       deletedAt: null,
-    }
+    };
 
     if (status) {
-      where.status = status
+      where.status = status;
     }
 
     if (fromDate || toDate) {
       where.session = {
         startTime: {},
-      }
+      };
       if (fromDate) {
-        where.session.startTime.gte = new Date(fromDate)
+        where.session.startTime.gte = new Date(fromDate);
       }
       if (toDate) {
-        where.session.startTime.lte = new Date(toDate)
+        where.session.startTime.lte = new Date(toDate);
       }
     }
 
@@ -102,9 +103,9 @@ export async function GET(request: NextRequest) {
         take: limit,
       }),
       prisma.booking.count({ where }),
-    ])
+    ]);
 
-    const totalPages = Math.ceil(total / limit)
+    const totalPages = Math.ceil(total / limit);
 
     return createSuccessResponse({
       bookings,
@@ -116,21 +117,22 @@ export async function GET(request: NextRequest) {
         hasNext: page < totalPages,
         hasPrev: page > 1,
       },
-    })
+    });
   } catch (error) {
-    return handleApiError(error)
+    return handleApiError(error);
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth()
+    const session = await auth();
     if (!session?.user) {
-      return createErrorResponse('Unauthorized', 401)
+      return createErrorResponse('Unauthorized', 401);
     }
 
-    const body = await parseJsonBody(request)
-    const { sessionId, childId, quantity, notes } = createBookingSchema.parse(body)
+    const body = await parseJsonBody(request);
+    const { sessionId, childId, quantity, notes } =
+      createBookingSchema.parse(body);
 
     // Verify child belongs to user
     const child = await prisma.child.findFirst({
@@ -139,10 +141,10 @@ export async function POST(request: NextRequest) {
         parentId: session.user.id,
         deletedAt: null,
       },
-    })
+    });
 
     if (!child) {
-      return createErrorResponse('Child not found', 404)
+      return createErrorResponse('Child not found', 404);
     }
 
     // Get session with activity details
@@ -173,33 +175,40 @@ export async function POST(request: NextRequest) {
           },
         },
       },
-    })
+    });
 
     if (!activitySession) {
-      return createErrorResponse('Session not found or not available', 404)
+      return createErrorResponse('Session not found or not available', 404);
     }
 
     // Check child age eligibility
     const childAge = Math.floor(
-      (Date.now() - child.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000)
-    )
+      (Date.now() - child.dateOfBirth.getTime()) /
+        (365.25 * 24 * 60 * 60 * 1000)
+    );
 
-    if (childAge < activitySession.activity.ageMin || childAge > activitySession.activity.ageMax) {
+    if (
+      childAge < activitySession.activity.ageMin ||
+      childAge > activitySession.activity.ageMax
+    ) {
       return createErrorResponse(
         `Child age (${childAge}) is not within the required range (${activitySession.activity.ageMin}-${activitySession.activity.ageMax})`,
         400
-      )
+      );
     }
 
     // Check availability
-    const bookedSpots = activitySession.bookings.reduce((total, booking) => total + booking.quantity, 0)
-    const availableSpots = activitySession.capacity - bookedSpots
+    const bookedSpots = activitySession.bookings.reduce(
+      (total, booking) => total + booking.quantity,
+      0
+    );
+    const availableSpots = activitySession.capacity - bookedSpots;
 
     if (quantity > availableSpots) {
       return createErrorResponse(
         `Not enough spots available. Requested: ${quantity}, Available: ${availableSpots}`,
         400
-      )
+      );
     }
 
     // Check for duplicate booking
@@ -211,15 +220,19 @@ export async function POST(request: NextRequest) {
         status: { in: ['PENDING', 'CONFIRMED'] },
         deletedAt: null,
       },
-    })
+    });
 
     if (existingBooking) {
-      return createErrorResponse('Booking already exists for this child and session', 400)
+      return createErrorResponse(
+        'Booking already exists for this child and session',
+        400
+      );
     }
 
     // Calculate total amount
-    const sessionPrice = activitySession.price || activitySession.activity.price
-    const totalAmount = sessionPrice * quantity
+    const sessionPrice =
+      activitySession.price || activitySession.activity.price;
+    const totalAmount = sessionPrice * quantity;
 
     // Create booking
     const booking = await prisma.booking.create({
@@ -258,10 +271,10 @@ export async function POST(request: NextRequest) {
           },
         },
       },
-    })
+    });
 
-    return createSuccessResponse(booking, 201)
+    return createSuccessResponse(booking, 201);
   } catch (error) {
-    return handleApiError(error)
+    return handleApiError(error);
   }
 }

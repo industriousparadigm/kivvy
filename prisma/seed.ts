@@ -1,29 +1,29 @@
-import { PrismaClient } from '@prisma/client'
-import bcrypt from 'bcryptjs'
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Starting database seed...')
+  console.log('🌱 Starting database seed with real Porto/Matosinhos data...');
 
   // Clean existing data
-  await prisma.review.deleteMany()
-  await prisma.savedActivity.deleteMany()
-  await prisma.payment.deleteMany()
-  await prisma.booking.deleteMany()
-  await prisma.activitySession.deleteMany()
-  await prisma.activity.deleteMany()
-  await prisma.provider.deleteMany()
-  await prisma.child.deleteMany()
-  await prisma.userProfile.deleteMany()
-  await prisma.account.deleteMany()
-  await prisma.session.deleteMany()
-  await prisma.user.deleteMany()
+  await prisma.review.deleteMany();
+  await prisma.savedActivity.deleteMany();
+  await prisma.payment.deleteMany();
+  await prisma.booking.deleteMany();
+  await prisma.activitySession.deleteMany();
+  await prisma.activity.deleteMany();
+  await prisma.provider.deleteMany();
+  await prisma.child.deleteMany();
+  await prisma.userProfile.deleteMany();
+  await prisma.account.deleteMany();
+  await prisma.session.deleteMany();
+  await prisma.user.deleteMany();
 
   // Create users
-  const hashedPassword = await bcrypt.hash('password123', 10)
+  const hashedPassword = await bcrypt.hash('password123', 10);
 
-  // Create parent users
+  // Create parent users - real Portuguese names and locations
   const parent1 = await prisma.user.create({
     data: {
       email: 'ana.santos@gmail.com',
@@ -44,83 +44,83 @@ async function main() {
         },
       },
     },
-  })
+  });
 
   const parent2 = await prisma.user.create({
     data: {
-      email: 'joao.silva@gmail.com',
-      name: 'João Silva',
+      email: 'joana.silva@outlook.pt',
+      name: 'Joana Silva',
       password: hashedPassword,
       role: 'PARENT',
       profile: {
         create: {
-          firstName: 'João',
+          firstName: 'Joana',
           lastName: 'Silva',
           phone: '+351 923 456 789',
-          address: 'Avenida dos Aliados, 456',
-          city: 'Porto',
-          postalCode: '4000-002',
+          address: 'Avenida da Boavista, 456',
+          city: 'Matosinhos',
+          postalCode: '4450-100',
           country: 'Portugal',
-          dateOfBirth: new Date('1980-07-22'),
+          dateOfBirth: new Date('1988-07-20'),
           language: 'pt',
         },
       },
     },
-  })
+  });
 
-  // Create provider users
+  // Create real Porto/Matosinhos providers
   const provider1 = await prisma.user.create({
     data: {
-      email: 'contact@escolanatacao.pt',
-      name: 'Escola de Natação Porto',
+      email: 'geral@colibee.pt',
+      name: 'Colibee Fun Park',
       password: hashedPassword,
       role: 'PROVIDER',
       profile: {
         create: {
-          firstName: 'Maria',
-          lastName: 'Costa',
-          phone: '+351 934 567 890',
-          address: 'Rua da Piscina, 789',
+          firstName: 'Carla',
+          lastName: 'Ferreira',
+          phone: '+351 912 345 678',
+          address: 'R DO ENGENHEIRO FERREIRA DIAS 1010',
           city: 'Porto',
-          postalCode: '4100-001',
+          postalCode: '4100-246',
           country: 'Portugal',
           language: 'pt',
         },
       },
       provider: {
         create: {
-          businessName: 'Escola de Natação Porto',
-          businessType: 'ACADEMY',
-          description: 'Escola de natação com mais de 20 anos de experiência no ensino de natação para crianças e adultos.',
-          website: 'https://escolanatacao.pt',
-          phone: '+351 934 567 890',
-          email: 'contact@escolanatacao.pt',
-          address: 'Rua da Piscina, 789',
+          businessName: 'Colibee Fun Park',
+          businessType: 'CULTURAL_CENTER',
+          description:
+            'Parque infantil indoor no Porto com atividades para crianças dos 1-12 anos. Espaço ideal para festas de aniversário com diversões, jogos e momentos únicos para as crianças.',
+          website: 'https://www.facebook.com/colibee.pt',
+          phone: '+351 912 345 678',
+          email: 'geral@colibee.pt',
+          address: 'R DO ENGENHEIRO FERREIRA DIAS 1010',
           city: 'Porto',
-          postalCode: '4100-001',
+          postalCode: '4100-246',
           country: 'Portugal',
           latitude: 41.1579,
           longitude: -8.6291,
           taxId: 'PT123456789',
           isVerified: true,
-          isActive: true,
         },
       },
     },
-  })
+  });
 
   const provider2 = await prisma.user.create({
     data: {
-      email: 'info@academiadanca.pt',
-      name: 'Academia de Dança Movimento',
+      email: 'porto@princelandia.pt',
+      name: 'Princelandia Porto',
       password: hashedPassword,
       role: 'PROVIDER',
       profile: {
         create: {
           firstName: 'Sofia',
-          lastName: 'Ferreira',
-          phone: '+351 945 678 901',
-          address: 'Rua da Dança, 321',
+          lastName: 'Princesa',
+          phone: '+351 913 892 720',
+          address: 'Rua Tomaz Ribeiro',
           city: 'Matosinhos',
           postalCode: '4450-001',
           country: 'Portugal',
@@ -129,65 +129,145 @@ async function main() {
       },
       provider: {
         create: {
-          businessName: 'Academia de Dança Movimento',
-          businessType: 'ACADEMY',
-          description: 'Academia especializada em dança para crianças e jovens, com aulas de ballet, jazz, hip-hop e dança contemporânea.',
-          website: 'https://academiadanca.pt',
-          phone: '+351 945 678 901',
-          email: 'info@academiadanca.pt',
-          address: 'Rua da Dança, 321',
+          businessName: 'Princelandia Porto',
+          businessType: 'CULTURAL_CENTER',
+          description:
+            'O primeiro SPA infantil da Europa! Espaço de fantasia e magia concebido ao pormenor para meninas dos 4 aos 12 anos. Festas de Aniversário, Chá das Princesas, Spa e muito mais.',
+          website: 'https://princelandia.pt',
+          phone: '+351 913 892 720',
+          email: 'porto@princelandia.pt',
+          address: 'Rua Tomaz Ribeiro',
           city: 'Matosinhos',
           postalCode: '4450-001',
           country: 'Portugal',
-          latitude: 41.1833,
-          longitude: -8.6854,
+          latitude: 41.182134,
+          longitude: -8.685327,
           taxId: 'PT987654321',
           isVerified: true,
-          isActive: true,
         },
       },
     },
-  })
+  });
 
   const provider3 = await prisma.user.create({
     data: {
-      email: 'hello@futurecoders.pt',
-      name: 'Future Coders',
+      email: 'yupicolor@colorfunparks.pt',
+      name: 'YupiColor Fun Park',
       password: hashedPassword,
       role: 'PROVIDER',
       profile: {
         create: {
-          firstName: 'Pedro',
+          firstName: 'Miguel',
           lastName: 'Oliveira',
-          phone: '+351 956 789 012',
-          address: 'Rua da Tecnologia, 654',
-          city: 'Porto',
-          postalCode: '4200-001',
+          phone: '+351 911 140 061',
+          address: 'Rua de Fortunato Silvério 60',
+          city: 'Maia',
+          postalCode: '4470-392',
           country: 'Portugal',
           language: 'pt',
         },
       },
       provider: {
         create: {
-          businessName: 'Future Coders',
-          businessType: 'ACADEMY',
-          description: 'Cursos de programação e tecnologia para crianças e jovens. Scratch, Python, desenvolvimento web e robótica.',
-          website: 'https://futurecoders.pt',
-          phone: '+351 956 789 012',
-          email: 'hello@futurecoders.pt',
-          address: 'Rua da Tecnologia, 654',
-          city: 'Porto',
-          postalCode: '4200-001',
+          businessName: 'YupiColor Fun Park',
+          businessType: 'CULTURAL_CENTER',
+          description:
+            'Espaço maravilhoso em Maia, ideal para festas de aniversário. Instalações espaçosas com monitores atenciosos e amigáveis. Espaço moderno e colorido com futebol, trampolins, karts, escorregas e muito mais.',
+          website: 'https://colorfunparks.pt/yupicolor.php',
+          phone: '+351 911 140 061',
+          email: 'yupicolor@colorfunparks.pt',
+          address: 'Rua de Fortunato Silvério 60',
+          city: 'Maia',
+          postalCode: '4470-392',
           country: 'Portugal',
-          latitude: 41.1496,
-          longitude: -8.6109,
+          latitude: 41.2279,
+          longitude: -8.6208,
           taxId: 'PT456789123',
           isVerified: true,
-          isActive: true,
         },
       },
     },
-  })
+  });
+
+  const provider4 = await prisma.user.create({
+    data: {
+      email: 'geral@ateliedefestas.pt',
+      name: 'Ateliê de Festas',
+      password: hashedPassword,
+      role: 'PROVIDER',
+      profile: {
+        create: {
+          firstName: 'Carla',
+          lastName: 'Freitas',
+          phone: '+351 916 523 690',
+          address: 'Rua Eng. Fernando Pinto de Oliveira 56',
+          city: 'Matosinhos',
+          postalCode: '4450-614',
+          country: 'Portugal',
+          language: 'pt',
+        },
+      },
+      provider: {
+        create: {
+          businessName: 'Ateliê de Festas',
+          businessType: 'CULTURAL_CENTER',
+          description:
+            'Parque infantil coberto com entretenimento e atividades lúdicas, pensado para brincadeira livre, festas de aniversário e organização de eventos para crianças dos 3 aos 12 anos.',
+          website: 'https://www.pai.pt/paginas/310393-atelie-de-festas',
+          phone: '+351 916 523 690',
+          email: 'geral@ateliedefestas.pt',
+          address: 'Rua Eng. Fernando Pinto de Oliveira 56',
+          city: 'Matosinhos',
+          postalCode: '4450-614',
+          country: 'Portugal',
+          latitude: 41.1962,
+          longitude: -8.6892,
+          taxId: 'PT789123456',
+          isVerified: true,
+        },
+      },
+    },
+  });
+
+  const provider5 = await prisma.user.create({
+    data: {
+      email: 'anotherworld.porto@gmail.com',
+      name: 'Another World Porto',
+      password: hashedPassword,
+      role: 'PROVIDER',
+      profile: {
+        create: {
+          firstName: 'Ricardo',
+          lastName: 'Costa',
+          phone: '+351 965 914 900',
+          address: 'R. Dr Joaquim Pires de Lima 119',
+          city: 'Porto',
+          postalCode: '4200-347',
+          country: 'Portugal',
+          language: 'pt',
+        },
+      },
+      provider: {
+        create: {
+          businessName: 'Another World Porto',
+          businessType: 'CULTURAL_CENTER',
+          description:
+            'Arena de realidade virtual para festas de aniversário! Aventuras partilhadas em grupo para idades entre 6 e 18 anos. Experiências inesquecíveis com tecnologia de ponta.',
+          website: 'https://porto.another-world.pt',
+          phone: '+351 965 914 900',
+          email: 'anotherworld.porto@gmail.com',
+          address: 'R. Dr Joaquim Pires de Lima 119',
+          city: 'Porto',
+          postalCode: '4200-347',
+          country: 'Portugal',
+          latitude: 41.1496,
+          longitude: -8.6109,
+          taxId: 'PT234567890',
+          isVerified: true,
+        },
+      },
+    },
+  });
 
   // Create children
   const child1 = await prisma.child.create({
@@ -200,9 +280,9 @@ async function main() {
       medicalNotes: 'Asma ligeira',
       emergencyContact: 'Avó: +351 912 111 222',
     },
-  })
+  });
 
-  const child2 = await prisma.child.create({
+  await prisma.child.create({
     data: {
       parentId: parent1.id,
       firstName: 'Miguel',
@@ -210,9 +290,9 @@ async function main() {
       dateOfBirth: new Date('2017-09-22'),
       emergencyContact: 'Avó: +351 912 111 222',
     },
-  })
+  });
 
-  const child3 = await prisma.child.create({
+  await prisma.child.create({
     data: {
       parentId: parent2.id,
       firstName: 'Beatriz',
@@ -221,363 +301,324 @@ async function main() {
       allergies: 'Lactose',
       emergencyContact: 'Tia: +351 923 333 444',
     },
-  })
+  });
 
   // Get provider records
   const provider1Record = await prisma.provider.findUnique({
     where: { userId: provider1.id },
-  })
+  });
   const provider2Record = await prisma.provider.findUnique({
     where: { userId: provider2.id },
-  })
+  });
   const provider3Record = await prisma.provider.findUnique({
     where: { userId: provider3.id },
-  })
+  });
+  const provider4Record = await prisma.provider.findUnique({
+    where: { userId: provider4.id },
+  });
+  const provider5Record = await prisma.provider.findUnique({
+    where: { userId: provider5.id },
+  });
 
-  if (!provider1Record || !provider2Record || !provider3Record) {
-    throw new Error('Provider records not found')
+  if (
+    !provider1Record ||
+    !provider2Record ||
+    !provider3Record ||
+    !provider4Record ||
+    !provider5Record
+  ) {
+    throw new Error('Provider records not found');
   }
 
-  // Create activities
+  // Create real birthday party activities
   const activity1 = await prisma.activity.create({
     data: {
       providerId: provider1Record.id,
-      title: 'Natação para Crianças - Iniciação',
-      description: 'Aulas de natação para crianças iniciantes, focadas na adaptação ao meio aquático e aprendizagem das técnicas básicas de natação. Ambiente seguro e divertido com instrutores especializados.',
-      shortDescription: 'Aulas de natação para iniciantes dos 4 aos 12 anos',
-      category: 'SWIMMING',
-      ageMin: 4,
+      title: 'Festa de Aniversário no Colibee Fun Park',
+      description:
+        'Festa de aniversário inesquecível no nosso parque infantil indoor! As crianças vão adorar brincar em todas as nossas atrações: escorregas, túneis, piscina de bolas, trampolins e muito mais. Inclui monitor, decoração, lanche e bolo. Um dia especial cheio de diversão e alegria para o seu pequeno tesouro.',
+      shortDescription:
+        'Festa de aniversário completa para crianças dos 1 aos 12 anos',
+      category: 'OTHER',
+      ageMin: 1,
       ageMax: 12,
-      capacity: 8,
-      price: 45.00,
-      currency: 'EUR',
-      duration: 45,
-      language: 'pt',
-      difficulty: 'BEGINNER',
-      location: 'Piscina Interior Aquecida',
-      address: 'Rua da Piscina, 789',
-      city: 'Porto',
-      postalCode: '4100-001',
-      latitude: 41.1579,
-      longitude: -8.6291,
-      imageUrl: 'https://example.com/swimming-kids.jpg',
-      imageUrls: [
-        'https://example.com/swimming-kids.jpg',
-        'https://example.com/swimming-pool.jpg',
-        'https://example.com/swimming-instructor.jpg',
-      ],
-      requirements: 'Fato de banho, touca, chinelos antiderrapantes',
-      included: 'Equipamento de apoio, seguro de acidentes pessoais',
-      notIncluded: 'Toalha, produtos de higiene pessoal',
-      tags: ['natação', 'iniciação', 'água', 'segurança', 'diversão'],
+      duration: 180, // 3 hours
+      capacity: 25,
+      price: 15.5, // per child
+      location: 'R DO ENGENHEIRO FERREIRA DIAS 1010, Porto',
+      imageUrl: '/images/hero-birthday-party.png',
+      requirements: 'Roupa confortável e meias antiderrapantes obrigatórias',
       isActive: true,
+      tags: [
+        'festa',
+        'aniversário',
+        'indoor',
+        'trampolins',
+        'piscina de bolas',
+      ],
     },
-  })
+  });
 
   const activity2 = await prisma.activity.create({
     data: {
       providerId: provider2Record.id,
-      title: 'Ballet Clássico - Nível Inicial',
-      description: 'Aulas de ballet clássico para crianças, desenvolvendo a postura, coordenação, flexibilidade e expressão artística. Método pedagógico adaptado à idade, com foco na diversão e aprendizagem.',
-      shortDescription: 'Ballet para crianças dos 5 aos 10 anos',
-      category: 'DANCE',
-      ageMin: 5,
-      ageMax: 10,
+      title: 'Festa de Princesas no Princelandia',
+      description:
+        'Uma festa de aniversário mágica no primeiro SPA infantil da Europa! As meninas vão viver um conto de fadas com tratamentos de spa, manicure, penteados e muito glamour. Inclui chá das princesas, maquilhagem e sessão fotográfica. Um sonho tornado realidade para a sua princesa.',
+      shortDescription:
+        'Festa de princesas com spa e chá para meninas dos 4 aos 12 anos',
+      category: 'OTHER',
+      ageMin: 4,
+      ageMax: 12,
+      duration: 120, // 2 hours
       capacity: 12,
-      price: 35.00,
-      currency: 'EUR',
-      duration: 60,
-      language: 'pt',
-      difficulty: 'BEGINNER',
-      location: 'Estúdio de Dança Principal',
-      address: 'Rua da Dança, 321',
-      city: 'Matosinhos',
-      postalCode: '4450-001',
-      latitude: 41.1833,
-      longitude: -8.6854,
-      imageUrl: 'https://example.com/ballet-kids.jpg',
-      imageUrls: [
-        'https://example.com/ballet-kids.jpg',
-        'https://example.com/ballet-studio.jpg',
-        'https://example.com/ballet-teacher.jpg',
-      ],
-      requirements: 'Collant, sapatilhas de ballet, cabelo apanhado',
-      included: 'Uso do estúdio, barras de apoio, espelhos',
-      notIncluded: 'Vestuário de dança, sapatilhas',
-      tags: ['ballet', 'dança', 'postura', 'flexibilidade', 'arte'],
+      price: 22.0, // per child
+      location: 'Rua Tomaz Ribeiro, Matosinhos',
+      imageUrl: '/images/caring-instructor.png',
+      requirements:
+        'Apenas para meninas. Recomendamos trazer roupa confortável para depois do spa.',
+      included:
+        'Tratamentos de spa infantil, manicure, penteados, maquilhagem, chá das princesas com doces, sessão fotográfica e muita diversão num ambiente de fantasia.',
       isActive: true,
+      tags: ['festa', 'aniversário', 'princesas', 'spa', 'meninas'],
     },
-  })
+  });
 
   const activity3 = await prisma.activity.create({
     data: {
       providerId: provider3Record.id,
-      title: 'Programação com Scratch',
-      description: 'Curso de introdução à programação para crianças usando a linguagem visual Scratch. Aprender conceitos básicos de programação criando jogos e animações divertidas.',
-      shortDescription: 'Programação para crianças dos 7 aos 14 anos',
-      category: 'TECHNOLOGY',
-      ageMin: 7,
-      ageMax: 14,
-      capacity: 10,
-      price: 40.00,
-      currency: 'EUR',
-      duration: 90,
-      language: 'pt',
-      difficulty: 'BEGINNER',
-      location: 'Sala de Informática',
-      address: 'Rua da Tecnologia, 654',
-      city: 'Porto',
-      postalCode: '4200-001',
-      latitude: 41.1496,
-      longitude: -8.6109,
-      imageUrl: 'https://example.com/scratch-programming.jpg',
-      imageUrls: [
-        'https://example.com/scratch-programming.jpg',
-        'https://example.com/computer-lab.jpg',
-        'https://example.com/kids-coding.jpg',
-      ],
-      requirements: 'Conhecimentos básicos de computador',
-      included: 'Computador, software, certificado de participação',
-      notIncluded: 'Material de escrita',
-      tags: ['programação', 'scratch', 'tecnologia', 'criatividade', 'lógica'],
+      title: 'Festa Aventura no YupiColor',
+      description:
+        'Festa de aniversário cheia de aventura no nosso parque colorido! Futebol, trampolins, karts, escorregas, escalada e muito mais numa instalação moderna e segura. Monitores experientes garantem diversão e segurança. Inclui lanche, bolo e lembrança para todos.',
+      shortDescription:
+        'Festa aventura com atividades variadas dos 3 aos 12 anos',
+      category: 'SPORTS',
+      ageMin: 3,
+      ageMax: 12,
+      duration: 150, // 2.5 hours
+      capacity: 20,
+      price: 18.0, // per child
+      location: 'Rua de Fortunato Silvério 60, Maia',
+      imageUrl: '/images/activity-outdoor.png',
+      requirements: 'Roupa desportiva confortável e ténis obrigatórios',
+      included:
+        'Atividades variadas: futebol, trampolins, karts, escorregas, túneis, escalada. Monitores dedicados, lanche nutritivo, bolo de aniversário e lembranças.',
       isActive: true,
+      tags: ['festa', 'aniversário', 'aventura', 'desporto', 'trampolins'],
     },
-  })
+  });
 
   const activity4 = await prisma.activity.create({
     data: {
-      providerId: provider2Record.id,
-      title: 'Hip-Hop para Jovens',
-      description: 'Aulas de hip-hop com coreografias modernas e urbanas. Desenvolvimento da coordenação motora, ritmo e expressão corporal através da dança contemporânea.',
-      shortDescription: 'Hip-hop para jovens dos 10 aos 16 anos',
-      category: 'DANCE',
-      ageMin: 10,
-      ageMax: 16,
+      providerId: provider4Record.id,
+      title: 'Festa Criativa no Ateliê de Festas',
+      description:
+        'Festa de aniversário num ambiente acolhedor e criativo! Parque infantil coberto com atividades lúdicas e educativas. Oficinas criativas, jogos tradicionais e muita diversão numa atmosfera familiar. Perfeito para uma celebração especial e inesquecível.',
+      shortDescription: 'Festa criativa e educativa dos 3 aos 12 anos',
+      category: 'ARTS_CRAFTS',
+      ageMin: 3,
+      ageMax: 12,
+      duration: 120, // 2 hours
       capacity: 15,
-      price: 38.00,
-      currency: 'EUR',
-      duration: 75,
-      language: 'pt',
-      difficulty: 'INTERMEDIATE',
-      location: 'Estúdio de Dança Urbana',
-      address: 'Rua da Dança, 321',
-      city: 'Matosinhos',
-      postalCode: '4450-001',
-      latitude: 41.1833,
-      longitude: -8.6854,
-      imageUrl: 'https://example.com/hiphop-dance.jpg',
-      imageUrls: [
-        'https://example.com/hiphop-dance.jpg',
-        'https://example.com/urban-studio.jpg',
-        'https://example.com/dance-group.jpg',
-      ],
-      requirements: 'Roupa confortável, ténis adequados para dança',
-      included: 'Som profissional, espelhos, ar condicionado',
-      notIncluded: 'Roupa de dança, ténis',
-      tags: ['hip-hop', 'dança urbana', 'ritmo', 'coordenação', 'expressão'],
+      price: 16.5, // per child
+      location: 'Rua Eng. Fernando Pinto de Oliveira 56, Matosinhos',
+      imageUrl: '/images/testimonial-art-activity.png',
+      requirements: 'Roupa que possa sujar durante as atividades criativas',
+      included:
+        'Oficinas criativas, jogos educativos, atividades lúdicas, parque coberto, lanche saudável e ambiente familiar acolhedor.',
       isActive: true,
+      tags: ['festa', 'aniversário', 'criativo', 'educativo', 'oficinas'],
     },
-  })
+  });
+
+  const activity5 = await prisma.activity.create({
+    data: {
+      providerId: provider5Record.id,
+      title: 'Festa Realidade Virtual - Another World',
+      description:
+        'Festa de aniversário futurista com realidade virtual! Aventuras partilhadas em mundos virtuais incríveis. Experiência única e inovadora para adolescentes que procuram algo diferente. Inclui acesso VIP, consolas, jogos de tabuleiro e espaço para lanche.',
+      shortDescription: 'Festa de realidade virtual para dos 6 aos 18 anos',
+      category: 'TECHNOLOGY',
+      ageMin: 6,
+      ageMax: 18,
+      duration: 90, // 1.5 hours
+      capacity: 14,
+      price: 25.0, // per child
+      location: 'R. Dr Joaquim Pires de Lima 119, Porto',
+      imageUrl: '/images/activity-technology.png',
+      requirements:
+        'Idade mínima 6 anos. Crianças com óculos devem informar previamente.',
+      included:
+        'Aventuras em realidade virtual, acesso ao lounge VIP, consolas, jogos de tabuleiro, microondas e frigorífico disponíveis para lanche próprio.',
+      isActive: true,
+      tags: [
+        'festa',
+        'aniversário',
+        'realidade virtual',
+        'tecnologia',
+        'inovador',
+      ],
+    },
+  });
 
   // Create activity sessions
-  const today = new Date()
-  const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)
-  const twoWeeksLater = new Date(today.getTime() + 14 * 24 * 60 * 60 * 1000)
+  const today = new Date();
 
-  // Swimming sessions
-  await prisma.activitySession.createMany({
-    data: [
-      {
-        activityId: activity1.id,
-        startTime: new Date(nextWeek.getFullYear(), nextWeek.getMonth(), nextWeek.getDate(), 16, 0),
-        endTime: new Date(nextWeek.getFullYear(), nextWeek.getMonth(), nextWeek.getDate(), 16, 45),
-        capacity: 8,
-        availableSpots: 5,
-        status: 'SCHEDULED',
-      },
-      {
-        activityId: activity1.id,
-        startTime: new Date(nextWeek.getFullYear(), nextWeek.getMonth(), nextWeek.getDate() + 2, 16, 0),
-        endTime: new Date(nextWeek.getFullYear(), nextWeek.getMonth(), nextWeek.getDate() + 2, 16, 45),
-        capacity: 8,
-        availableSpots: 7,
-        status: 'SCHEDULED',
-      },
-      {
-        activityId: activity1.id,
-        startTime: new Date(twoWeeksLater.getFullYear(), twoWeeksLater.getMonth(), twoWeeksLater.getDate(), 16, 0),
-        endTime: new Date(twoWeeksLater.getFullYear(), twoWeeksLater.getMonth(), twoWeeksLater.getDate(), 16, 45),
-        capacity: 8,
-        availableSpots: 8,
-        status: 'SCHEDULED',
-      },
-    ],
-  })
+  // Sessions for each activity over the next month
+  for (let i = 0; i < 30; i++) {
+    const sessionDate = new Date(today.getTime() + i * 24 * 60 * 60 * 1000);
 
-  // Ballet sessions
-  await prisma.activitySession.createMany({
-    data: [
-      {
-        activityId: activity2.id,
-        startTime: new Date(nextWeek.getFullYear(), nextWeek.getMonth(), nextWeek.getDate() + 1, 17, 0),
-        endTime: new Date(nextWeek.getFullYear(), nextWeek.getMonth(), nextWeek.getDate() + 1, 18, 0),
-        capacity: 12,
-        availableSpots: 9,
-        status: 'SCHEDULED',
-      },
-      {
-        activityId: activity2.id,
-        startTime: new Date(nextWeek.getFullYear(), nextWeek.getMonth(), nextWeek.getDate() + 3, 17, 0),
-        endTime: new Date(nextWeek.getFullYear(), nextWeek.getMonth(), nextWeek.getDate() + 3, 18, 0),
-        capacity: 12,
-        availableSpots: 10,
-        status: 'SCHEDULED',
-      },
-    ],
-  })
+    // Skip Mondays (many venues are closed)
+    if (sessionDate.getDay() === 1) continue;
 
-  // Programming sessions
-  await prisma.activitySession.createMany({
-    data: [
-      {
-        activityId: activity3.id,
-        startTime: new Date(nextWeek.getFullYear(), nextWeek.getMonth(), nextWeek.getDate() + 5, 14, 0),
-        endTime: new Date(nextWeek.getFullYear(), nextWeek.getMonth(), nextWeek.getDate() + 5, 15, 30),
-        capacity: 10,
-        availableSpots: 6,
-        status: 'SCHEDULED',
-      },
-      {
-        activityId: activity3.id,
-        startTime: new Date(twoWeeksLater.getFullYear(), twoWeeksLater.getMonth(), twoWeeksLater.getDate() + 5, 14, 0),
-        endTime: new Date(twoWeeksLater.getFullYear(), twoWeeksLater.getMonth(), twoWeeksLater.getDate() + 5, 15, 30),
-        capacity: 10,
-        availableSpots: 10,
-        status: 'SCHEDULED',
-      },
-    ],
-  })
-
-  // Hip-hop sessions
-  await prisma.activitySession.createMany({
-    data: [
-      {
-        activityId: activity4.id,
-        startTime: new Date(nextWeek.getFullYear(), nextWeek.getMonth(), nextWeek.getDate() + 4, 18, 0),
-        endTime: new Date(nextWeek.getFullYear(), nextWeek.getMonth(), nextWeek.getDate() + 4, 19, 15),
-        capacity: 15,
-        availableSpots: 12,
-        status: 'SCHEDULED',
-      },
-    ],
-  })
-
-  // Create some sample bookings
-  const sessions = await prisma.activitySession.findMany()
-  
-  const booking1 = await prisma.booking.create({
-    data: {
-      userId: parent1.id,
-      childId: child1.id,
-      sessionId: sessions[0].id,
-      quantity: 1,
-      totalAmount: 45.00,
-      currency: 'EUR',
-      status: 'CONFIRMED',
-      paymentStatus: 'SUCCEEDED',
-      paymentId: 'pi_test_123',
-      payment: {
-        create: {
-          stripePaymentIntentId: 'pi_test_123',
-          paymentMethodType: 'STRIPE_CARD',
-          amount: 45.00,
-          currency: 'EUR',
-          status: 'SUCCEEDED',
-          providerFee: 4.50,
-          netAmount: 40.50,
-          metadata: {
-            stripePaymentIntentId: 'pi_test_123',
-            paymentMethod: 'card',
-          },
+    // Weekend sessions (Saturday and Sunday)
+    if (sessionDate.getDay() === 0 || sessionDate.getDay() === 6) {
+      // Morning sessions
+      await prisma.activitySession.create({
+        data: {
+          activityId: activity1.id,
+          startTime: new Date(sessionDate.setHours(10, 0, 0, 0)),
+          endTime: new Date(sessionDate.setHours(13, 0, 0, 0)),
+          capacity: 25,
+          availableSpots: 25,
+          price: 15.5,
         },
+      });
+
+      // Afternoon sessions
+      await prisma.activitySession.create({
+        data: {
+          activityId: activity2.id,
+          startTime: new Date(sessionDate.setHours(15, 0, 0, 0)),
+          endTime: new Date(sessionDate.setHours(17, 0, 0, 0)),
+          capacity: 12,
+          availableSpots: 12,
+          price: 22.0,
+        },
+      });
+
+      await prisma.activitySession.create({
+        data: {
+          activityId: activity3.id,
+          startTime: new Date(sessionDate.setHours(16, 30, 0, 0)),
+          endTime: new Date(sessionDate.setHours(19, 0, 0, 0)),
+          capacity: 20,
+          availableSpots: 20,
+          price: 18.0,
+        },
+      });
+    }
+
+    // Weekday afternoon sessions
+    if (sessionDate.getDay() >= 2 && sessionDate.getDay() <= 5) {
+      await prisma.activitySession.create({
+        data: {
+          activityId: activity4.id,
+          startTime: new Date(sessionDate.setHours(16, 0, 0, 0)),
+          endTime: new Date(sessionDate.setHours(18, 0, 0, 0)),
+          capacity: 15,
+          availableSpots: 15,
+          price: 16.5,
+        },
+      });
+
+      await prisma.activitySession.create({
+        data: {
+          activityId: activity5.id,
+          startTime: new Date(sessionDate.setHours(17, 0, 0, 0)),
+          endTime: new Date(sessionDate.setHours(18, 30, 0, 0)),
+          capacity: 14,
+          availableSpots: 14,
+          price: 25.0,
+        },
+      });
+    }
+  }
+
+  // Create some bookings
+  const sessions = await prisma.activitySession.findMany({
+    take: 3,
+    where: {
+      startTime: {
+        gt: today,
       },
     },
-  })
+  });
 
-  // Create reviews
-  await prisma.review.createMany({
-    data: [
-      {
+  if (sessions.length > 0) {
+    await prisma.booking.create({
+      data: {
         userId: parent1.id,
-        activityId: activity1.id,
-        providerId: provider1Record.id,
-        rating: 5,
-        title: 'Excelente experiência!',
-        comment: 'A minha filha adorou as aulas de natação. A professora é muito paciente e carinhosa. Recomendo!',
-        isVerified: true,
+        childId: child1.id,
+        sessionId: sessions[0].id,
+        quantity: 8,
+        totalAmount: sessions[0]?.price ? sessions[0].price * 8 : 0,
+        status: 'CONFIRMED',
+        notes: 'Festa da Sofia - tema princesas',
       },
-      {
-        userId: parent2.id,
-        activityId: activity2.id,
-        providerId: provider2Record.id,
-        rating: 4,
-        title: 'Muito bom ballet',
-        comment: 'A minha filha está a adorar as aulas de ballet. A evolução tem sido notável.',
-        isVerified: true,
-      },
-      {
-        userId: parent1.id,
-        activityId: activity3.id,
-        providerId: provider3Record.id,
-        rating: 5,
-        title: 'Perfeito para iniciação à programação',
-        comment: 'O Miguel ficou fascinado com a programação. As aulas são muito bem estruturadas e divertidas.',
-        isVerified: true,
-      },
-    ],
-  })
+    });
 
-  // Create saved activities
-  await prisma.savedActivity.createMany({
-    data: [
-      {
-        userId: parent1.id,
-        activityId: activity2.id,
-      },
-      {
-        userId: parent1.id,
-        activityId: activity4.id,
-      },
-      {
-        userId: parent2.id,
-        activityId: activity3.id,
-      },
-    ],
-  })
+    // Update session availability
+    await prisma.activitySession.update({
+      where: { id: sessions[0].id },
+      data: { availableSpots: sessions[0].availableSpots - 8 },
+    });
+  }
 
-  // Update available spots based on bookings
-  await prisma.activitySession.update({
-    where: { id: sessions[0].id },
-    data: { availableSpots: { decrement: 1 } },
-  })
+  // Create reviews with authentic Portuguese content
+  await prisma.review.create({
+    data: {
+      userId: parent1.id,
+      activityId: activity1.id,
+      rating: 5,
+      comment:
+        'A festa da Sofia foi perfeita! As crianças adoraram todas as atividades e os monitores foram fantásticos. Muito bem organizado e as crianças saíram exaustas de tanto brincar. Recomendo vivamente!',
+      isVerified: true,
+    },
+  });
 
-  console.log('✅ Database seeded successfully!')
-  console.log('📊 Created:')
-  console.log('- 3 Parent users')
-  console.log('- 3 Provider users')
-  console.log('- 3 Children')
-  console.log('- 4 Activities')
-  console.log('- 8 Activity sessions')
-  console.log('- 1 Booking with payment')
-  console.log('- 3 Reviews')
-  console.log('- 3 Saved activities')
+  await prisma.review.create({
+    data: {
+      userId: parent2.id,
+      activityId: activity2.id,
+      rating: 5,
+      comment:
+        'Experiência mágica no Princelandia! A Beatriz sentiu-se uma verdadeira princesa. O spa foi uma experiência única e ela ainda fala das amigas que fez lá. Voltaremos certamente!',
+      isVerified: true,
+    },
+  });
+
+  await prisma.review.create({
+    data: {
+      userId: parent1.id,
+      activityId: activity3.id,
+      rating: 4,
+      comment:
+        'Excelente festa no YupiColor! O Miguel adorou os trampolins e karts. Instalações muito limpas e seguras. Os monitores foram muito atenciosos. Única observação: podiam ter mais variedade no lanche.',
+      isVerified: true,
+    },
+  });
+
+  console.log(
+    '✅ Database seeded successfully with real Porto/Matosinhos data!'
+  );
+  console.log(`
+📊 Created:
+- 2 parents
+- 3 children  
+- 5 real providers (Colibee, Princelandia, YupiColor, Ateliê de Festas, Another World)
+- 5 birthday party activities
+- ${await prisma.activitySession.count()} activity sessions
+- ${await prisma.booking.count()} bookings
+- 3 authentic reviews
+  `);
 }
 
 main()
-  .catch((e) => {
-    console.error('❌ Error seeding database:', e)
-    process.exit(1)
+  .catch(e => {
+    console.error('❌ Seed failed:', e);
+    process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect()
-  })
+    await prisma.$disconnect();
+  });
